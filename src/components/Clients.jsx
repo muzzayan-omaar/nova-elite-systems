@@ -9,20 +9,38 @@ export default function Clients() {
   }, []);
 
   return (
-    <section className="bg-[#0B0F1A] py-6">
-      <p className="text-center text-gray-400 mb-4">
-        Trusted by businesses across UAE
-      </p>
+    <section className="py-8 md:py-10 overflow-hidden">
 
-      <div className="flex justify-center gap-8 flex-wrap">
-        {clients.map((c) => (
+      <div
+        className="
+          relative
+          max-w-6xl mx-auto
+          flex flex-wrap items-center justify-center
+          gap-x-8 gap-y-6
+          md:gap-12
+          px-5 md:px-6
+        "
+      >
+
+        {clients.map((client) => (
           <img
-            key={c._id}
-            src={c.logo}
-            className="h-10 opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition"
+            key={client._id}
+            src={client.logo}
+            alt={client.name}
+            className="
+              h-5 sm:h-6 md:h-8
+              max-w-[90px] sm:max-w-[110px] md:max-w-none
+              object-contain
+              opacity-60
+              grayscale
+              transition duration-300
+              hover:grayscale-0 hover:opacity-100
+            "
           />
         ))}
+
       </div>
+
     </section>
   );
 }
