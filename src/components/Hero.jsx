@@ -1,4 +1,7 @@
+import { useLanguage } from "../context/LanguageContext";
 export default function Hero() {
+
+  const { t } = useLanguage();
   return (
     <section
       className="
@@ -27,24 +30,15 @@ export default function Hero() {
 
         {/* LEFT */}
         <div className="text-center md:text-left">
-
-          <h1
-            className="
-              text-[2.5rem]
-              leading-[1.1]
-              sm:text-5xl
-              md:text-6xl
-              font-bold
-            "
-          >
-            Smart Solutions.
-            <br />
-            Seamless Systems.
-            <br />
-            <span className="text-blue-500">
-              Stronger Businesses.
-            </span>
-          </h1>
+<h1 className="text-4xl md:text-6xl font-bold leading-tight">
+  {t.heroTitle1}
+  <br />
+  {t.heroTitle2}
+  <br />
+  <span className="text-blue-500">
+    {t.heroTitle3}
+  </span>
+</h1>
 
           <p
             className="
@@ -56,9 +50,7 @@ export default function Hero() {
               leading-relaxed
             "
           >
-            High-performance digital platforms and secure
-            infrastructure that help UAE businesses scale,
-            automate, and operate efficiently.
+            {t.heroDesc}
           </p>
 
           <div

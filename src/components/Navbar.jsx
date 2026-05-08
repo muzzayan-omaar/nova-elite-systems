@@ -1,20 +1,111 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
+import {
+  Menu,
+  X,
+  ChevronDown,
+  Globe,
+  Code2,
+  Smartphone,
+  Cloud,
+  Camera,
+  Fingerprint,
+  Network,
+  Briefcase,
+  FileText,
+  CircleHelp,
+  MessageCircle,
+  Info,
+} from "lucide-react";
 
 export default function Navbar() {
+  const { language, setLanguage, t } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
+
+  const digitalSolutions = [
+    {
+      icon: <Code2 size={18} />,
+      title: "Web Development",
+      desc: "Modern responsive business websites",
+    },
+    {
+      icon: <Smartphone size={18} />,
+      title: "App Development",
+      desc: "Custom mobile app solutions",
+    },
+    {
+      icon: <Cloud size={18} />,
+      title: "SaaS Applications",
+      desc: "Cloud automation platforms",
+    },
+  ];
+
+  const infraSolutions = [
+    {
+      icon: <Camera size={18} />,
+      title: "CCTV Systems",
+      desc: "Enterprise surveillance systems",
+    },
+    {
+      icon: <Fingerprint size={18} />,
+      title: "Access Control",
+      desc: "Smart secure access systems",
+    },
+    {
+      icon: <Network size={18} />,
+      title: "Networking",
+      desc: "Reliable infrastructure solutions",
+    },
+  ];
+
+  const explore = [
+    {
+      icon: <Briefcase size={18} />,
+      title: "Case Studies",
+      desc: "Real client transformations",
+    },
+    {
+      icon: <Globe size={18} />,
+      title: "Industries",
+      desc: "Solutions tailored to sectors",
+    },
+    {
+      icon: <Info size={18} />,
+      title: "About NOVA",
+      desc: "Who we are & our vision",
+    },
+  ];
+
+  const support = [
+    {
+      icon: <MessageCircle size={18} />,
+      title: "Contact",
+      desc: "Talk to our team",
+    },
+    {
+      icon: <CircleHelp size={18} />,
+      title: "FAQs",
+      desc: "Common questions answered",
+    },
+    {
+      icon: <FileText size={18} />,
+      title: "Book Consultation",
+      desc: "Schedule a strategy session",
+    },
+  ];
 
   return (
-    <div className="fixed top-3 md:top-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-6xl">
+    <div className="fixed top-3 md:top-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-7xl">
 
       <div
         className="
           relative
-          rounded-xl
-          bg-white/5
-          backdrop-blur-lg
+          rounded-2xl
+          bg-[#07111F]/80
+          backdrop-blur-2xl
           border border-white/10
-          shadow-lg
+          shadow-[0_10px_40px_rgba(0,0,0,0.35)]
         "
       >
 
@@ -28,68 +119,319 @@ export default function Navbar() {
         >
 
           {/* LOGO */}
-          <div className="flex items-center shrink-0">
-            <a href="/" className="flex items-center">
-              <img
-                src="https://res.cloudinary.com/diszilwhc/image/upload/v1777939226/IMG_20260422_200643_073_fdpjkb.webp"
-                alt="NOVA Elite Systems"
-                className="
-                  h-7 md:h-10
-                  object-contain
-                  drop-shadow-[0_0_10px_rgba(59,130,246,0.6)]
-                "
-              />
-            </a>
-          </div>
+          <a href="/" className="shrink-0">
+            <img
+              src="https://res.cloudinary.com/diszilwhc/image/upload/v1777939226/IMG_20260422_200643_073_fdpjkb.webp"
+              alt="NOVA Elite Systems"
+              className="
+                h-7 md:h-10
+                object-contain
+                drop-shadow-[0_0_12px_rgba(59,130,246,0.6)]
+              "
+            />
+          </a>
 
           {/* DESKTOP NAV */}
-          <div className="hidden md:flex gap-6 text-gray-300 text-sm">
-            <a href="#" className="hover:text-white transition">
-              Home
+          <div className="hidden md:flex items-center gap-1">
+
+            {/* SOLUTIONS */}
+            <div
+              className="relative"
+              onMouseEnter={() => setActiveDropdown("solutions")}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <button
+                className="
+                  flex items-center gap-2
+                  px-4 py-2
+                  rounded-xl
+                  text-gray-300
+                  hover:text-white
+                  hover:bg-white/[0.04]
+                  transition
+                  text-sm
+                "
+              >
+                Solutions
+                <ChevronDown size={16} />
+              </button>
+
+              {activeDropdown === "solutions" && (
+                <div
+                  className="
+                    absolute
+                    top-[120%]
+                    left-0
+                    w-[520px]
+                    rounded-[24px]
+                    border border-white/10
+                    bg-[#081120]/95
+                    backdrop-blur-2xl
+                    p-5
+                    shadow-[0_20px_60px_rgba(0,0,0,0.45)]
+                  "
+                >
+
+                  <div className="grid grid-cols-2 gap-8">
+
+                    {/* LEFT */}
+                    <div>
+                      <p
+                        className="
+                          text-[11px]
+                          tracking-[0.2em]
+                          text-blue-500
+                          font-semibold
+                          mb-4
+                        "
+                      >
+                        DIGITAL SOLUTIONS
+                      </p>
+
+                      <div className="space-y-4">
+                        {digitalSolutions.map((item, index) => (
+                          <a
+                            key={index}
+                            href="#"
+                            className="
+                              flex items-start gap-3
+                              group
+                            "
+                          >
+
+                            <div
+                              className="
+                                text-blue-500
+                                mt-1
+                              "
+                            >
+                              {item.icon}
+                            </div>
+
+                            <div>
+                              <h3
+                                className="
+                                  text-white
+                                  text-sm
+                                  font-medium
+                                  group-hover:text-blue-400
+                                  transition
+                                "
+                              >
+                                {item.title}
+                              </h3>
+
+                              <p
+                                className="
+                                  text-xs
+                                  text-gray-400
+                                  mt-1
+                                  leading-relaxed
+                                "
+                              >
+                                {item.desc}
+                              </p>
+                            </div>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* RIGHT */}
+                    <div>
+                      <p
+                        className="
+                          text-[11px]
+                          tracking-[0.2em]
+                          text-blue-500
+                          font-semibold
+                          mb-4
+                        "
+                      >
+                        INFRASTRUCTURE & SECURITY
+                      </p>
+
+                      <div className="space-y-4">
+                        {infraSolutions.map((item, index) => (
+                          <a
+                            key={index}
+                            href="#"
+                            className="
+                              flex items-start gap-3
+                              group
+                            "
+                          >
+
+                            <div
+                              className="
+                                text-blue-500
+                                mt-1
+                              "
+                            >
+                              {item.icon}
+                            </div>
+
+                            <div>
+                              <h3
+                                className="
+                                  text-white
+                                  text-sm
+                                  font-medium
+                                  group-hover:text-blue-400
+                                  transition
+                                "
+                              >
+                                {item.title}
+                              </h3>
+
+                              <p
+                                className="
+                                  text-xs
+                                  text-gray-400
+                                  mt-1
+                                  leading-relaxed
+                                "
+                              >
+                                {item.desc}
+                              </p>
+                            </div>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              )}
+            </div>
+
+            {/* PRICING */}
+            <a
+              href="#"
+              className="
+                px-4 py-2
+                rounded-xl
+                text-gray-300
+                hover:text-white
+                hover:bg-white/[0.04]
+                transition
+                text-sm
+              "
+            >
+              Pricing
             </a>
 
-            <a href="#" className="hover:text-white transition">
-              Services
-            </a>
+            {/* EXPLORE */}
+            <SimpleDropdown
+              title="Explore"
+              items={explore}
+              activeDropdown={activeDropdown}
+              setActiveDropdown={setActiveDropdown}
+              id="explore"
+            />
 
-            <a href="#" className="hover:text-white transition">
-              Our Work
-            </a>
+            {/* SUPPORT */}
+            <SimpleDropdown
+              title="Support"
+              items={support}
+              activeDropdown={activeDropdown}
+              setActiveDropdown={setActiveDropdown}
+              id="support"
+            />
 
-            <a href="#" className="hover:text-white transition">
-              About
-            </a>
-
-            <a href="/contact" className="hover:text-white transition">
-              Contact
-            </a>
           </div>
 
           {/* RIGHT SIDE */}
           <div className="flex items-center gap-2">
 
-            {/* DESKTOP CTA */}
+            {/* LANGUAGE 
+<div className="relative group hidden md:block">
+  <button
+    className="
+      flex items-center gap-2
+      px-3 py-2
+      rounded-xl
+      border border-white/10
+      bg-white/[0.03]
+      text-sm text-gray-300
+      hover:border-blue-500/30
+      transition
+    "
+  >
+    <Globe size={16} />
+    {language.toUpperCase()}
+  </button>
+
+  <div
+    className="
+      absolute
+      top-[120%]
+      right-0
+      w-32
+      rounded-2xl
+      border border-white/10
+      bg-[#081120]/95
+      backdrop-blur-2xl
+      overflow-hidden
+      opacity-0 invisible
+      group-hover:opacity-100
+      group-hover:visible
+      transition-all duration-200
+    "
+  >
+    <button
+      onClick={() => setLanguage("en")}
+      className="
+        w-full text-left
+        px-4 py-3
+        text-sm text-gray-300
+        hover:bg-white/[0.04]
+        hover:text-white
+        transition
+      "
+    >
+      🇺🇸 English
+    </button>
+
+    <button
+      onClick={() => setLanguage("ar")}
+      className="
+        w-full text-left
+        px-4 py-3
+        text-sm text-gray-300
+        hover:bg-white/[0.04]
+        hover:text-white
+        transition
+      "
+    >
+      🇦🇪 العربية
+    </button>
+  </div>
+</div>*/}
+
+            {/* CTA */}
             <button
               className="
                 hidden md:flex
                 bg-blue-600 hover:bg-blue-700
-                px-5 py-2
-                rounded-lg
+                px-5 py-2.5
+                rounded-xl
                 text-white text-sm
-                shadow-md
+                shadow-[0_0_20px_rgba(59,130,246,0.25)]
                 transition
               "
             >
-              Get a Quote →
+              Get Started
             </button>
 
-            {/* MOBILE MENU BUTTON */}
+            {/* MOBILE BUTTON */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="
                 md:hidden
                 w-10 h-10
-                rounded-lg
+                rounded-xl
                 border border-white/10
                 bg-white/[0.04]
                 flex items-center justify-center
@@ -112,61 +454,153 @@ export default function Navbar() {
             md:hidden
             overflow-hidden
             transition-all duration-300
-            ${menuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"}
+            ${menuOpen ? "max-h-[700px] opacity-100" : "max-h-0 opacity-0"}
           `}
         >
 
-          <div
-            className="
-              px-4 pb-4
-              border-t border-white/10
-              flex flex-col gap-2
-            "
-          >
+          <div className="px-4 pb-5 border-t border-white/10">
 
             {[
-              "Home",
-              "Services",
-              "Our Work",
-              "About",
-              "Contact",
+              "Solutions",
+              "Pricing",
+              "Explore",
+              "Support",
             ].map((item, index) => (
-              <a
+              <button
                 key={index}
-                href={item === "Contact" ? "/contact" : "#"}
                 className="
+                  w-full
+                  flex items-center justify-between
+                  py-4
+                  text-left
                   text-gray-300
-                  hover:text-white
-                  transition
-                  py-3 px-2
-                  rounded-lg
-                  hover:bg-white/[0.04]
-                  text-sm
+                  border-b border-white/5
                 "
               >
                 {item}
-              </a>
+
+                {item !== "Pricing" && (
+                  <ChevronDown size={16} />
+                )}
+              </button>
             ))}
 
-            {/* MOBILE CTA */}
             <button
               className="
-                mt-2
+                w-full
+                mt-5
                 bg-blue-600 hover:bg-blue-700
-                py-3
-                rounded-lg
+                py-3.5
+                rounded-xl
                 text-white text-sm
-                shadow-md
                 transition
               "
             >
-              Get a Quote →
+              Get Started
             </button>
 
           </div>
+
         </div>
 
       </div>
+    </div>
+  );
+}
+
+function SimpleDropdown({
+  title,
+  items,
+  activeDropdown,
+  setActiveDropdown,
+  id,
+}) {
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setActiveDropdown(id)}
+      onMouseLeave={() => setActiveDropdown(null)}
+    >
+      <button
+        className="
+          flex items-center gap-2
+          px-4 py-2
+          rounded-xl
+          text-gray-300
+          hover:text-white
+          hover:bg-white/[0.04]
+          transition
+          text-sm
+        "
+      >
+        {title}
+        <ChevronDown size={16} />
+      </button>
+
+      {activeDropdown === id && (
+        <div
+          className="
+            absolute
+            top-[120%]
+            left-0
+            w-[280px]
+            rounded-[22px]
+            border border-white/10
+            bg-[#081120]/95
+            backdrop-blur-2xl
+            p-5
+            shadow-[0_20px_60px_rgba(0,0,0,0.45)]
+          "
+        >
+
+          <div className="space-y-4">
+
+            {items.map((item, index) => (
+              <a
+                key={index}
+                href="#"
+                className="
+                  flex items-start gap-3
+                  group
+                "
+              >
+
+                <div className="text-blue-500 mt-1">
+                  {item.icon}
+                </div>
+
+                <div>
+                  <h3
+                    className="
+                      text-white
+                      text-sm
+                      font-medium
+                      group-hover:text-blue-400
+                      transition
+                    "
+                  >
+                    {item.title}
+                  </h3>
+
+                  <p
+                    className="
+                      text-xs
+                      text-gray-400
+                      mt-1
+                      leading-relaxed
+                    "
+                  >
+                    {item.desc}
+                  </p>
+                </div>
+
+              </a>
+            ))}
+
+          </div>
+
+        </div>
+      )}
     </div>
   );
 }
