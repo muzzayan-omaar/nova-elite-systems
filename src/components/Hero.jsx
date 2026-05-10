@@ -1,64 +1,153 @@
 import { useLanguage } from "../context/LanguageContext";
-export default function Hero() {
+import { useEffect, useState } from "react";
 
+export default function Hero() {
   const { t } = useLanguage();
+
   return (
     <section
       className="
+        relative
         min-h-screen
-        pt-32 md:pt-28
-        pb-14 md:pb-0
-        bg-gradient-to-b
-        from-[#05070F]
-        to-[#0B0F1A]
-        text-white
-        flex items-center
-        px-5 md:px-6
         overflow-hidden
+        bg-[#05070F]
+        text-white
       "
     >
+
+      {/* BACKGROUND IMAGE */}
+      <img
+        src="https://res.cloudinary.com/diszilwhc/image/upload/v1777984942/globe1_g9sjcl.jpg"
+        alt="hero"
+        className="
+          absolute inset-0
+          w-full h-full
+          object-cover
+          scale-110 md:scale-100
+          opacity-60
+        "
+      />
+
+      {/* DARK OVERLAY */}
+      <div className="absolute inset-0 bg-black/50" />
+
+      {/* LEFT FADE */}
       <div
         className="
+          absolute inset-0
+          bg-gradient-to-r
+          from-[#05070F]
+          via-[#05070F]/90
+          via-[#05070F]/70
+          to-transparent
+        "
+      />
+
+      {/* GLOW */}
+      <div
+        className="
+          absolute
+          left-[-120px]
+          top-1/2
+          -translate-y-1/2
+          w-[420px]
+          h-[420px]
+          bg-blue-500/10
+          blur-[120px]
+          rounded-full
+        "
+      />
+
+      {/* CONTENT */}
+      <div
+        className="
+          relative z-10
           max-w-7xl
           mx-auto
-          grid md:grid-cols-2
-          gap-14 md:gap-10
-          items-center
-          w-full
+          min-h-screen
+          flex items-center
+          px-6 md:px-10
         "
       >
 
-        {/* LEFT */}
-        <div className="text-center md:text-left">
-<h1 className="text-4xl md:text-6xl font-bold leading-tight">
-  {t.heroTitle1}
-  <br />
-  {t.heroTitle2}
-  <br />
-  <span className="text-blue-500">
-    {t.heroTitle3}
-  </span>
-</h1>
+        <div className="max-w-2xl pl-2 md:pl-8 lg:pl-14">
 
+          {/* TOP BADGE */}
+          <div
+            className="
+              inline-flex
+              items-center gap-2
+              px-3 py-1.5
+              rounded-full
+              border border-blue-500/20
+              bg-blue-500/10
+              backdrop-blur-xl
+              mb-6
+            "
+          >
+            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+
+            <span
+              className="
+                text-[10px]
+                uppercase
+                tracking-[0.22em]
+                text-blue-400
+                font-medium
+              "
+            >
+              UAE DIGITAL & INFRASTRUCTURE SOLUTIONS
+            </span>
+          </div>
+
+          {/* TITLE */}
+          <h1
+            className="
+              text-4xl
+              sm:text-5xl
+              md:text-6xl
+              font-semibold
+              leading-[1.05]
+              tracking-[-0.04em]
+              min-h-[100px] md:min-h-[130px]
+            "
+          >
+                      <span
+              className="
+                bg-gradient-to-r
+                from-blue-400
+                to-cyan-300
+                bg-clip-text
+                text-transparent
+              "
+            >
+              <TypingTitles />
+            </span>
+
+
+  
+          </h1>
+
+          {/* DESCRIPTION */}
           <p
             className="
-              text-gray-400
-              mt-6
-              max-w-lg
-              mx-auto md:mx-0
-              text-sm sm:text-base
+              mt-5
+              text-sm
+              sm:text-base
               leading-relaxed
+              text-gray-300
+              max-w-lg
             "
           >
             {t.heroDesc}
           </p>
 
+          {/* BUTTONS */}
           <div
             className="
               flex flex-col sm:flex-row
-              gap-3 sm:gap-4
+              gap-3
               mt-8
-              justify-center md:justify-start
             "
           >
 
@@ -66,59 +155,97 @@ export default function Hero() {
               className="
                 bg-blue-600 hover:bg-blue-700
                 px-6 py-3
-                rounded-lg
-                shadow-lg
-                text-sm md:text-base
-                transition
+                rounded-xl
+                text-sm
+                font-medium
+                shadow-[0_0_30px_rgba(59,130,246,0.28)]
+                transition-all duration-300
               "
             >
-              Get a Quote →
+              Get Started →
             </button>
 
             <button
               className="
-                border border-gray-600
+                border border-white/10
+                bg-white/[0.03]
+                hover:bg-white/[0.06]
+                backdrop-blur-xl
                 px-6 py-3
-                rounded-lg
-                hover:bg-gray-800
-                text-sm md:text-base
-                transition
+                rounded-xl
+                text-sm
+                font-medium
+                transition-all duration-300
               "
             >
               View Our Work
             </button>
+
           </div>
+
         </div>
-
-        {/* RIGHT */}
-        <div className="relative flex justify-center">
-
-          {/* GLOW */}
-          <div
-            className="
-              w-[260px] h-[260px]
-              md:w-[400px] md:h-[400px]
-              bg-blue-500/10
-              rounded-full
-              blur-3xl
-              absolute
-            "
-          />
-
-          <img
-            src="https://res.cloudinary.com/diszilwhc/image/upload/v1777984942/globe1_g9sjcl.jpg"
-            alt="hero"
-            className="
-              relative
-              w-[300px]
-              sm:w-[380px]
-              md:w-[520px]
-              object-contain
-            "
-          />
-        </div>
-
       </div>
     </section>
+  );
+}
+/* ========================= */
+/* TYPING COMPONENT */
+/* ========================= */
+
+function TypingTitles() {
+  const titles = [
+    "Get Your Website Now!",
+    "Need CCTV Systems?",
+    "Launch In 24 Hours.",
+    "Upgrade Your Business Today.",
+    "Build Smarter Infrastructure.",
+    "Secure Your Company.",
+    "With NOVA, It’s Possible.",
+  ];
+
+  const [currentTitle, setCurrentTitle] = useState(0);
+  const [displayedText, setDisplayedText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const current = titles[currentTitle];
+
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        setDisplayedText(
+          current.slice(0, displayedText.length + 1)
+        );
+
+        if (displayedText === current) {
+          setTimeout(() => {
+            setIsDeleting(true);
+          }, 1600);
+        }
+      } else {
+        setDisplayedText(
+          current.slice(0, displayedText.length - 1)
+        );
+
+        if (displayedText === "") {
+          setIsDeleting(false);
+
+          setCurrentTitle(
+            (prev) => (prev + 1) % titles.length
+          );
+        }
+      }
+    }, isDeleting ? 40 : 70);
+
+    return () => clearTimeout(timeout);
+  }, [displayedText, isDeleting, currentTitle]);
+
+  return (
+    <span>
+      {displayedText}
+
+      <span className="animate-pulse text-blue-400">
+        |
+      </span>
+    </span>
   );
 }

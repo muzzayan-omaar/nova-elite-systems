@@ -22,6 +22,7 @@ export default function Navbar() {
   const { language, setLanguage, t } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [mobileDropdown, setMobileDropdown] = useState(null);
 
   const digitalSolutions = [
     {
@@ -308,7 +309,7 @@ export default function Navbar() {
 
             {/* PRICING */}
             <a
-              href="#"
+              href="/pricing"
               className="
                 px-4 py-2
                 rounded-xl
@@ -449,59 +450,269 @@ export default function Navbar() {
         </div>
 
         {/* MOBILE MENU */}
-        <div
-          className={`
-            md:hidden
-            overflow-hidden
-            transition-all duration-300
-            ${menuOpen ? "max-h-[700px] opacity-100" : "max-h-0 opacity-0"}
-          `}
-        >
+{/* MOBILE MENU */}
+<div
+  className={`
+    md:hidden
+    overflow-hidden
+    transition-all duration-300
+    ${menuOpen ? "max-h-[900px] opacity-100" : "max-h-0 opacity-0"}
+  `}
+>
 
-          <div className="px-4 pb-5 border-t border-white/10">
+  <div className="px-4 pb-5 border-t border-white/10">
 
-            {[
-              "Solutions",
-              "Pricing",
-              "Explore",
-              "Support",
-            ].map((item, index) => (
-              <button
-                key={index}
-                className="
-                  w-full
-                  flex items-center justify-between
-                  py-4
-                  text-left
-                  text-gray-300
-                  border-b border-white/5
-                "
-              >
-                {item}
+    {/* SOLUTIONS */}
+    <div className="border-b border-white/5">
 
-                {item !== "Pricing" && (
-                  <ChevronDown size={16} />
-                )}
-              </button>
-            ))}
+      <button
+        onClick={() =>
+          setMobileDropdown(
+            mobileDropdown === "solutions"
+              ? null
+              : "solutions"
+          )
+        }
+        className="
+          w-full
+          flex items-center justify-between
+          py-4
+          text-left
+          text-gray-300
+        "
+      >
+        Solutions
 
-            <button
-              className="
-                w-full
-                mt-5
-                bg-blue-600 hover:bg-blue-700
-                py-3.5
-                rounded-xl
-                text-white text-sm
-                transition
-              "
-            >
-              Get Started
-            </button>
+        <ChevronDown
+          size={16}
+          className={`transition ${
+            mobileDropdown === "solutions"
+              ? "rotate-180"
+              : ""
+          }`}
+        />
+      </button>
 
+      {mobileDropdown === "solutions" && (
+        <div className="pb-4 space-y-5">
+
+          {/* DIGITAL */}
+          <div>
+            <p className="text-[11px] tracking-[0.2em] text-blue-500 font-semibold mb-3">
+              DIGITAL SOLUTIONS
+            </p>
+
+            <div className="space-y-4">
+              {digitalSolutions.map((item, index) => (
+                <a
+                  key={index}
+                  href="#"
+                  className="flex items-start gap-3"
+                >
+                  <div className="text-blue-500 mt-1">
+                    {item.icon}
+                  </div>
+
+                  <div>
+                    <h3 className="text-white text-sm font-medium">
+                      {item.title}
+                    </h3>
+
+                    <p className="text-xs text-gray-400 mt-1">
+                      {item.desc}
+                    </p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* INFRA */}
+          <div>
+            <p className="text-[11px] tracking-[0.2em] text-blue-500 font-semibold mb-3">
+              INFRASTRUCTURE & SECURITY
+            </p>
+
+            <div className="space-y-4">
+              {infraSolutions.map((item, index) => (
+                <a
+                  key={index}
+                  href="#"
+                  className="flex items-start gap-3"
+                >
+                  <div className="text-blue-500 mt-1">
+                    {item.icon}
+                  </div>
+
+                  <div>
+                    <h3 className="text-white text-sm font-medium">
+                      {item.title}
+                    </h3>
+
+                    <p className="text-xs text-gray-400 mt-1">
+                      {item.desc}
+                    </p>
+                  </div>
+                </a>
+              ))}
+            </div>
           </div>
 
         </div>
+      )}
+    </div>
+
+    {/* PRICING */}
+    <a
+      href="/pricing"
+      className="
+        block
+        py-4
+        text-gray-300
+        border-b border-white/5
+      "
+    >
+      Pricing
+    </a>
+
+    {/* EXPLORE */}
+    <div className="border-b border-white/5">
+
+      <button
+        onClick={() =>
+          setMobileDropdown(
+            mobileDropdown === "explore"
+              ? null
+              : "explore"
+          )
+        }
+        className="
+          w-full
+          flex items-center justify-between
+          py-4
+          text-left
+          text-gray-300
+        "
+      >
+        Explore
+
+        <ChevronDown
+          size={16}
+          className={`transition ${
+            mobileDropdown === "explore"
+              ? "rotate-180"
+              : ""
+          }`}
+        />
+      </button>
+
+      {mobileDropdown === "explore" && (
+        <div className="pb-4 space-y-4">
+
+          {explore.map((item, index) => (
+            <a
+              key={index}
+              href="#"
+              className="flex items-start gap-3"
+            >
+              <div className="text-blue-500 mt-1">
+                {item.icon}
+              </div>
+
+              <div>
+                <h3 className="text-white text-sm font-medium">
+                  {item.title}
+                </h3>
+
+                <p className="text-xs text-gray-400 mt-1">
+                  {item.desc}
+                </p>
+              </div>
+            </a>
+          ))}
+
+        </div>
+      )}
+    </div>
+
+    {/* SUPPORT */}
+    <div>
+
+      <button
+        onClick={() =>
+          setMobileDropdown(
+            mobileDropdown === "support"
+              ? null
+              : "support"
+          )
+        }
+        className="
+          w-full
+          flex items-center justify-between
+          py-4
+          text-left
+          text-gray-300
+        "
+      >
+        Support
+
+        <ChevronDown
+          size={16}
+          className={`transition ${
+            mobileDropdown === "support"
+              ? "rotate-180"
+              : ""
+          }`}
+        />
+      </button>
+
+      {mobileDropdown === "support" && (
+        <div className="pb-4 space-y-4">
+
+          {support.map((item, index) => (
+            <a
+              key={index}
+              href="#"
+              className="flex items-start gap-3"
+            >
+              <div className="text-blue-500 mt-1">
+                {item.icon}
+              </div>
+
+              <div>
+                <h3 className="text-white text-sm font-medium">
+                  {item.title}
+                </h3>
+
+                <p className="text-xs text-gray-400 mt-1">
+                  {item.desc}
+                </p>
+              </div>
+            </a>
+          ))}
+
+        </div>
+      )}
+    </div>
+
+    {/* CTA */}
+    <button
+      className="
+        w-full
+        mt-5
+        bg-blue-600 hover:bg-blue-700
+        py-3.5
+        rounded-xl
+        text-white text-sm
+        transition
+      "
+    >
+      Get Started
+    </button>
+
+  </div>
+
+</div>
 
       </div>
     </div>

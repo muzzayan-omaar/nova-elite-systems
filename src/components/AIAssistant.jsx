@@ -1,17 +1,16 @@
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  MessageCircle,
   X,
   ArrowRight,
   Globe,
   Briefcase,
   Phone,
-  Shield,
 } from "lucide-react";
 
 export default function AIAssistant() {
   const [open, setOpen] = useState(false);
+  const [showBubble, setShowBubble] = useState(false);
+
   const [messages, setMessages] = useState([
     {
       type: "bot",
@@ -42,6 +41,36 @@ export default function AIAssistant() {
     },
   ];
 
+  const prompts = [
+    "Need a website fast?",
+    "Need CCTV solutions?",
+    "Stuck? I can help 👋",
+    "Need help choosing?",
+    "Get started here",
+  ];
+
+  const [currentPrompt, setCurrentPrompt] = useState(prompts[0]);
+
+  useEffect(() => {
+    let promptIndex = 0;
+
+    const interval = setInterval(() => {
+      if (!open) {
+        promptIndex = (promptIndex + 1) % prompts.length;
+
+        setCurrentPrompt(prompts[promptIndex]);
+
+        setShowBubble(true);
+
+        setTimeout(() => {
+          setShowBubble(false);
+        }, 3500);
+      }
+    }, 9000);
+
+    return () => clearInterval(interval);
+  }, [open]);
+
   const handleReply = (item) => {
     setMessages((prev) => [
       ...prev,
@@ -60,18 +89,67 @@ export default function AIAssistant() {
     <>
       {/* FLOATING BUTTON */}
       <div className="fixed left-6 bottom-6 z-[999]">
+
+        {/* POPUP BUBBLE */}
+        <div
+          className={`
+            absolute
+            left-[78px]
+            bottom-3
+            transition-all duration-500
+            ${
+              showBubble && !open
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-3 pointer-events-none"
+            }
+          `}
+        >
+          <div
+            className="
+              relative
+              whitespace-nowrap
+              px-4 py-2.5
+              rounded-2xl
+              bg-white
+              text-[#07111F]
+              text-sm
+              font-medium
+              shadow-[0_10px_40px_rgba(0,0,0,0.28)]
+            "
+          >
+            {currentPrompt}
+
+            {/* POINTER */}
+            <div
+              className="
+                absolute
+                left-[-6px]
+                bottom-4
+                w-3 h-3
+                rotate-45
+                bg-white
+              "
+            />
+          </div>
+        </div>
+
+        {/* BUTTON */}
         <button
-          onClick={() => setOpen(!open)}
+          onClick={() => {
+            setOpen(!open);
+            setShowBubble(false);
+          }}
           className="
             relative
-            w-13 h-13
-           rounded-xl
-            bg-blue-600
-            hover:bg-blue-500
+            w-14 h-14
+            rounded-2xl
+            bg-[#081120]
+            border border-blue-500/20
+            hover:border-blue-400/40
             transition-all duration-300
-            shadow-[0_0_35px_rgba(59,130,246,0.45)]
+            shadow-[0_0_35px_rgba(59,130,246,0.25)]
             flex items-center justify-center
-            group
+            overflow-hidden
           "
         >
 
@@ -80,17 +158,23 @@ export default function AIAssistant() {
             className="
               absolute inset-0
               rounded-2xl
-              border border-blue-400/40
+              border border-blue-400/30
               animate-ping
             "
           />
 
           {open ? (
-            <X size={28} className="relative z-10 text-white" />
+            <X size={24} className="relative z-10 text-white" />
           ) : (
-            <MessageCircle
-              size={22}
-              className="relative z-10 text-white"
+            <img
+              src="https://res.cloudinary.com/diszilwhc/image/upload/v1778360837/20260510_010555_jissyl.png"
+              alt="NOVA Assistant"
+              className="
+                relative z-10
+                w-8 h-8
+                object-contain
+                drop-shadow-[0_0_18px_rgba(59,130,246,0.45)]
+              "
             />
           )}
         </button>
@@ -105,9 +189,10 @@ export default function AIAssistant() {
           w-[320px]
           max-w-[calc(100vw-3rem)]
           transition-all duration-300
-          ${open
-            ? "opacity-100 translate-y-0 pointer-events-auto"
-            : "opacity-0 translate-y-6 pointer-events-none"
+          ${
+            open
+              ? "opacity-100 translate-y-0 pointer-events-auto"
+              : "opacity-0 translate-y-6 pointer-events-none"
           }
         `}
       >
@@ -160,21 +245,21 @@ export default function AIAssistant() {
               relative z-10
               px-4 py-4
               border-b border-white/10
-              flex items-center gap-4
+              flex items-center gap-3
             "
           >
 
-            <div
+            <img
+              src="https://res.cloudinary.com/diszilwhc/image/upload/v1778360837/20260510_010555_jissyl.png"
+              alt="NOVA Assistant"
               className="
-                w-10 h-10
-                rounded-2xl
-                bg-blue-600
-                flex items-center justify-center
-                shadow-[0_0_25px_rgba(59,130,246,0.4)]
+                w-8 h-8
+                object-contain
+                shrink-0
+                opacity-95
+                drop-shadow-[0_0_18px_rgba(59,130,246,0.35)]
               "
-            >
-              <Shield size={18} className="text-white" />
-            </div>
+            />
 
             <div>
               <h3 className="font-semibold text-white text-base">
@@ -185,6 +270,7 @@ export default function AIAssistant() {
                 Instant guidance & quick actions
               </p>
             </div>
+
           </div>
 
           {/* CHAT BODY */}
@@ -214,9 +300,10 @@ export default function AIAssistant() {
                     px-3 py-2.5
                     rounded-xl
                     text-[13px] leading-relaxed
-                    ${msg.type === "bot"
-                      ? "bg-white/[0.05] border border-white/10 text-gray-200"
-                      : "bg-blue-600 text-white"
+                    ${
+                      msg.type === "bot"
+                        ? "bg-white/[0.05] border border-white/10 text-gray-200"
+                        : "bg-blue-600 text-white"
                     }
                   `}
                 >
@@ -266,6 +353,7 @@ export default function AIAssistant() {
                     </div>
                   </button>
                 ))}
+
               </div>
             </div>
           </div>
@@ -320,6 +408,7 @@ export default function AIAssistant() {
                 transition
                 flex items-center gap-2
                 text-sm font-medium
+                text-white
               "
             >
               <Phone size={16} />
