@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import FAQ from "../components/FAQ";
 import {
   Check,
   Sparkles,
@@ -749,10 +750,350 @@ export default function Pricing() {
   </div>
 </section>
 
-        </div>
-      </section>
+{/* TESTIMONIAL EXPERIENCE */}
+<section
+  className="
+    relative
+    py-28
+    overflow-hidden
+  "
+>
 
-      <Footer />
+  {/* BACKGROUND GLOW */}
+  <div
+    className="
+      absolute
+      top-0
+      left-1/2
+      -translate-x-1/2
+      w-[900px]
+      h-[900px]
+      bg-blue-500/10
+      blur-[180px]
+      rounded-full
+      pointer-events-none
+    "
+  />
+
+  {/* HUGE QUOTE */}
+  <div
+    className="
+      absolute
+      top-10
+      left-8
+      text-[220px]
+      md:text-[340px]
+      font-bold
+      leading-none
+      text-white/[0.03]
+      pointer-events-none
+      select-none
+    "
+  >
+    “
+  </div>
+
+  <div
+    className="
+      relative
+      z-10
+      max-w-7xl
+      mx-auto
+      px-6
+      grid
+      md:grid-cols-2
+      gap-20
+      items-center
+    "
+  >
+
+    {/* LEFT CONTENT */}
+    <div>
+
+      <p
+        className="
+          text-blue-400
+          uppercase
+          tracking-[0.3em]
+          text-xs
+          font-semibold
+          mb-5
+        "
+      >
+        CLIENT EXPERIENCES
+      </p>
+
+      <h2
+        className="
+          text-4xl
+          md:text-6xl
+          font-bold
+          leading-[1.05]
+        "
+      >
+        Trusted By
+        <br />
+
+        Businesses
+        <br />
+
+        <span className="text-blue-500">
+          That Expect More.
+        </span>
+      </h2>
+
+      <p
+        className="
+          mt-7
+          text-gray-400
+          leading-relaxed
+          text-sm
+          md:text-base
+          max-w-lg
+        "
+      >
+        NOVA helps businesses elevate their image,
+        modernize operations and create digital
+        experiences that build trust and drive growth.
+      </p>
+
+      {/* METRICS */}
+      <div
+        className="
+          flex
+          flex-wrap
+          gap-8
+          mt-10
+        "
+      >
+
+        {[
+          {
+            value: "120+",
+            label: "Projects Delivered",
+          },
+
+          {
+            value: "98%",
+            label: "Client Satisfaction",
+          },
+
+          {
+            value: "24hr",
+            label: "Fast Turnaround",
+          },
+        ].map((item, index) => (
+          <div key={index}>
+            <h3
+              className="
+                text-2xl
+                md:text-3xl
+                font-bold
+                text-white
+              "
+            >
+              {item.value}
+            </h3>
+
+            <p
+              className="
+                text-sm
+                text-gray-500
+                mt-1
+              "
+            >
+              {item.label}
+            </p>
+          </div>
+        ))}
+
+      </div>
+    </div>
+
+    {/* FLOATING TESTIMONIALS */}
+    <div
+      className="
+        relative
+        h-[520px]
+        hidden md:block
+      "
+    >
+
+      {/* TESTIMONIAL 1 */}
+      <div
+        className="
+          absolute
+          top-0
+          left-0
+          max-w-[280px]
+          animate-[float_6s_ease-in-out_infinite]
+        "
+      >
+
+        <p
+          className="
+            text-2xl
+            leading-relaxed
+            text-white/90
+            font-light
+          "
+        >
+          “NOVA completely transformed our online
+          presence. Clients immediately noticed the
+          difference.”
+        </p>
+
+        <div className="mt-5">
+          <p className="text-sm text-white font-medium">
+            Ahmed Kareem
+          </p>
+
+          <p className="text-xs text-gray-500 uppercase tracking-[0.2em]">
+            AK Logistics
+          </p>
+        </div>
+      </div>
+
+      {/* TESTIMONIAL 2 */}
+      <div
+        className="
+          absolute
+          top-[140px]
+          right-0
+          max-w-[260px]
+          animate-[float_8s_ease-in-out_infinite]
+        "
+      >
+
+        <p
+          className="
+            text-xl
+            leading-relaxed
+            text-white/80
+            font-light
+          "
+        >
+          “The professionalism and execution felt like
+          working with a much larger agency.”
+        </p>
+
+        <div className="mt-5">
+          <p className="text-sm text-white font-medium">
+            Sarah Malik
+          </p>
+
+          <p className="text-xs text-gray-500 uppercase tracking-[0.2em]">
+            Elevate Clinics
+          </p>
+        </div>
+      </div>
+
+      {/* TESTIMONIAL 3 */}
+      <div
+        className="
+          absolute
+          bottom-0
+          left-[80px]
+          max-w-[320px]
+          animate-[float_7s_ease-in-out_infinite]
+        "
+      >
+
+        <p
+          className="
+            text-2xl
+            leading-relaxed
+            text-white/90
+            font-light
+          "
+        >
+          “Fast delivery. Premium quality.
+          The entire process felt effortless.”
+        </p>
+
+        <div className="mt-5">
+          <p className="text-sm text-white font-medium">
+            Daniel Moyo
+          </p>
+
+          <p className="text-xs text-gray-500 uppercase tracking-[0.2em]">
+            NovaFit Gym
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    {/* MOBILE TESTIMONIALS */}
+    <div className="space-y-10 md:hidden">
+
+      {[
+        {
+          quote:
+            "NOVA completely transformed our online presence.",
+          name: "Ahmed Kareem",
+          company: "AK Logistics",
+        },
+
+        {
+          quote:
+            "The professionalism felt world-class from start to finish.",
+          name: "Sarah Malik",
+          company: "Elevate Clinics",
+        },
+
+        {
+          quote:
+            "Fast delivery and premium quality throughout.",
+          name: "Daniel Moyo",
+          company: "NovaFit Gym",
+        },
+      ].map((item, index) => (
+        <div key={index}>
+
+          <p
+            className="
+              text-xl
+              text-white/90
+              leading-relaxed
+              font-light
+            "
+          >
+            “{item.quote}”
+          </p>
+
+          <div className="mt-4">
+            <p className="text-sm font-medium text-white">
+              {item.name}
+            </p>
+
+            <p
+              className="
+                text-xs
+                uppercase
+                tracking-[0.2em]
+                text-gray-500
+                mt-1
+              "
+            >
+              {item.company}
+            </p>
+          </div>
+
+        </div>
+      ))}
+
+    </div>
+
+  </div>
+</section>
+
+        </div>
+        <FAQ />
+        <Footer />
+      </section>
+        
+      
     </>
   );
 }
