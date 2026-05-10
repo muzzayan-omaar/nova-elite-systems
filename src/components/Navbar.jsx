@@ -78,23 +78,20 @@ export default function Navbar() {
     },
   ];
 
-  const support = [
-    {
-      icon: <MessageCircle size={18} />,
-      title: "Contact",
-      desc: "Talk to our team",
-    },
-    {
-      icon: <CircleHelp size={18} />,
-      title: "FAQs",
-      desc: "Common questions answered",
-    },
-    {
-      icon: <FileText size={18} />,
-      title: "Book Consultation",
-      desc: "Schedule a strategy session",
-    },
-  ];
+const support = [
+  {
+    icon: <MessageCircle size={18} />,
+    title: "Technical Support",
+    desc: "Talk to our team",
+    link: "/technical-support",
+  },
+  {
+    icon: <FileText size={18} />,
+    title: "Book Consultation",
+    desc: "Schedule a strategy session",
+    link: "/book-consultation",
+  },
+];
 
   return (
     <div className="fixed top-3 md:top-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-7xl">
@@ -672,7 +669,7 @@ export default function Navbar() {
           {support.map((item, index) => (
             <a
               key={index}
-              href="#"
+              href={item.link}
               className="flex items-start gap-3"
             >
               <div className="text-blue-500 mt-1">
@@ -769,7 +766,7 @@ function SimpleDropdown({
             {items.map((item, index) => (
               <a
                 key={index}
-                href="#"
+                href={item.link}
                 className="
                   flex items-start gap-3
                   group
