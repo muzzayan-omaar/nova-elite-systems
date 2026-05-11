@@ -537,7 +537,7 @@ const support = [
               {infraSolutions.map((item, index) => (
                 <a
                   key={index}
-                  href="#"
+                  href={item.link}
                   className="flex items-start gap-3"
                 >
                   <div className="text-blue-500 mt-1">
