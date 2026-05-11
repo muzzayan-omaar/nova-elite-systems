@@ -5,6 +5,9 @@ import Contact from "./pages/Contact";
 import Pricing from "./pages/Pricing";
 import TechnicalSupport from "./pages/TechnicalSupport";
 import BookConsultation from "./pages/BookConsultation";
+import About from "./pages/About";
+import Industries from "./pages/Industries";
+import Blog from "./pages/Blog";
 
 function App() {
   return (
@@ -16,6 +19,9 @@ function App() {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/technical-support" element={<TechnicalSupport />} />
         <Route path="/book-consultation" element={<BookConsultation />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/industries" element={<Industries />} />
+        <Route path="/blog" element={<Blog />} />
       </Routes>
     </BrowserRouter>
   );
