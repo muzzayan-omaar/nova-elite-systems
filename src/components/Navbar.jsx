@@ -65,19 +65,16 @@ export default function Navbar() {
       icon: <Briefcase size={18} />,
       title: "Case Studies",
       desc: "Real client transformations",
-      link: "/blog",
     },
     {
       icon: <Globe size={18} />,
       title: "Industries",
       desc: "Solutions tailored to sectors",
-      link: "/industries",
     },
     {
       icon: <Info size={18} />,
       title: "About NOVA",
       desc: "Who we are & our vision",
-      link: "/about",
     },
   ];
 
@@ -506,7 +503,7 @@ const support = [
               {digitalSolutions.map((item, index) => (
                 <a
                   key={index}
-                  href={item.link}
+                  href="#"
                   className="flex items-start gap-3"
                 >
                   <div className="text-blue-500 mt-1">
@@ -537,7 +534,7 @@ const support = [
               {infraSolutions.map((item, index) => (
                 <a
                   key={index}
-                  href={item.link}
+                  href="#"
                   className="flex items-start gap-3"
                 >
                   <div className="text-blue-500 mt-1">
@@ -612,7 +609,7 @@ const support = [
           {explore.map((item, index) => (
             <a
               key={index}
-              href={item.link}
+              href="#"
               className="flex items-start gap-3"
             >
               <div className="text-blue-500 mt-1">
