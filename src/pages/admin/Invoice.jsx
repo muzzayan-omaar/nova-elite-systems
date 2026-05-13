@@ -4,6 +4,7 @@ import {
   CalendarDays,
   CircleDollarSign,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import InvoiceForm from "../../components/admin/InvoiceForm";
 import InvoicePreview from "../../components/admin/InvoicePreview";
@@ -129,23 +130,76 @@ export default function Invoices() {
 
   /* SAVE INVOICE */
 
-  const saveInvoice = async () => {
-    try {
-      await axios.post("/invoices", {
+const saveInvoice = async () => {
+  console.log("Saving started");
+
+  try {
+    console.log(invoiceData);
+
+    const res = await axios.post(
+      "/invoices",
+      {
         ...invoiceData,
         subtotal,
         total,
-      });
+      }
+    );
 
-      alert("Invoice saved successfully");
+    console.log("SUCCESS:", res.data);
 
-      setRefreshTable(!refreshTable);
+    toast.success(
+  "Invoice saved successfully"
+);
 
-    } catch (err) {
-      console.log(err);
-      alert("Failed to save invoice");
+    setRefreshTable(!refreshTable);
+
+    /* RESET FORM */
+
+setInvoiceData({
+  clientName: "",
+  company: "",
+  email: "",
+  phone: "",
+
+  invoiceNumber: `INV-${Date.now()
+    .toString()
+    .slice(-5)}`,
+
+  issueDate: "",
+  dueDate: "",
+
+  paymentMethod: "",
+  bankName: "",
+  accountName: "",
+  accountNumber: "",
+
+  status: "Pending",
+
+  notes: "",
+
+  tax: 0,
+
+  items: [
+    {
+      service: "",
+      qty: 1,
+      price: 0,
+    },
+  ],
+});
+
+  } catch (err) {
+    console.log("FULL ERROR:", err);
+
+    if (err.response) {
+      console.log(err.response.data);
     }
-  };
+
+    toast.error(
+  "Failed to save invoice"
+);
+  }
+};
 
   return (
     <section

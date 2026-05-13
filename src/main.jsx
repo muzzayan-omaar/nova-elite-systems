@@ -6,11 +6,13 @@ import "./index.css";
 import App from "./App.jsx";
 
 import { LanguageProvider } from "./context/LanguageContext";
+import { Toaster } from "sonner";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <LanguageProvider>
       <App />
+      <Toaster />
     </LanguageProvider>
   </StrictMode>
 );

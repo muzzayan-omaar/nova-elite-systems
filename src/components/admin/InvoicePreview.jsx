@@ -499,8 +499,12 @@ export default function InvoicePreview({
 
       </div>
 
-      <button
-  onClick={saveInvoice}
+<button
+  onClick={() => {
+    console.log("BUTTON CLICKED");
+
+    saveInvoice();
+  }}
   className="
     mt-5
     bg-blue-600
