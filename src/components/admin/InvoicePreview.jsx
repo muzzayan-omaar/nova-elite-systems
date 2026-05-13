@@ -2,7 +2,9 @@ export default function InvoicePreview({
   invoiceData,
   subtotal,
   total,
+  saveInvoice,
 }) {
+
   return (
     <div
       className="
@@ -207,47 +209,51 @@ export default function InvoicePreview({
 
           <div className="space-y-2 text-sm">
 
-            <div>
-              <span className="text-gray-500">
-                Method:
-              </span>
+  <div>
+    <span className="text-gray-500">
+      Method:
+    </span>
 
-              <span className="ml-2 text-gray-300">
-                Bank Transfer
-              </span>
-            </div>
+    <span className="ml-2 text-gray-300">
+      {invoiceData.paymentMethod ||
+        "Bank Transfer"}
+    </span>
+  </div>
 
-            <div>
-              <span className="text-gray-500">
-                Bank:
-              </span>
+  <div>
+    <span className="text-gray-500">
+      Bank:
+    </span>
 
-              <span className="ml-2 text-gray-300">
-                Emirates NBD
-              </span>
-            </div>
+    <span className="ml-2 text-gray-300">
+      {invoiceData.bankName ||
+        "Emirates NBD"}
+    </span>
+  </div>
 
-            <div>
-              <span className="text-gray-500">
-                Account:
-              </span>
+  <div>
+    <span className="text-gray-500">
+      Account:
+    </span>
 
-              <span className="ml-2 text-gray-300">
-                NOVA Elite Systems
-              </span>
-            </div>
+    <span className="ml-2 text-gray-300">
+      {invoiceData.accountName ||
+        "NOVA Elite Systems"}
+    </span>
+  </div>
 
-            <div>
-              <span className="text-gray-500">
-                Currency:
-              </span>
+  <div>
+    <span className="text-gray-500">
+      Account No:
+    </span>
 
-              <span className="ml-2 text-gray-300">
-                USD / AED
-              </span>
-            </div>
+    <span className="ml-2 text-gray-300">
+      {invoiceData.accountNumber ||
+        "XXXXXXXX"}
+    </span>
+  </div>
 
-          </div>
+</div>
 
         </div>
 

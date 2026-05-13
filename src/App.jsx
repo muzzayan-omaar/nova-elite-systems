@@ -9,12 +9,14 @@ import BookConsultation from "./pages/BookConsultation";
 import About from "./pages/About";
 import Industries from "./pages/Industries";
 import Blog from "./pages/Blog";
+import Invoice from "./pages/admin/Invoice";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/invoice" element={<Invoice />} />
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/pricing" element={<Pricing />} />

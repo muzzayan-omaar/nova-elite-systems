@@ -1,7 +1,5 @@
 import { useMemo, useState } from "react";
 import {
-  Plus,
-  Trash2,
   FileText,
   CalendarDays,
   CircleDollarSign,
@@ -10,38 +8,48 @@ import {
 import InvoiceForm from "../../components/admin/InvoiceForm";
 import InvoicePreview from "../../components/admin/InvoicePreview";
 import InvoiceTable from "../../components/admin/InvoiceTable";
+
 import axios from "../../api/axios";
 
 export default function Invoices() {
-  const [invoiceData, setInvoiceData] = useState({
-    clientName: "",
-    company: "",
-    email: "",
-    phone: "",
+  const [refreshTable, setRefreshTable] =
+    useState(false);
 
-    invoiceNumber: `INV-${Date.now()
-      .toString()
-      .slice(-5)}`,
+  const [invoiceData, setInvoiceData] =
+    useState({
+      clientName: "",
+      company: "",
+      email: "",
+      phone: "",
 
-    issueDate: "",
-    dueDate: "",
+      invoiceNumber: `INV-${Date.now()
+        .toString()
+        .slice(-5)}`,
 
-    status: "Pending",
+      issueDate: "",
+      dueDate: "",
 
-    notes: "",
+      paymentMethod: "",
+      bankName: "",
+      accountName: "",
+      accountNumber: "",
 
-    tax: 0,
+      status: "Pending",
 
-    items: [
-      {
-        service: "",
-        qty: 1,
-        price: 0,
-      },
-    ],
-  });
+      notes: "",
 
-  /* ---------------- CALCULATIONS ---------------- */
+      tax: 0,
+
+      items: [
+        {
+          service: "",
+          qty: 1,
+          price: 0,
+        },
+      ],
+    });
+
+  /* CALCULATIONS */
 
   const subtotal = useMemo(() => {
     return invoiceData.items.reduce(
@@ -58,7 +66,7 @@ export default function Invoices() {
     );
   }, [subtotal, invoiceData.tax]);
 
-  /* ---------------- UPDATE INPUT ---------------- */
+  /* UPDATE FIELD */
 
   const updateField = (field, value) => {
     setInvoiceData((prev) => ({
@@ -67,7 +75,7 @@ export default function Invoices() {
     }));
   };
 
-  /* ---------------- UPDATE ITEM ---------------- */
+  /* UPDATE ITEM */
 
   const updateItem = (
     index,
@@ -89,12 +97,11 @@ export default function Invoices() {
     }));
   };
 
-  /* ---------------- ADD ITEM ---------------- */
+  /* ADD ITEM */
 
   const addItem = () => {
     setInvoiceData((prev) => ({
       ...prev,
-
       items: [
         ...prev.items,
         {
@@ -106,7 +113,7 @@ export default function Invoices() {
     }));
   };
 
-  /* ---------------- REMOVE ITEM ---------------- */
+  /* REMOVE ITEM */
 
   const removeItem = (index) => {
     const filtered =
@@ -120,22 +127,26 @@ export default function Invoices() {
     }));
   };
 
+  /* SAVE INVOICE */
+
   const saveInvoice = async () => {
-  try {
-    await axios.post(
-      "/invoices",
-      {
+    try {
+      await axios.post("/invoices", {
         ...invoiceData,
         subtotal,
         total,
-      }
-    );
+      });
 
-    alert("Invoice saved successfully");
-  } catch (err) {
-    console.log(err);
-  }
-};
+      alert("Invoice saved successfully");
+
+      setRefreshTable(!refreshTable);
+
+    } catch (err) {
+      console.log(err);
+      alert("Failed to save invoice");
+    }
+  };
+
   return (
     <section
       className="
@@ -147,7 +158,7 @@ export default function Invoices() {
       "
     >
 
-      {/* BG GLOW */}
+      {/* BG */}
       <div
         className="
           fixed
@@ -163,14 +174,9 @@ export default function Invoices() {
         "
       />
 
-      <div
-        className="
-          relative
-          z-10
-        "
-      >
+      <div className="relative z-10">
 
-        {/* TOP */}
+        {/* HEADER */}
         <div
           className="
             flex
@@ -202,7 +208,6 @@ export default function Invoices() {
               className="
                 text-4xl
                 font-bold
-                leading-none
               "
             >
               Invoice
@@ -214,19 +219,13 @@ export default function Invoices() {
           </div>
 
           {/* STATS */}
-          <div
-            className="
-              flex
-              gap-4
-              flex-wrap
-            "
-          >
+          <div className="flex gap-4 flex-wrap">
 
             {[
               {
                 icon: <FileText size={18} />,
                 label: "Invoices",
-                value: "24",
+                value: "LIVE",
               },
 
               {
@@ -236,7 +235,7 @@ export default function Invoices() {
                   />
                 ),
                 label: "Revenue",
-                value: "$12.4K",
+                value: "TRACKED",
               },
 
               {
@@ -245,8 +244,8 @@ export default function Invoices() {
                     size={18}
                   />
                 ),
-                label: "Pending",
-                value: "7",
+                label: "Status",
+                value: "ACTIVE",
               },
             ].map((item, index) => (
               <div
@@ -283,12 +282,7 @@ export default function Invoices() {
                   </div>
 
                   <div>
-                    <p
-                      className="
-                        text-xs
-                        text-gray-500
-                      "
-                    >
+                    <p className="text-xs text-gray-500">
                       {item.label}
                     </p>
 
@@ -312,7 +306,7 @@ export default function Invoices() {
 
         </div>
 
-        {/* MAIN GRID */}
+        {/* GRID */}
         <div
           className="
             grid
@@ -322,7 +316,6 @@ export default function Invoices() {
           "
         >
 
-          {/* LEFT */}
           <InvoiceForm
             invoiceData={invoiceData}
             updateField={updateField}
@@ -333,18 +326,22 @@ export default function Invoices() {
             total={total}
           />
 
-          {/* RIGHT */}
           <InvoicePreview
             invoiceData={invoiceData}
             subtotal={subtotal}
             total={total}
+            saveInvoice={saveInvoice}
           />
 
         </div>
 
         {/* TABLE */}
         <div className="mt-14">
-          <InvoiceTable />
+
+          <InvoiceTable
+            refresh={refreshTable}
+          />
+
         </div>
 
       </div>

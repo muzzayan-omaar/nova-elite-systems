@@ -1,4 +1,42 @@
-export default function InvoiceTable() {
+import { useEffect, useState } from "react";
+import axios from "../../api/axios";
+
+export default function InvoiceTable({
+  refresh,
+}) {
+  const [invoices, setInvoices] =
+    useState([]);
+
+  const fetchInvoices = async () => {
+    try {
+      const res = await axios.get(
+        "/invoices"
+      );
+
+      setInvoices(res.data);
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchInvoices();
+  }, [refresh]);
+
+  const deleteInvoice = async (id) => {
+    try {
+      await axios.delete(
+        `/invoices/${id}`
+      );
+
+      fetchInvoices();
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div
       className="
@@ -14,41 +52,33 @@ export default function InvoiceTable() {
         className="
           px-7 py-6
           border-b border-white/10
-          flex
-          items-center
-          justify-between
         "
       >
 
-        <div>
+        <p
+          className="
+            text-xs
+            uppercase
+            tracking-[0.25em]
+            text-blue-400
+            font-semibold
+            mb-3
+          "
+        >
+          Invoice Records
+        </p>
 
-          <p
-            className="
-              text-xs
-              uppercase
-              tracking-[0.25em]
-              text-blue-400
-              font-semibold
-              mb-3
-            "
-          >
-            Invoice Records
-          </p>
-
-          <h2
-            className="
-              text-2xl
-              font-semibold
-            "
-          >
-            Saved Invoices
-          </h2>
-
-        </div>
+        <h2
+          className="
+            text-2xl
+            font-semibold
+          "
+        >
+          Saved Invoices
+        </h2>
 
       </div>
 
-      {/* TABLE */}
       <div className="overflow-x-auto">
 
         <table className="w-full">
@@ -68,6 +98,7 @@ export default function InvoiceTable() {
                 "Amount",
                 "Status",
                 "Date",
+                "Actions",
               ].map((item, index) => (
                 <th
                   key={index}
@@ -90,9 +121,10 @@ export default function InvoiceTable() {
 
           <tbody>
 
-            {[1, 2, 3].map((_, index) => (
+            {invoices.map((invoice) => (
+
               <tr
-                key={index}
+                key={invoice._id}
                 className="
                   border-b border-white/5
                   hover:bg-white/[0.02]
@@ -101,15 +133,15 @@ export default function InvoiceTable() {
               >
 
                 <td className="px-7 py-5">
-                  INV-2043
+                  {invoice.invoiceNumber}
                 </td>
 
                 <td className="px-7 py-5 text-gray-300">
-                  Khalid Holdings
+                  {invoice.clientName}
                 </td>
 
                 <td className="px-7 py-5">
-                  $2,400
+                  ${invoice.total}
                 </td>
 
                 <td className="px-7 py-5">
@@ -118,19 +150,52 @@ export default function InvoiceTable() {
                     className="
                       px-3 py-1
                       rounded-full
-                      bg-yellow-500/10
-                      border border-yellow-500/20
-                      text-yellow-400
+                      bg-blue-500/10
+                      border border-blue-500/20
+                      text-blue-400
                       text-xs
                     "
                   >
-                    Pending
+                    {invoice.status}
                   </span>
 
                 </td>
 
                 <td className="px-7 py-5 text-gray-500">
-                  May 12, 2026
+                  {invoice.issueDate}
+                </td>
+
+                <td className="px-7 py-5">
+
+                  <div className="flex gap-3">
+
+                    <a
+                      href={`http://localhost:5000/api/invoices/pdf/${invoice._id}`}
+                      target="_blank"
+                      className="
+                        text-blue-400
+                        text-sm
+                      "
+                    >
+                      PDF
+                    </a>
+
+                    <button
+                      onClick={() =>
+                        deleteInvoice(
+                          invoice._id
+                        )
+                      }
+                      className="
+                        text-red-400
+                        text-sm
+                      "
+                    >
+                      Delete
+                    </button>
+
+                  </div>
+
                 </td>
 
               </tr>

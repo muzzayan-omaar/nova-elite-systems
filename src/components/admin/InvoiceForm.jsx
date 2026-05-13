@@ -160,6 +160,73 @@ export default function InvoiceForm({
 
       </div>
 
+      {/* PAYMENT DETAILS */}
+
+<div className="mb-10">
+
+  <p
+    className="
+      text-xs
+      tracking-[0.25em]
+      text-blue-400
+      uppercase
+      font-semibold
+      mb-6
+    "
+  >
+    Payment Details
+  </p>
+
+  <div className="grid md:grid-cols-2 gap-5">
+
+    <Input
+      placeholder="Payment Method"
+      value={invoiceData.paymentMethod}
+      onChange={(e) =>
+        updateField(
+          "paymentMethod",
+          e.target.value
+        )
+      }
+    />
+
+    <Input
+      placeholder="Bank Name"
+      value={invoiceData.bankName}
+      onChange={(e) =>
+        updateField(
+          "bankName",
+          e.target.value
+        )
+      }
+    />
+
+    <Input
+      placeholder="Account Name"
+      value={invoiceData.accountName}
+      onChange={(e) =>
+        updateField(
+          "accountName",
+          e.target.value
+        )
+      }
+    />
+
+    <Input
+      placeholder="Account Number"
+      value={invoiceData.accountNumber}
+      onChange={(e) =>
+        updateField(
+          "accountNumber",
+          e.target.value
+        )
+      }
+    />
+
+  </div>
+
+</div>
+
       {/* SERVICES */}
       <div>
 
