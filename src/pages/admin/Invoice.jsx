@@ -10,6 +10,7 @@ import {
 import InvoiceForm from "../../components/admin/InvoiceForm";
 import InvoicePreview from "../../components/admin/InvoicePreview";
 import InvoiceTable from "../../components/admin/InvoiceTable";
+import axios from "../../api/axios";
 
 export default function Invoices() {
   const [invoiceData, setInvoiceData] = useState({
@@ -119,6 +120,22 @@ export default function Invoices() {
     }));
   };
 
+  const saveInvoice = async () => {
+  try {
+    await axios.post(
+      "/invoices",
+      {
+        ...invoiceData,
+        subtotal,
+        total,
+      }
+    );
+
+    alert("Invoice saved successfully");
+  } catch (err) {
+    console.log(err);
+  }
+};
   return (
     <section
       className="
