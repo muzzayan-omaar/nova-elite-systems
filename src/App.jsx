@@ -26,6 +26,7 @@ function App() {
         <Route path="/industries" element={<Industries />} />
         <Route path="/blog" element={<Blog />} />
       </Routes>
+      <Analytics />
     </BrowserRouter>
   );
 }
