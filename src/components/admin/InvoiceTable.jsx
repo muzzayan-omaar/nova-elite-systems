@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "../../api/axios";
+import { toast } from "sonner";
 
 export default function InvoiceTable({
   refresh,
@@ -19,6 +20,57 @@ export default function InvoiceTable({
       console.log(err);
     }
   };
+
+  const downloadPDF = async (
+  id,
+  invoiceNumber
+) => {
+  try {
+    const response = await axios.get(
+      `/invoices/pdf/${id}`,
+      {
+        responseType: "blob",
+      }
+    );
+
+    const blob = new Blob(
+      [response.data],
+      {
+        type: "application/pdf",
+      }
+    );
+
+    const url =
+      window.URL.createObjectURL(blob);
+
+    const link =
+      document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+      `${invoiceNumber}.pdf`;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    window.URL.revokeObjectURL(url);
+
+    toast.success(
+      "Invoice PDF downloaded"
+    );
+
+  } catch (err) {
+    console.log(err);
+
+    toast.error(
+      "Failed to download PDF"
+    );
+  }
+};
 
   useEffect(() => {
     fetchInvoices();
@@ -169,16 +221,22 @@ export default function InvoiceTable({
 
                   <div className="flex gap-3">
 
-                    <a
-                      href={`http://localhost:5000/api/invoices/pdf/${invoice._id}`}
-                      target="_blank"
-                      className="
-                        text-blue-400
-                        text-sm
-                      "
-                    >
-                      PDF
-                    </a>
+<button
+  onClick={() =>
+    downloadPDF(
+      invoice._id,
+      invoice.invoiceNumber
+    )
+  }
+  className="
+    text-blue-400
+    text-sm
+    hover:text-blue-300
+    transition
+  "
+>
+  PDF
+</button>
 
                     <button
                       onClick={() =>
