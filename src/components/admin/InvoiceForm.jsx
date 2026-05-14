@@ -346,7 +346,7 @@ export default function InvoiceForm({
                         text-gray-300
                       "
                     >
-                      $
+                      UGX
                       {item.qty *
                         item.price}
                     </span>
@@ -419,7 +419,7 @@ export default function InvoiceForm({
               "
             >
               <span>Subtotal</span>
-              <span>${subtotal}</span>
+              <span>UGX {subtotal}</span>
             </div>
 
             <div
@@ -434,7 +434,7 @@ export default function InvoiceForm({
             >
               <span>Tax</span>
               <span>
-                ${invoiceData.tax}
+                UGX {invoiceData.tax}
               </span>
             </div>
 
@@ -449,7 +449,7 @@ export default function InvoiceForm({
             >
               <span>Total</span>
               <span className="text-blue-400">
-                ${total}
+                UGX {total}
               </span>
             </div>
 

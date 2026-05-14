@@ -353,7 +353,7 @@ export default function InvoicePreview({
                   text-gray-300
                 "
               >
-                $
+                UGX
                 {item.qty *
                   item.price}
               </span>
@@ -417,7 +417,7 @@ export default function InvoicePreview({
           "
         >
           <span>Subtotal</span>
-          <span>${subtotal}</span>
+          <span>UGX {subtotal}</span>
         </div>
 
         <div
@@ -432,7 +432,7 @@ export default function InvoicePreview({
           <span>Tax</span>
 
           <span>
-            ${invoiceData.tax}
+            UGX {invoiceData.tax}
           </span>
         </div>
 
@@ -448,7 +448,7 @@ export default function InvoicePreview({
           <span>Total</span>
 
           <span className="text-blue-400">
-            ${total}
+            UGX {total}
           </span>
 
         </div>

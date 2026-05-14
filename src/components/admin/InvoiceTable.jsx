@@ -193,7 +193,7 @@ export default function InvoiceTable({
                 </td>
 
                 <td className="px-7 py-5">
-                  ${invoice.total}
+                  UGX {invoice.total}
                 </td>
 
                 <td className="px-7 py-5">
