@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import axios from "../../api/axios";
 
@@ -24,10 +24,13 @@ import {
 } from "recharts";
 
 export default function Revenue() {
-  const [analytics, setAnalytics] =
-    useState(null);
+  const [invoices, setInvoices] =
+    useState([]);
 
-  /* FILTER STATES */
+  const [loading, setLoading] =
+    useState(true);
+
+  /* FILTERS */
 
   const [fromDate, setFromDate] =
     useState("");
@@ -41,43 +44,245 @@ export default function Revenue() {
   const [clientFilter, setClientFilter] =
     useState("");
 
-  /* FETCH ANALYTICS */
+  /* FETCH */
 
-  const fetchAnalytics =
+  const fetchInvoices =
     async () => {
       try {
         const res =
           await axios.get(
-            "/revenue/analytics"
+            "/invoices"
           );
 
-        setAnalytics(res.data);
+        setInvoices(res.data);
 
       } catch (err) {
         console.log(err);
+
+      } finally {
+        setLoading(false);
       }
     };
 
   useEffect(() => {
-    fetchAnalytics();
+    fetchInvoices();
   }, []);
 
-  /* LOADING */
+  /* FILTERED INVOICES */
 
-  if (!analytics) {
-    return (
-      <div className="text-white p-10">
-        Loading analytics...
-      </div>
-    );
-  }
+  const filteredInvoices =
+    useMemo(() => {
+      return invoices.filter(
+        (invoice) => {
 
-  const {
-    totals,
-    revenueChartData,
-    invoiceStatusData,
-    invoices = [],
-  } = analytics;
+          const invoiceDate =
+            invoice.issueDate
+              ? new Date(
+                  invoice.issueDate
+                )
+              : null;
+
+          const from =
+            fromDate
+              ? new Date(fromDate)
+              : null;
+
+          const to =
+            toDate
+              ? new Date(toDate)
+              : null;
+
+          const matchesDate =
+            (!from ||
+              invoiceDate >= from) &&
+            (!to ||
+              invoiceDate <= to);
+
+          const matchesStatus =
+            statusFilter ===
+            "All"
+              ? true
+              : invoice.status ===
+                statusFilter;
+
+          const matchesClient =
+            invoice.clientName
+              ?.toLowerCase()
+              .includes(
+                clientFilter.toLowerCase()
+              );
+
+          return (
+            matchesDate &&
+            matchesStatus &&
+            matchesClient
+          );
+        }
+      );
+    }, [
+      invoices,
+      fromDate,
+      toDate,
+      statusFilter,
+      clientFilter,
+    ]);
+
+  /* KPI TOTALS */
+
+  const analytics =
+    useMemo(() => {
+
+      const totalRevenue =
+        filteredInvoices
+          .filter(
+            (invoice) =>
+              invoice.status ===
+              "Paid"
+          )
+          .reduce(
+            (acc, invoice) =>
+              acc +
+              Number(
+                invoice.total || 0
+              ),
+            0
+          );
+
+      const paidInvoices =
+        filteredInvoices.filter(
+          (invoice) =>
+            invoice.status ===
+            "Paid"
+        ).length;
+
+      const pendingInvoices =
+        filteredInvoices.filter(
+          (invoice) =>
+            invoice.status ===
+            "Pending"
+        ).length;
+
+      const overdueInvoices =
+        filteredInvoices.filter(
+          (invoice) =>
+            invoice.status ===
+            "Overdue"
+        ).length;
+
+      return {
+        totalRevenue,
+        paidInvoices,
+        pendingInvoices,
+        overdueInvoices,
+      };
+    }, [filteredInvoices]);
+
+  /* MONTHLY CHART */
+
+  const revenueChartData =
+    useMemo(() => {
+
+      const grouped = {};
+
+      filteredInvoices.forEach(
+        (invoice) => {
+
+          if (
+            invoice.status !==
+            "Paid"
+          )
+            return;
+
+          const date =
+            new Date(
+              invoice.issueDate
+            );
+
+          const month =
+            date.toLocaleString(
+              "default",
+              {
+                month: "short",
+              }
+            );
+
+          if (!grouped[month]) {
+            grouped[month] = 0;
+          }
+
+          grouped[month] +=
+            Number(
+              invoice.total || 0
+            );
+        }
+      );
+
+      return Object.keys(grouped).map(
+        (month) => ({
+          month,
+          revenue:
+            grouped[month],
+        })
+      );
+    }, [filteredInvoices]);
+
+  /* PIE DATA */
+
+  const invoiceStatusData =
+    useMemo(() => {
+
+      const paid =
+        filteredInvoices.filter(
+          (i) =>
+            i.status ===
+            "Paid"
+        ).length;
+
+      const pending =
+        filteredInvoices.filter(
+          (i) =>
+            i.status ===
+            "Pending"
+        ).length;
+
+      const overdue =
+        filteredInvoices.filter(
+          (i) =>
+            i.status ===
+            "Overdue"
+        ).length;
+
+      const cancelled =
+        filteredInvoices.filter(
+          (i) =>
+            i.status ===
+            "Cancelled"
+        ).length;
+
+      return [
+        {
+          name: "Paid",
+          value: paid,
+        },
+
+        {
+          name: "Pending",
+          value: pending,
+        },
+
+        {
+          name: "Overdue",
+          value: overdue,
+        },
+
+        {
+          name: "Cancelled",
+          value: cancelled,
+        },
+      ];
+    }, [filteredInvoices]);
+
+  /* COLORS */
 
   const COLORS = [
     "#3b82f6",
@@ -86,49 +291,13 @@ export default function Revenue() {
     "#6b7280",
   ];
 
-  /* FILTER LOGIC */
-
-  const filteredInvoices =
-    invoices.filter((invoice) => {
-
-      const invoiceDate =
-        new Date(invoice.issueDate);
-
-      const from =
-        fromDate
-          ? new Date(fromDate)
-          : null;
-
-      const to =
-        toDate
-          ? new Date(toDate)
-          : null;
-
-      const matchesDate =
-        (!from ||
-          invoiceDate >= from) &&
-        (!to ||
-          invoiceDate <= to);
-
-      const matchesStatus =
-        statusFilter === "All"
-          ? true
-          : invoice.status ===
-            statusFilter;
-
-      const matchesClient =
-        invoice.clientName
-          ?.toLowerCase()
-          .includes(
-            clientFilter.toLowerCase()
-          );
-
-      return (
-        matchesDate &&
-        matchesStatus &&
-        matchesClient
-      );
-    });
+  if (loading) {
+    return (
+      <div className="text-white p-8">
+        Loading revenue...
+      </div>
+    );
+  }
 
   return (
     <section
@@ -136,11 +305,10 @@ export default function Revenue() {
         min-h-screen
         bg-[#050816]
         text-white
-        p-6
       "
     >
 
-      {/* BG GLOW */}
+      {/* BG */}
 
       <div
         className="
@@ -148,8 +316,8 @@ export default function Revenue() {
           top-0
           left-1/2
           -translate-x-1/2
-          w-[1000px]
-          h-[1000px]
+          w-[900px]
+          h-[900px]
           rounded-full
           bg-blue-500/10
           blur-[180px]
@@ -159,209 +327,164 @@ export default function Revenue() {
 
       <div className="relative z-10">
 
-        {/* HEADER */}
-
-        <div className="mb-10">
-
-          <p
-            className="
-              uppercase
-              tracking-[0.3em]
-              text-xs
-              text-blue-400
-              font-semibold
-              mb-4
-            "
-          >
-            FINANCIAL ANALYTICS
-          </p>
-
-          <h1
-            className="
-              text-4xl
-              font-bold
-            "
-          >
-            Revenue
-            <span className="text-blue-500">
-              {" "}Dashboard
-            </span>
-          </h1>
-
-        </div>
-
-        {/* FILTERS */}
+        {/* TOP BAR */}
 
         <div
           className="
-            rounded-[28px]
-            border border-white/10
-            bg-white/[0.03]
-            backdrop-blur-xl
-            p-5
+            flex
+            flex-col
+            xl:flex-row
+            xl:items-center
+            xl:justify-between
+            gap-5
             mb-8
           "
         >
 
+          <div>
+
+            <p
+              className="
+                uppercase
+                tracking-[0.25em]
+                text-[10px]
+                text-blue-400
+                font-semibold
+                mb-2
+              "
+            >
+              FINANCIAL ANALYTICS
+            </p>
+
+            <h1
+              className="
+                text-3xl
+                font-bold
+              "
+            >
+              Revenue Dashboard
+            </h1>
+
+          </div>
+
+          {/* FILTERS */}
+
           <div
             className="
-              grid
-              md:grid-cols-4
-              gap-4
+              flex
+              flex-wrap
+              gap-3
             "
           >
 
-            {/* FROM DATE */}
+            <input
+              type="date"
+              value={fromDate}
+              onChange={(e) =>
+                setFromDate(
+                  e.target.value
+                )
+              }
+              className="
+                bg-[#0B1220]
+                border border-white/10
+                rounded-xl
+                px-3 py-2
+                text-sm
+                outline-none
+              "
+            />
 
-            <div>
+            <input
+              type="date"
+              value={toDate}
+              onChange={(e) =>
+                setToDate(
+                  e.target.value
+                )
+              }
+              className="
+                bg-[#0B1220]
+                border border-white/10
+                rounded-xl
+                px-3 py-2
+                text-sm
+                outline-none
+              "
+            />
 
-              <p className="text-xs text-gray-500 mb-2 uppercase">
-                From Date
-              </p>
+            <select
+              value={statusFilter}
+              onChange={(e) =>
+                setStatusFilter(
+                  e.target.value
+                )
+              }
+              className="
+                bg-[#0B1220]
+                border border-white/10
+                rounded-xl
+                px-3 py-2
+                text-sm
+                outline-none
+              "
+            >
+
+              <option>
+                All
+              </option>
+
+              <option>
+                Paid
+              </option>
+
+              <option>
+                Pending
+              </option>
+
+              <option>
+                Overdue
+              </option>
+
+              <option>
+                Cancelled
+              </option>
+
+            </select>
+
+            <div className="relative">
+
+              <Search
+                size={14}
+                className="
+                  absolute
+                  left-3
+                  top-1/2
+                  -translate-y-1/2
+                  text-gray-500
+                "
+              />
 
               <input
-                type="date"
-                value={fromDate}
+                type="text"
+                placeholder="Client..."
+                value={clientFilter}
                 onChange={(e) =>
-                  setFromDate(
+                  setClientFilter(
                     e.target.value
                   )
                 }
                 className="
-                  w-full
                   bg-[#0B1220]
                   border border-white/10
-                  rounded-2xl
-                  p-3
+                  rounded-xl
+                  pl-9
+                  pr-3
+                  py-2
                   text-sm
                   outline-none
                 "
               />
-
-            </div>
-
-            {/* TO DATE */}
-
-            <div>
-
-              <p className="text-xs text-gray-500 mb-2 uppercase">
-                To Date
-              </p>
-
-              <input
-                type="date"
-                value={toDate}
-                onChange={(e) =>
-                  setToDate(
-                    e.target.value
-                  )
-                }
-                className="
-                  w-full
-                  bg-[#0B1220]
-                  border border-white/10
-                  rounded-2xl
-                  p-3
-                  text-sm
-                  outline-none
-                "
-              />
-
-            </div>
-
-            {/* STATUS */}
-
-            <div>
-
-              <p className="text-xs text-gray-500 mb-2 uppercase">
-                Status
-              </p>
-
-              <select
-                value={statusFilter}
-                onChange={(e) =>
-                  setStatusFilter(
-                    e.target.value
-                  )
-                }
-                className="
-                  w-full
-                  bg-[#0B1220]
-                  border border-white/10
-                  rounded-2xl
-                  p-3
-                  text-sm
-                  outline-none
-                "
-              >
-
-                <option>
-                  All
-                </option>
-
-                <option>
-                  Paid
-                </option>
-
-                <option>
-                  Pending
-                </option>
-
-                <option>
-                  Overdue
-                </option>
-
-                <option>
-                  Cancelled
-                </option>
-
-              </select>
-
-            </div>
-
-            {/* CLIENT SEARCH */}
-
-            <div>
-
-              <p className="text-xs text-gray-500 mb-2 uppercase">
-                Search Client
-              </p>
-
-              <div className="relative">
-
-                <Search
-                  size={16}
-                  className="
-                    absolute
-                    left-3
-                    top-1/2
-                    -translate-y-1/2
-                    text-gray-500
-                  "
-                />
-
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={clientFilter}
-                  onChange={(e) =>
-                    setClientFilter(
-                      e.target.value
-                    )
-                  }
-                  className="
-                    w-full
-                    pl-10
-                    bg-[#0B1220]
-                    border border-white/10
-                    rounded-2xl
-                    p-3
-                    text-sm
-                    outline-none
-                  "
-                />
-
-              </div>
 
             </div>
 
@@ -369,70 +492,84 @@ export default function Revenue() {
 
         </div>
 
-        {/* KPI CARDS */}
+        {/* KPI ROW */}
 
         <div
           className="
             grid
-            md:grid-cols-2
+            grid-cols-2
             xl:grid-cols-4
-            gap-5
-            mb-10
+            gap-4
+            mb-6
           "
         >
 
           {[
             {
-              title: "Total Revenue",
-              value: `UGX ${totals.totalRevenue}`,
+              label:
+                "Revenue",
+              value: `UGX ${analytics.totalRevenue.toLocaleString()}`,
               icon: (
-                <DollarSign size={20} />
+                <DollarSign
+                  size={16}
+                />
               ),
               color:
                 "text-emerald-400",
             },
 
             {
-              title: "Paid Invoices",
+              label:
+                "Paid",
               value:
-                totals.paidInvoices,
+                analytics.paidInvoices,
               icon: (
-                <FileText size={20} />
+                <FileText
+                  size={16}
+                />
               ),
               color:
                 "text-blue-400",
             },
 
             {
-              title: "Pending",
+              label:
+                "Pending",
               value:
-                totals.pendingInvoices,
+                analytics.pendingInvoices,
               icon: (
-                <Clock3 size={20} />
+                <Clock3
+                  size={16}
+                />
               ),
               color:
                 "text-yellow-400",
             },
 
             {
-              title: "Overdue",
+              label:
+                "Overdue",
               value:
-                totals.overdueInvoices,
+                analytics.overdueInvoices,
               icon: (
-                <AlertTriangle size={20} />
+                <AlertTriangle
+                  size={16}
+                />
               ),
               color:
                 "text-red-400",
             },
-          ].map((card, index) => (
+          ].map((item, index) => (
+
             <div
               key={index}
               className="
-                rounded-[28px]
-                border border-white/10
+                border
+                border-white/10
                 bg-white/[0.03]
-                backdrop-blur-xl
-                p-6
+                rounded-2xl
+                px-4
+                py-4
               "
             >
 
@@ -441,38 +578,36 @@ export default function Revenue() {
                   flex
                   items-center
                   justify-between
-                  mb-6
+                  mb-3
                 "
               >
 
-                <div
-                  className={`
-                    w-12 h-12
-                    rounded-2xl
-                    bg-white/5
-                    flex
-                    items-center
-                    justify-center
-                    ${card.color}
-                  `}
+                <p
+                  className="
+                    text-xs
+                    text-gray-500
+                    uppercase
+                    tracking-[0.15em]
+                  "
                 >
-                  {card.icon}
+                  {item.label}
+                </p>
+
+                <div
+                  className={item.color}
+                >
+                  {item.icon}
                 </div>
 
               </div>
 
-              <p className="text-gray-500 text-sm">
-                {card.title}
-              </p>
-
               <h2
                 className="
-                  text-3xl
-                  font-bold
-                  mt-3
+                  text-xl
+                  font-semibold
                 "
               >
-                {card.value}
+                {item.value}
               </h2>
 
             </div>
@@ -485,33 +620,31 @@ export default function Revenue() {
         <div
           className="
             grid
-            xl:grid-cols-[1.5fr_450px]
-            gap-6
-            mb-10
+            xl:grid-cols-[1.6fr_380px]
+            gap-5
           "
         >
 
-          {/* LINE CHART */}
+          {/* REVENUE CHART */}
 
           <div
             className="
-              rounded-[30px]
               border border-white/10
               bg-white/[0.03]
-              backdrop-blur-xl
-              p-7
+              rounded-3xl
+              p-5
             "
           >
 
-            <div className="mb-8">
+            <div className="mb-5">
 
               <p
                 className="
+                  text-xs
                   uppercase
                   tracking-[0.2em]
-                  text-xs
                   text-blue-400
-                  mb-3
+                  mb-2
                 "
               >
                 Revenue Trend
@@ -519,7 +652,7 @@ export default function Revenue() {
 
               <h2
                 className="
-                  text-2xl
+                  text-lg
                   font-semibold
                 "
               >
@@ -528,7 +661,7 @@ export default function Revenue() {
 
             </div>
 
-            <div className="h-[350px]">
+            <div className="h-[340px]">
 
               <ResponsiveContainer
                 width="100%"
@@ -548,11 +681,13 @@ export default function Revenue() {
 
                   <XAxis
                     dataKey="month"
-                    stroke="#9ca3af"
+                    stroke="#6b7280"
+                    fontSize={12}
                   />
 
                   <YAxis
-                    stroke="#9ca3af"
+                    stroke="#6b7280"
+                    fontSize={12}
                   />
 
                   <Tooltip />
@@ -561,7 +696,7 @@ export default function Revenue() {
                     type="monotone"
                     dataKey="revenue"
                     stroke="#3b82f6"
-                    strokeWidth={4}
+                    strokeWidth={3}
                   />
 
                 </LineChart>
@@ -572,27 +707,26 @@ export default function Revenue() {
 
           </div>
 
-          {/* PIE CHART */}
+          {/* PIE */}
 
           <div
             className="
-              rounded-[30px]
               border border-white/10
               bg-white/[0.03]
-              backdrop-blur-xl
-              p-7
+              rounded-3xl
+              p-5
             "
           >
 
-            <div className="mb-8">
+            <div className="mb-5">
 
               <p
                 className="
+                  text-xs
                   uppercase
                   tracking-[0.2em]
-                  text-xs
                   text-blue-400
-                  mb-3
+                  mb-2
                 "
               >
                 Invoice Status
@@ -600,7 +734,7 @@ export default function Revenue() {
 
               <h2
                 className="
-                  text-2xl
+                  text-lg
                   font-semibold
                 "
               >
@@ -609,7 +743,7 @@ export default function Revenue() {
 
             </div>
 
-            <div className="h-[350px]">
+            <div className="h-[280px]">
 
               <ResponsiveContainer
                 width="100%"
@@ -624,7 +758,7 @@ export default function Revenue() {
                     }
                     dataKey="value"
                     nameKey="name"
-                    outerRadius={120}
+                    outerRadius={90}
                   >
 
                     {invoiceStatusData.map(
@@ -632,6 +766,7 @@ export default function Revenue() {
                         entry,
                         index
                       ) => (
+
                         <Cell
                           key={index}
                           fill={
@@ -651,155 +786,67 @@ export default function Revenue() {
 
             </div>
 
-          </div>
+            {/* LEGEND */}
 
-        </div>
+            <div className="space-y-3 mt-4">
 
-        {/* INVOICE TABLE */}
+              {invoiceStatusData.map(
+                (item, index) => (
 
-        <div
-          className="
-            rounded-[30px]
-            border border-white/10
-            bg-white/[0.03]
-            backdrop-blur-xl
-            overflow-hidden
-          "
-        >
+                  <div
+                    key={index}
+                    className="
+                      flex
+                      items-center
+                      justify-between
+                    "
+                  >
 
-          <div
-            className="
-              px-7 py-6
-              border-b border-white/10
-            "
-          >
-
-            <h2
-              className="
-                text-2xl
-                font-semibold
-              "
-            >
-              Revenue Records
-            </h2>
-
-          </div>
-
-          <div className="overflow-x-auto">
-
-            <table className="w-full">
-
-              <thead>
-
-                <tr
-                  className="
-                    border-b border-white/10
-                    text-left
-                  "
-                >
-
-                  {[
-                    "Invoice",
-                    "Client",
-                    "Status",
-                    "Amount",
-                    "Date",
-                  ].map((item) => (
-                    <th
-                      key={item}
+                    <div
                       className="
-                        px-7 py-5
-                        text-xs
-                        uppercase
-                        tracking-[0.2em]
+                        flex
+                        items-center
+                        gap-2
+                      "
+                    >
+
+                      <div
+                        className="
+                          w-2.5
+                          h-2.5
+                          rounded-full
+                        "
+                        style={{
+                          background:
+                            COLORS[index],
+                        }}
+                      />
+
+                      <p
+                        className="
+                          text-sm
+                          text-gray-300
+                        "
+                      >
+                        {item.name}
+                      </p>
+
+                    </div>
+
+                    <p
+                      className="
+                        text-sm
                         text-gray-500
-                        font-medium
                       "
                     >
-                      {item}
-                    </th>
-                  ))}
+                      {item.value}
+                    </p>
 
-                </tr>
+                  </div>
+                )
+              )}
 
-              </thead>
-
-              <tbody>
-
-                {filteredInvoices.map(
-                  (invoice) => (
-
-                    <tr
-                      key={invoice._id}
-                      className="
-                        border-b border-white/5
-                        hover:bg-white/[0.02]
-                        transition
-                      "
-                    >
-
-                      <td className="px-7 py-5">
-                        {
-                          invoice.invoiceNumber
-                        }
-                      </td>
-
-                      <td className="px-7 py-5 text-gray-300">
-                        {
-                          invoice.clientName
-                        }
-                      </td>
-
-                      <td className="px-7 py-5">
-
-                        <span
-                          className={`
-                            px-3 py-1
-                            rounded-full
-                            text-xs
-                            font-medium
-
-                            ${
-                              invoice.status ===
-                              "Paid"
-                                ? "bg-emerald-500/15 text-emerald-400"
-
-                                : invoice.status ===
-                                  "Pending"
-                                ? "bg-yellow-500/15 text-yellow-400"
-
-                                : invoice.status ===
-                                  "Overdue"
-                                ? "bg-red-500/15 text-red-400"
-
-                                : "bg-gray-500/15 text-gray-400"
-                            }
-                          `}
-                        >
-                          {
-                            invoice.status
-                          }
-                        </span>
-
-                      </td>
-
-                      <td className="px-7 py-5">
-                        UGX {invoice.total}
-                      </td>
-
-                      <td className="px-7 py-5 text-gray-500">
-                        {
-                          invoice.issueDate
-                        }
-                      </td>
-
-                    </tr>
-                  )
-                )}
-
-              </tbody>
-
-            </table>
+            </div>
 
           </div>
 
