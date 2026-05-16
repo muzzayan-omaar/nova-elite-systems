@@ -8,6 +8,7 @@ import {
   BadgePercent,
   Receipt,
   DollarSign,
+  CreditCard,
 } from "lucide-react";
 
 import Invoice from "./admin/Invoice";
