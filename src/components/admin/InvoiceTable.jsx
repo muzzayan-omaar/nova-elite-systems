@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../../api/axios";
 import { toast } from "sonner";
+import InvoiceStatusModal from "./InvoiceStatusModal";
 
 export default function InvoiceTable({
   refresh,
@@ -20,6 +21,12 @@ export default function InvoiceTable({
       console.log(err);
     }
   };
+
+  const [selectedInvoice, setSelectedInvoice] =
+  useState(null);
+
+const [showModal, setShowModal] =
+  useState(false);
 
   const downloadPDF = async (
   id,
@@ -198,18 +205,33 @@ export default function InvoiceTable({
 
                 <td className="px-7 py-5">
 
-                  <span
-                    className="
-                      px-3 py-1
-                      rounded-full
-                      bg-blue-500/10
-                      border border-blue-500/20
-                      text-blue-400
-                      text-xs
-                    "
-                  >
-                    {invoice.status}
-                  </span>
+                  <button
+  onClick={() => {
+    setSelectedInvoice(invoice);
+    setShowModal(true);
+  }}
+  className={`
+    px-3 py-1
+    rounded-full
+    text-xs
+    font-medium
+    transition
+
+    ${
+      invoice.status === "Paid"
+        ? "bg-emerald-500/15 text-emerald-400"
+        : invoice.status ===
+          "Overdue"
+        ? "bg-red-500/15 text-red-400"
+        : invoice.status ===
+          "Cancelled"
+        ? "bg-gray-500/15 text-gray-400"
+        : "bg-yellow-500/15 text-yellow-400"
+    }
+  `}
+>
+  {invoice.status}
+</button>
 
                 </td>
 
@@ -267,4 +289,16 @@ export default function InvoiceTable({
 
     </div>
   );
+
+  {showModal && selectedInvoice && (
+  <InvoiceStatusModal
+    invoice={selectedInvoice}
+    onClose={() =>
+      setShowModal(false)
+    }
+    onUpdated={() => {
+      fetchInvoices();
+    }}
+  />
+)}
 }
