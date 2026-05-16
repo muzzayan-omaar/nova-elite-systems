@@ -96,7 +96,8 @@ const [showModal, setShowModal] =
     }
   };
 
-  return (
+return (
+  <>
     <div
       className="
         rounded-[30px]
@@ -206,32 +207,30 @@ const [showModal, setShowModal] =
                 <td className="px-7 py-5">
 
                   <button
-  onClick={() => {
-    setSelectedInvoice(invoice);
-    setShowModal(true);
-  }}
-  className={`
-    px-3 py-1
-    rounded-full
-    text-xs
-    font-medium
-    transition
+                    onClick={() => {
+                      setSelectedInvoice(invoice);
+                      setShowModal(true);
+                    }}
+                    className={`
+                      px-3 py-1
+                      rounded-full
+                      text-xs
+                      font-medium
+                      transition
 
-    ${
-      invoice.status === "Paid"
-        ? "bg-emerald-500/15 text-emerald-400"
-        : invoice.status ===
-          "Overdue"
-        ? "bg-red-500/15 text-red-400"
-        : invoice.status ===
-          "Cancelled"
-        ? "bg-gray-500/15 text-gray-400"
-        : "bg-yellow-500/15 text-yellow-400"
-    }
-  `}
->
-  {invoice.status}
-</button>
+                      ${
+                        invoice.status === "Paid"
+                          ? "bg-emerald-500/15 text-emerald-400"
+                          : invoice.status === "Overdue"
+                          ? "bg-red-500/15 text-red-400"
+                          : invoice.status === "Cancelled"
+                          ? "bg-gray-500/15 text-gray-400"
+                          : "bg-yellow-500/15 text-yellow-400"
+                      }
+                    `}
+                  >
+                    {invoice.status}
+                  </button>
 
                 </td>
 
@@ -243,28 +242,26 @@ const [showModal, setShowModal] =
 
                   <div className="flex gap-3">
 
-<button
-  onClick={() =>
-    downloadPDF(
-      invoice._id,
-      invoice.invoiceNumber
-    )
-  }
-  className="
-    text-blue-400
-    text-sm
-    hover:text-blue-300
-    transition
-  "
->
-  PDF
-</button>
+                    <button
+                      onClick={() =>
+                        downloadPDF(
+                          invoice._id,
+                          invoice.invoiceNumber
+                        )
+                      }
+                      className="
+                        text-blue-400
+                        text-sm
+                        hover:text-blue-300
+                        transition
+                      "
+                    >
+                      PDF
+                    </button>
 
                     <button
                       onClick={() =>
-                        deleteInvoice(
-                          invoice._id
-                        )
+                        deleteInvoice(invoice._id)
                       }
                       className="
                         text-red-400
@@ -288,17 +285,24 @@ const [showModal, setShowModal] =
       </div>
 
     </div>
-  );
 
-  {showModal && selectedInvoice && (
-  <InvoiceStatusModal
-    invoice={selectedInvoice}
-    onClose={() =>
-      setShowModal(false)
-    }
-    onUpdated={() => {
-      fetchInvoices();
-    }}
-  />
-)}
+    {/* STATUS MODAL */}
+
+    {showModal && selectedInvoice && (
+      <InvoiceStatusModal
+        invoice={selectedInvoice}
+        onClose={() =>
+          setShowModal(false)
+        }
+        onUpdated={() => {
+          fetchInvoices();
+          setShowModal(false);
+        }}
+      />
+    )}
+
+  </>
+);
+
+
 }
