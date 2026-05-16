@@ -12,6 +12,7 @@ import {
 
 import Invoice from "./admin/Invoice";
 import Revenue from "./admin/Revenue";
+import Expenses from "./admin/Expenses";
 
 export default function Admin() {
 
@@ -289,6 +290,11 @@ export default function Admin() {
                 label: "Invoices",
                 icon: <Receipt size={18} />,
               },
+              {
+                id: "expenses",
+                label: "Expenses",
+                icon: <CreditCard size={18} />,
+              }
 
             ].map((item) => (
 
@@ -727,6 +733,11 @@ export default function Admin() {
           {/* REVENUE */}
           {activeTab === "revenue" && (
             <Revenue />
+          )}
+
+          {/* EXPENSES */}
+          {activeTab === "expenses" && (
+            <Expenses />
           )}
 
         </div>
