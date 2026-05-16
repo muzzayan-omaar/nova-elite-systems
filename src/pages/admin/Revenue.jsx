@@ -85,57 +85,44 @@ export default function Revenue() {
 
   /* FILTER LOGIC */
 
-  const filteredInvoices =
-    useMemo(() => {
-      return invoices.filter(
-        (invoice) => {
-          const invoiceDate =
-            invoice.issueDate
-              ? new Date(
-                  invoice.issueDate
-                )
-              : null;
+const filteredInvoices = useMemo(() => {
+  if (!Array.isArray(invoices)) return [];
 
-          const matchesStatus =
-            statusFilter === "All"
-              ? true
-              : invoice.status ===
-                statusFilter;
+  return invoices.filter((invoice) => {
+    const invoiceDate = invoice?.issueDate
+      ? new Date(invoice.issueDate)
+      : null;
 
-          const matchesClient =
-            invoice.clientName
-              ?.toLowerCase()
-              .includes(
-                clientFilter.toLowerCase()
-              );
+    const matchesStatus =
+      statusFilter === "All"
+        ? true
+        : invoice?.status === statusFilter;
 
-          const matchesFrom =
-            fromDate && invoiceDate
-              ? invoiceDate >=
-                new Date(fromDate)
-              : true;
+    const matchesClient =
+      (invoice?.clientName || "")
+        .toLowerCase()
+        .includes(clientFilter.toLowerCase());
 
-          const matchesTo =
-            toDate && invoiceDate
-              ? invoiceDate <=
-                new Date(toDate)
-              : true;
+    const matchesFrom =
+      fromDate && invoiceDate
+        ? !isNaN(invoiceDate) &&
+          invoiceDate >= new Date(fromDate)
+        : true;
 
-          return (
-            matchesStatus &&
-            matchesClient &&
-            matchesFrom &&
-            matchesTo
-          );
-        }
-      );
-    }, [
-      invoices,
-      statusFilter,
-      clientFilter,
-      fromDate,
-      toDate,
-    ]);
+    const matchesTo =
+      toDate && invoiceDate
+        ? !isNaN(invoiceDate) &&
+          invoiceDate <= new Date(toDate)
+        : true;
+
+    return (
+      matchesStatus &&
+      matchesClient &&
+      matchesFrom &&
+      matchesTo
+    );
+  });
+}, [invoices, statusFilter, clientFilter, fromDate, toDate]);
 
   /* FILTERED TOTALS */
 
