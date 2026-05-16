@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import Invoice from "./admin/Invoice";
+import Revenue from "./pages/admin/Revenue";
 
 export default function Admin() {
 
@@ -716,6 +717,11 @@ export default function Admin() {
           {/* INVOICES */}
           {activeTab === "invoices" && (
             <Invoice />
+          )}
+
+          {/* REVENUE */}
+          {activeTab === "revenue" && (
+            <Revenue />
           )}
 
         </div>
