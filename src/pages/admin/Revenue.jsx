@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import axios from "../../api/axios";
 
@@ -7,6 +7,8 @@ import {
   FileText,
   AlertTriangle,
   Clock3,
+  Search,
+  Filter,
 } from "lucide-react";
 
 import {
@@ -20,11 +22,25 @@ import {
   PieChart,
   Pie,
   Cell,
+  BarChart,
+  Bar,
 } from "recharts";
 
 export default function Revenue() {
   const [analytics, setAnalytics] =
     useState(null);
+
+  const [fromDate, setFromDate] =
+    useState("");
+
+  const [toDate, setToDate] =
+    useState("");
+
+  const [statusFilter, setStatusFilter] =
+    useState("All");
+
+  const [clientFilter, setClientFilter] =
+    useState("");
 
   const fetchAnalytics =
     async () => {
@@ -45,6 +61,13 @@ export default function Revenue() {
     fetchAnalytics();
   }, []);
 
+  const COLORS = [
+    "#3b82f6",
+    "#eab308",
+    "#ef4444",
+    "#6b7280",
+  ];
+
   if (!analytics) {
     return (
       <div className="text-white p-10">
@@ -57,13 +80,102 @@ export default function Revenue() {
     totals,
     revenueChartData,
     invoiceStatusData,
+    invoices = [],
   } = analytics;
 
-  const COLORS = [
-    "#3b82f6",
-    "#eab308",
-    "#ef4444",
-    "#6b7280",
+  /* FILTER LOGIC */
+
+  const filteredInvoices =
+    useMemo(() => {
+      return invoices.filter(
+        (invoice) => {
+          const invoiceDate =
+            invoice.issueDate
+              ? new Date(
+                  invoice.issueDate
+                )
+              : null;
+
+          const matchesStatus =
+            statusFilter === "All"
+              ? true
+              : invoice.status ===
+                statusFilter;
+
+          const matchesClient =
+            invoice.clientName
+              ?.toLowerCase()
+              .includes(
+                clientFilter.toLowerCase()
+              );
+
+          const matchesFrom =
+            fromDate && invoiceDate
+              ? invoiceDate >=
+                new Date(fromDate)
+              : true;
+
+          const matchesTo =
+            toDate && invoiceDate
+              ? invoiceDate <=
+                new Date(toDate)
+              : true;
+
+          return (
+            matchesStatus &&
+            matchesClient &&
+            matchesFrom &&
+            matchesTo
+          );
+        }
+      );
+    }, [
+      invoices,
+      statusFilter,
+      clientFilter,
+      fromDate,
+      toDate,
+    ]);
+
+  /* FILTERED TOTALS */
+
+  const filteredRevenue =
+    filteredInvoices.reduce(
+      (acc, invoice) =>
+        acc + Number(invoice.total),
+      0
+    );
+
+  const filteredPaid =
+    filteredInvoices.filter(
+      (i) => i.status === "Paid"
+    ).length;
+
+  const filteredPending =
+    filteredInvoices.filter(
+      (i) => i.status === "Pending"
+    ).length;
+
+  const filteredOverdue =
+    filteredInvoices.filter(
+      (i) => i.status === "Overdue"
+    ).length;
+
+  /* STATUS CHART */
+
+  const dynamicStatusData = [
+    {
+      name: "Paid",
+      value: filteredPaid,
+    },
+    {
+      name: "Pending",
+      value: filteredPending,
+    },
+    {
+      name: "Overdue",
+      value: filteredOverdue,
+    },
   ];
 
   return (
@@ -126,6 +238,200 @@ export default function Revenue() {
 
         </div>
 
+        {/* FILTERS */}
+
+        <div
+          className="
+            rounded-[30px]
+            border border-white/10
+            bg-white/[0.03]
+            backdrop-blur-xl
+            p-6
+            mb-10
+          "
+        >
+
+          <div
+            className="
+              flex
+              items-center
+              gap-3
+              mb-6
+            "
+          >
+
+            <div
+              className="
+                w-11 h-11
+                rounded-2xl
+                bg-blue-500/10
+                flex
+                items-center
+                justify-center
+                text-blue-400
+              "
+            >
+              <Filter size={18} />
+            </div>
+
+            <div>
+
+              <p className="text-sm text-gray-400">
+                Revenue Filters
+              </p>
+
+              <h3 className="text-xl font-semibold">
+                Analytics Controls
+              </h3>
+
+            </div>
+
+          </div>
+
+          <div
+            className="
+              grid
+              md:grid-cols-2
+              xl:grid-cols-4
+              gap-4
+            "
+          >
+
+            {/* SEARCH */}
+
+            <div
+              className="
+                relative
+              "
+            >
+
+              <Search
+                size={16}
+                className="
+                  absolute
+                  left-4
+                  top-1/2
+                  -translate-y-1/2
+                  text-gray-500
+                "
+              />
+
+              <input
+                type="text"
+                placeholder="Search Client..."
+                value={clientFilter}
+                onChange={(e) =>
+                  setClientFilter(
+                    e.target.value
+                  )
+                }
+                className="
+                  w-full
+                  bg-[#0B1220]
+                  border border-white/5
+                  rounded-2xl
+                  h-14
+                  pl-11
+                  pr-4
+                  outline-none
+                  text-sm
+                  focus:border-blue-500/40
+                "
+              />
+
+            </div>
+
+            {/* STATUS */}
+
+            <select
+              value={statusFilter}
+              onChange={(e) =>
+                setStatusFilter(
+                  e.target.value
+                )
+              }
+              className="
+                bg-[#0B1220]
+                border border-white/5
+                rounded-2xl
+                h-14
+                px-4
+                outline-none
+                text-sm
+                focus:border-blue-500/40
+              "
+            >
+
+              <option value="All">
+                All Status
+              </option>
+
+              <option value="Paid">
+                Paid
+              </option>
+
+              <option value="Pending">
+                Pending
+              </option>
+
+              <option value="Overdue">
+                Overdue
+              </option>
+
+              <option value="Cancelled">
+                Cancelled
+              </option>
+
+            </select>
+
+            {/* FROM */}
+
+            <input
+              type="date"
+              value={fromDate}
+              onChange={(e) =>
+                setFromDate(
+                  e.target.value
+                )
+              }
+              className="
+                bg-[#0B1220]
+                border border-white/5
+                rounded-2xl
+                h-14
+                px-4
+                outline-none
+                text-sm
+                focus:border-blue-500/40
+              "
+            />
+
+            {/* TO */}
+
+            <input
+              type="date"
+              value={toDate}
+              onChange={(e) =>
+                setToDate(
+                  e.target.value
+                )
+              }
+              className="
+                bg-[#0B1220]
+                border border-white/5
+                rounded-2xl
+                h-14
+                px-4
+                outline-none
+                text-sm
+                focus:border-blue-500/40
+              "
+            />
+
+          </div>
+
+        </div>
+
         {/* KPI CARDS */}
 
         <div
@@ -140,8 +446,9 @@ export default function Revenue() {
 
           {[
             {
-              title: "Total Revenue",
-              value: `UGX ${totals.totalRevenue}`,
+              title:
+                "Filtered Revenue",
+              value: `UGX ${filteredRevenue.toLocaleString()}`,
               icon: (
                 <DollarSign size={20} />
               ),
@@ -150,9 +457,8 @@ export default function Revenue() {
             },
 
             {
-              title: "Paid Invoices",
-              value:
-                totals.paidInvoices,
+              title: "Paid",
+              value: filteredPaid,
               icon: (
                 <FileText size={20} />
               ),
@@ -163,7 +469,7 @@ export default function Revenue() {
             {
               title: "Pending",
               value:
-                totals.pendingInvoices,
+                filteredPending,
               icon: (
                 <Clock3 size={20} />
               ),
@@ -174,7 +480,7 @@ export default function Revenue() {
             {
               title: "Overdue",
               value:
-                totals.overdueInvoices,
+                filteredOverdue,
               icon: (
                 <AlertTriangle size={20} />
               ),
@@ -244,6 +550,7 @@ export default function Revenue() {
             grid
             xl:grid-cols-[1.5fr_450px]
             gap-6
+            mb-10
           "
         >
 
@@ -376,14 +683,14 @@ export default function Revenue() {
 
                   <Pie
                     data={
-                      invoiceStatusData
+                      dynamicStatusData
                     }
                     dataKey="value"
                     nameKey="name"
                     outerRadius={120}
                   >
 
-                    {invoiceStatusData.map(
+                    {dynamicStatusData.map(
                       (
                         entry,
                         index
@@ -407,48 +714,167 @@ export default function Revenue() {
 
             </div>
 
-            {/* LEGEND */}
+          </div>
 
-            <div className="mt-5 space-y-3">
+        </div>
 
-              {invoiceStatusData.map(
-                (item, index) => (
-                  <div
-                    key={index}
-                    className="
-                      flex
-                      items-center
-                      justify-between
-                    "
-                  >
+        {/* RECENT INVOICES */}
 
-                    <div className="flex items-center gap-3">
+        <div
+          className="
+            rounded-[30px]
+            border border-white/10
+            bg-white/[0.03]
+            backdrop-blur-xl
+            overflow-hidden
+          "
+        >
 
-                      <div
-                        className="
-                          w-3 h-3 rounded-full
-                        "
-                        style={{
-                          background:
-                            COLORS[index],
-                        }}
-                      />
+          <div
+            className="
+              px-7 py-6
+              border-b border-white/10
+            "
+          >
 
-                      <span className="text-sm text-gray-300">
-                        {item.name}
-                      </span>
+            <p
+              className="
+                uppercase
+                tracking-[0.2em]
+                text-xs
+                text-blue-400
+                mb-3
+              "
+            >
+              Financial Records
+            </p>
 
-                    </div>
+            <h2
+              className="
+                text-2xl
+                font-semibold
+              "
+            >
+              Invoice Breakdown
+            </h2>
 
-                    <span className="text-sm text-gray-400">
-                      {item.value}
-                    </span>
+          </div>
 
-                  </div>
-                )
-              )}
+          <div className="overflow-x-auto">
 
-            </div>
+            <table className="w-full">
+
+              <thead>
+
+                <tr
+                  className="
+                    border-b border-white/10
+                    text-left
+                  "
+                >
+
+                  {[
+                    "Invoice",
+                    "Client",
+                    "Status",
+                    "Amount",
+                    "Date",
+                  ].map((item, index) => (
+                    <th
+                      key={index}
+                      className="
+                        px-7 py-5
+                        text-xs
+                        uppercase
+                        tracking-[0.2em]
+                        text-gray-500
+                        font-medium
+                      "
+                    >
+                      {item}
+                    </th>
+                  ))}
+
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                {filteredInvoices.map(
+                  (invoice) => (
+
+                    <tr
+                      key={invoice._id}
+                      className="
+                        border-b border-white/5
+                        hover:bg-white/[0.02]
+                        transition
+                      "
+                    >
+
+                      <td className="px-7 py-5">
+                        {
+                          invoice.invoiceNumber
+                        }
+                      </td>
+
+                      <td className="px-7 py-5 text-gray-300">
+                        {
+                          invoice.clientName
+                        }
+                      </td>
+
+                      <td className="px-7 py-5">
+
+                        <span
+                          className={`
+                            px-3 py-1
+                            rounded-full
+                            text-xs
+                            font-medium
+
+                            ${
+                              invoice.status ===
+                              "Paid"
+                                ? "bg-emerald-500/15 text-emerald-400"
+                                : invoice.status ===
+                                  "Overdue"
+                                ? "bg-red-500/15 text-red-400"
+                                : invoice.status ===
+                                  "Cancelled"
+                                ? "bg-gray-500/15 text-gray-400"
+                                : "bg-yellow-500/15 text-yellow-400"
+                            }
+                          `}
+                        >
+                          {
+                            invoice.status
+                          }
+                        </span>
+
+                      </td>
+
+                      <td className="px-7 py-5">
+                        UGX{" "}
+                        {Number(
+                          invoice.total
+                        ).toLocaleString()}
+                      </td>
+
+                      <td className="px-7 py-5 text-gray-500">
+                        {
+                          invoice.issueDate
+                        }
+                      </td>
+
+                    </tr>
+                  )
+                )}
+
+              </tbody>
+
+            </table>
 
           </div>
 
