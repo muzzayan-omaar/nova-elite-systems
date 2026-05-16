@@ -278,7 +278,11 @@ export default function Admin() {
                 label: "Offers",
                 icon: <BadgePercent size={18} />,
               },
-
+              {
+                id: "revenue",
+                label: "Revenue",
+                icon: <DollarSign size={18} />,
+              },
               {
                 id: "invoices",
                 label: "Invoices",
