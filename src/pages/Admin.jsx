@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 import Invoice from "./admin/Invoice";
-import Revenue from "./pages/admin/Revenue";
+import Revenue from "./admin/Revenue";
 
 export default function Admin() {
 
