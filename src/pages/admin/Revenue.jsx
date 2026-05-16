@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import axios from "../../api/axios";
 
@@ -8,7 +8,6 @@ import {
   AlertTriangle,
   Clock3,
   Search,
-  Filter,
 } from "lucide-react";
 
 import {
@@ -22,13 +21,13 @@ import {
   PieChart,
   Pie,
   Cell,
-  BarChart,
-  Bar,
 } from "recharts";
 
 export default function Revenue() {
   const [analytics, setAnalytics] =
     useState(null);
+
+  /* FILTER STATES */
 
   const [fromDate, setFromDate] =
     useState("");
@@ -41,6 +40,8 @@ export default function Revenue() {
 
   const [clientFilter, setClientFilter] =
     useState("");
+
+  /* FETCH ANALYTICS */
 
   const fetchAnalytics =
     async () => {
@@ -61,12 +62,7 @@ export default function Revenue() {
     fetchAnalytics();
   }, []);
 
-  const COLORS = [
-    "#3b82f6",
-    "#eab308",
-    "#ef4444",
-    "#6b7280",
-  ];
+  /* LOADING */
 
   if (!analytics) {
     return (
@@ -83,100 +79,56 @@ export default function Revenue() {
     invoices = [],
   } = analytics;
 
+  const COLORS = [
+    "#3b82f6",
+    "#eab308",
+    "#ef4444",
+    "#6b7280",
+  ];
+
   /* FILTER LOGIC */
 
   const filteredInvoices =
-    useMemo(() => {
-      return invoices.filter(
-        (invoice) => {
-          const invoiceDate =
-            invoice.issueDate
-              ? new Date(
-                  invoice.issueDate
-                )
-              : null;
+    invoices.filter((invoice) => {
 
-          const matchesStatus =
-            statusFilter === "All"
-              ? true
-              : invoice.status ===
-                statusFilter;
+      const invoiceDate =
+        new Date(invoice.issueDate);
 
-          const matchesClient =
-            invoice.clientName
-              ?.toLowerCase()
-              .includes(
-                clientFilter.toLowerCase()
-              );
+      const from =
+        fromDate
+          ? new Date(fromDate)
+          : null;
 
-          const matchesFrom =
-            fromDate && invoiceDate
-              ? invoiceDate >=
-                new Date(fromDate)
-              : true;
+      const to =
+        toDate
+          ? new Date(toDate)
+          : null;
 
-          const matchesTo =
-            toDate && invoiceDate
-              ? invoiceDate <=
-                new Date(toDate)
-              : true;
+      const matchesDate =
+        (!from ||
+          invoiceDate >= from) &&
+        (!to ||
+          invoiceDate <= to);
 
-          return (
-            matchesStatus &&
-            matchesClient &&
-            matchesFrom &&
-            matchesTo
+      const matchesStatus =
+        statusFilter === "All"
+          ? true
+          : invoice.status ===
+            statusFilter;
+
+      const matchesClient =
+        invoice.clientName
+          ?.toLowerCase()
+          .includes(
+            clientFilter.toLowerCase()
           );
-        }
+
+      return (
+        matchesDate &&
+        matchesStatus &&
+        matchesClient
       );
-    }, [
-      invoices,
-      statusFilter,
-      clientFilter,
-      fromDate,
-      toDate,
-    ]);
-
-  /* FILTERED TOTALS */
-
-  const filteredRevenue =
-    filteredInvoices.reduce(
-      (acc, invoice) =>
-        acc + Number(invoice.total),
-      0
-    );
-
-  const filteredPaid =
-    filteredInvoices.filter(
-      (i) => i.status === "Paid"
-    ).length;
-
-  const filteredPending =
-    filteredInvoices.filter(
-      (i) => i.status === "Pending"
-    ).length;
-
-  const filteredOverdue =
-    filteredInvoices.filter(
-      (i) => i.status === "Overdue"
-    ).length;
-
-  /* STATUS CHART */
-
-  const dynamicStatusData = [
-    {
-      name: "Paid",
-      value: filteredPaid,
-    },
-    {
-      name: "Pending",
-      value: filteredPending,
-    },
-    {
-      name: "Overdue",
-      value: filteredOverdue,
-    },
-  ];
+    });
 
   return (
     <section
@@ -242,100 +194,76 @@ export default function Revenue() {
 
         <div
           className="
-            rounded-[30px]
+            rounded-[28px]
             border border-white/10
             bg-white/[0.03]
             backdrop-blur-xl
-            p-6
-            mb-10
+            p-5
+            mb-8
           "
         >
 
           <div
             className="
-              flex
-              items-center
-              gap-3
-              mb-6
-            "
-          >
-
-            <div
-              className="
-                w-11 h-11
-                rounded-2xl
-                bg-blue-500/10
-                flex
-                items-center
-                justify-center
-                text-blue-400
-              "
-            >
-              <Filter size={18} />
-            </div>
-
-            <div>
-
-              <p className="text-sm text-gray-400">
-                Revenue Filters
-              </p>
-
-              <h3 className="text-xl font-semibold">
-                Analytics Controls
-              </h3>
-
-            </div>
-
-          </div>
-
-          <div
-            className="
               grid
-              md:grid-cols-2
-              xl:grid-cols-4
+              md:grid-cols-4
               gap-4
             "
           >
 
-            {/* SEARCH */}
+            {/* FROM DATE */}
 
-            <div
-              className="
-                relative
-              "
-            >
+            <div>
 
-              <Search
-                size={16}
-                className="
-                  absolute
-                  left-4
-                  top-1/2
-                  -translate-y-1/2
-                  text-gray-500
-                "
-              />
+              <p className="text-xs text-gray-500 mb-2 uppercase">
+                From Date
+              </p>
 
               <input
-                type="text"
-                placeholder="Search Client..."
-                value={clientFilter}
+                type="date"
+                value={fromDate}
                 onChange={(e) =>
-                  setClientFilter(
+                  setFromDate(
                     e.target.value
                   )
                 }
                 className="
                   w-full
                   bg-[#0B1220]
-                  border border-white/5
+                  border border-white/10
                   rounded-2xl
-                  h-14
-                  pl-11
-                  pr-4
-                  outline-none
+                  p-3
                   text-sm
-                  focus:border-blue-500/40
+                  outline-none
+                "
+              />
+
+            </div>
+
+            {/* TO DATE */}
+
+            <div>
+
+              <p className="text-xs text-gray-500 mb-2 uppercase">
+                To Date
+              </p>
+
+              <input
+                type="date"
+                value={toDate}
+                onChange={(e) =>
+                  setToDate(
+                    e.target.value
+                  )
+                }
+                className="
+                  w-full
+                  bg-[#0B1220]
+                  border border-white/10
+                  rounded-2xl
+                  p-3
+                  text-sm
+                  outline-none
                 "
               />
 
@@ -343,90 +271,99 @@ export default function Revenue() {
 
             {/* STATUS */}
 
-            <select
-              value={statusFilter}
-              onChange={(e) =>
-                setStatusFilter(
-                  e.target.value
-                )
-              }
-              className="
-                bg-[#0B1220]
-                border border-white/5
-                rounded-2xl
-                h-14
-                px-4
-                outline-none
-                text-sm
-                focus:border-blue-500/40
-              "
-            >
+            <div>
 
-              <option value="All">
-                All Status
-              </option>
+              <p className="text-xs text-gray-500 mb-2 uppercase">
+                Status
+              </p>
 
-              <option value="Paid">
-                Paid
-              </option>
+              <select
+                value={statusFilter}
+                onChange={(e) =>
+                  setStatusFilter(
+                    e.target.value
+                  )
+                }
+                className="
+                  w-full
+                  bg-[#0B1220]
+                  border border-white/10
+                  rounded-2xl
+                  p-3
+                  text-sm
+                  outline-none
+                "
+              >
 
-              <option value="Pending">
-                Pending
-              </option>
+                <option>
+                  All
+                </option>
 
-              <option value="Overdue">
-                Overdue
-              </option>
+                <option>
+                  Paid
+                </option>
 
-              <option value="Cancelled">
-                Cancelled
-              </option>
+                <option>
+                  Pending
+                </option>
 
-            </select>
+                <option>
+                  Overdue
+                </option>
 
-            {/* FROM */}
+                <option>
+                  Cancelled
+                </option>
 
-            <input
-              type="date"
-              value={fromDate}
-              onChange={(e) =>
-                setFromDate(
-                  e.target.value
-                )
-              }
-              className="
-                bg-[#0B1220]
-                border border-white/5
-                rounded-2xl
-                h-14
-                px-4
-                outline-none
-                text-sm
-                focus:border-blue-500/40
-              "
-            />
+              </select>
 
-            {/* TO */}
+            </div>
 
-            <input
-              type="date"
-              value={toDate}
-              onChange={(e) =>
-                setToDate(
-                  e.target.value
-                )
-              }
-              className="
-                bg-[#0B1220]
-                border border-white/5
-                rounded-2xl
-                h-14
-                px-4
-                outline-none
-                text-sm
-                focus:border-blue-500/40
-              "
-            />
+            {/* CLIENT SEARCH */}
+
+            <div>
+
+              <p className="text-xs text-gray-500 mb-2 uppercase">
+                Search Client
+              </p>
+
+              <div className="relative">
+
+                <Search
+                  size={16}
+                  className="
+                    absolute
+                    left-3
+                    top-1/2
+                    -translate-y-1/2
+                    text-gray-500
+                  "
+                />
+
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={clientFilter}
+                  onChange={(e) =>
+                    setClientFilter(
+                      e.target.value
+                    )
+                  }
+                  className="
+                    w-full
+                    pl-10
+                    bg-[#0B1220]
+                    border border-white/10
+                    rounded-2xl
+                    p-3
+                    text-sm
+                    outline-none
+                  "
+                />
+
+              </div>
+
+            </div>
 
           </div>
 
@@ -446,9 +383,8 @@ export default function Revenue() {
 
           {[
             {
-              title:
-                "Filtered Revenue",
-              value: `UGX ${filteredRevenue.toLocaleString()}`,
+              title: "Total Revenue",
+              value: `UGX ${totals.totalRevenue}`,
               icon: (
                 <DollarSign size={20} />
               ),
@@ -457,8 +393,9 @@ export default function Revenue() {
             },
 
             {
-              title: "Paid",
-              value: filteredPaid,
+              title: "Paid Invoices",
+              value:
+                totals.paidInvoices,
               icon: (
                 <FileText size={20} />
               ),
@@ -469,7 +406,7 @@ export default function Revenue() {
             {
               title: "Pending",
               value:
-                filteredPending,
+                totals.pendingInvoices,
               icon: (
                 <Clock3 size={20} />
               ),
@@ -480,7 +417,7 @@ export default function Revenue() {
             {
               title: "Overdue",
               value:
-                filteredOverdue,
+                totals.overdueInvoices,
               icon: (
                 <AlertTriangle size={20} />
               ),
@@ -554,7 +491,7 @@ export default function Revenue() {
           "
         >
 
-          {/* REVENUE CHART */}
+          {/* LINE CHART */}
 
           <div
             className="
@@ -683,14 +620,14 @@ export default function Revenue() {
 
                   <Pie
                     data={
-                      dynamicStatusData
+                      invoiceStatusData
                     }
                     dataKey="value"
                     nameKey="name"
                     outerRadius={120}
                   >
 
-                    {dynamicStatusData.map(
+                    {invoiceStatusData.map(
                       (
                         entry,
                         index
@@ -718,7 +655,7 @@ export default function Revenue() {
 
         </div>
 
-        {/* RECENT INVOICES */}
+        {/* INVOICE TABLE */}
 
         <div
           className="
@@ -737,25 +674,13 @@ export default function Revenue() {
             "
           >
 
-            <p
-              className="
-                uppercase
-                tracking-[0.2em]
-                text-xs
-                text-blue-400
-                mb-3
-              "
-            >
-              Financial Records
-            </p>
-
             <h2
               className="
                 text-2xl
                 font-semibold
               "
             >
-              Invoice Breakdown
+              Revenue Records
             </h2>
 
           </div>
@@ -779,9 +704,9 @@ export default function Revenue() {
                     "Status",
                     "Amount",
                     "Date",
-                  ].map((item, index) => (
+                  ].map((item) => (
                     <th
-                      key={index}
+                      key={item}
                       className="
                         px-7 py-5
                         text-xs
@@ -838,13 +763,16 @@ export default function Revenue() {
                               invoice.status ===
                               "Paid"
                                 ? "bg-emerald-500/15 text-emerald-400"
+
+                                : invoice.status ===
+                                  "Pending"
+                                ? "bg-yellow-500/15 text-yellow-400"
+
                                 : invoice.status ===
                                   "Overdue"
                                 ? "bg-red-500/15 text-red-400"
-                                : invoice.status ===
-                                  "Cancelled"
-                                ? "bg-gray-500/15 text-gray-400"
-                                : "bg-yellow-500/15 text-yellow-400"
+
+                                : "bg-gray-500/15 text-gray-400"
                             }
                           `}
                         >
@@ -856,10 +784,7 @@ export default function Revenue() {
                       </td>
 
                       <td className="px-7 py-5">
-                        UGX{" "}
-                        {Number(
-                          invoice.total
-                        ).toLocaleString()}
+                        UGX {invoice.total}
                       </td>
 
                       <td className="px-7 py-5 text-gray-500">
