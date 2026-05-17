@@ -287,19 +287,101 @@ export default function InvoiceForm({
 
                 <div className="grid md:grid-cols-12 gap-4">
 
-                  <div className="md:col-span-5">
-                    <Input
-                      placeholder="Service Name"
-                      value={item.service}
-                      onChange={(e) =>
-                        updateItem(
-                          index,
-                          "service",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </div>
+                 <div className="md:col-span-5">
+
+  <select
+    value={item.service}
+    onChange={(e) => {
+
+      const service =
+        e.target.value;
+
+      let department = "";
+
+      if (
+        [
+          "Web Development",
+          "App Development",
+          "SAAS Solutions",
+        ].includes(service)
+      ) {
+        department =
+          "Digital Solutions";
+      }
+
+      if (
+        [
+          "CCTV Systems",
+          "Access Control",
+          "Networking",
+        ].includes(service)
+      ) {
+        department =
+          "Infra & Security";
+      }
+
+      updateItem(
+        index,
+        "service",
+        service
+      );
+
+      updateItem(
+        index,
+        "department",
+        department
+      );
+    }}
+    className="
+      w-full
+      h-[54px]
+      rounded-2xl
+      border border-white/10
+      bg-white/[0.03]
+      px-5
+      text-sm
+      text-white
+      outline-none
+      focus:border-blue-500/40
+      transition-all
+    "
+  >
+
+    <option value="">
+      Select Service
+    </option>
+
+    {/* DIGITAL SOLUTIONS */}
+
+    <option value="Web Development">
+      Web Development
+    </option>
+
+    <option value="App Development">
+      App Development
+    </option>
+
+    <option value="SAAS Solutions">
+      SAAS Solutions
+    </option>
+
+    {/* INFRA & SECURITY */}
+
+    <option value="CCTV Systems">
+      CCTV Systems
+    </option>
+
+    <option value="Access Control">
+      Access Control
+    </option>
+
+    <option value="Networking">
+      Networking
+    </option>
+
+  </select>
+
+</div>
 
                   <div className="md:col-span-2">
                     <Input
