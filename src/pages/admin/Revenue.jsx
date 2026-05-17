@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import axios from "../../api/axios";
 
@@ -8,6 +8,7 @@ import {
   AlertTriangle,
   Clock3,
   Search,
+  Wallet,
 } from "lucide-react";
 
 import {
@@ -24,8 +25,8 @@ import {
 } from "recharts";
 
 export default function Revenue() {
-  const [invoices, setInvoices] =
-    useState([]);
+  const [analytics, setAnalytics] =
+    useState(null);
 
   const [loading, setLoading] =
     useState(true);
@@ -44,17 +45,43 @@ export default function Revenue() {
   const [clientFilter, setClientFilter] =
     useState("");
 
-  /* FETCH */
+  /* FETCH ANALYTICS */
 
-  const fetchInvoices =
+  const fetchAnalytics =
     async () => {
       try {
+        setLoading(true);
+
+        const params = {};
+
+        if (fromDate)
+          params.from = fromDate;
+
+        if (toDate)
+          params.to = toDate;
+
+        if (
+          statusFilter &&
+          statusFilter !== "All"
+        ) {
+          params.status =
+            statusFilter;
+        }
+
+        if (clientFilter) {
+          params.client =
+            clientFilter;
+        }
+
         const res =
           await axios.get(
-            "/invoices"
+            "/revenue/analytics",
+            {
+              params,
+            }
           );
 
-        setInvoices(res.data);
+        setAnalytics(res.data);
 
       } catch (err) {
         console.log(err);
@@ -64,225 +91,16 @@ export default function Revenue() {
       }
     };
 
+  /* AUTO REFRESH */
+
   useEffect(() => {
-    fetchInvoices();
-  }, []);
-
-  /* FILTERED INVOICES */
-
-  const filteredInvoices =
-    useMemo(() => {
-      return invoices.filter(
-        (invoice) => {
-
-          const invoiceDate =
-            invoice.issueDate
-              ? new Date(
-                  invoice.issueDate
-                )
-              : null;
-
-          const from =
-            fromDate
-              ? new Date(fromDate)
-              : null;
-
-          const to =
-            toDate
-              ? new Date(toDate)
-              : null;
-
-          const matchesDate =
-            (!from ||
-              invoiceDate >= from) &&
-            (!to ||
-              invoiceDate <= to);
-
-          const matchesStatus =
-            statusFilter ===
-            "All"
-              ? true
-              : invoice.status ===
-                statusFilter;
-
-          const matchesClient =
-            invoice.clientName
-              ?.toLowerCase()
-              .includes(
-                clientFilter.toLowerCase()
-              );
-
-          return (
-            matchesDate &&
-            matchesStatus &&
-            matchesClient
-          );
-        }
-      );
-    }, [
-      invoices,
-      fromDate,
-      toDate,
-      statusFilter,
-      clientFilter,
-    ]);
-
-  /* KPI TOTALS */
-
-  const analytics =
-    useMemo(() => {
-
-      const totalRevenue =
-        filteredInvoices
-          .filter(
-            (invoice) =>
-              invoice.status ===
-              "Paid"
-          )
-          .reduce(
-            (acc, invoice) =>
-              acc +
-              Number(
-                invoice.total || 0
-              ),
-            0
-          );
-
-      const paidInvoices =
-        filteredInvoices.filter(
-          (invoice) =>
-            invoice.status ===
-            "Paid"
-        ).length;
-
-      const pendingInvoices =
-        filteredInvoices.filter(
-          (invoice) =>
-            invoice.status ===
-            "Pending"
-        ).length;
-
-      const overdueInvoices =
-        filteredInvoices.filter(
-          (invoice) =>
-            invoice.status ===
-            "Overdue"
-        ).length;
-
-      return {
-        totalRevenue,
-        paidInvoices,
-        pendingInvoices,
-        overdueInvoices,
-      };
-    }, [filteredInvoices]);
-
-  /* MONTHLY CHART */
-
-  const revenueChartData =
-    useMemo(() => {
-
-      const grouped = {};
-
-      filteredInvoices.forEach(
-        (invoice) => {
-
-          if (
-            invoice.status !==
-            "Paid"
-          )
-            return;
-
-          const date =
-            new Date(
-              invoice.issueDate
-            );
-
-          const month =
-            date.toLocaleString(
-              "default",
-              {
-                month: "short",
-              }
-            );
-
-          if (!grouped[month]) {
-            grouped[month] = 0;
-          }
-
-          grouped[month] +=
-            Number(
-              invoice.total || 0
-            );
-        }
-      );
-
-      return Object.keys(grouped).map(
-        (month) => ({
-          month,
-          revenue:
-            grouped[month],
-        })
-      );
-    }, [filteredInvoices]);
-
-  /* PIE DATA */
-
-  const invoiceStatusData =
-    useMemo(() => {
-
-      const paid =
-        filteredInvoices.filter(
-          (i) =>
-            i.status ===
-            "Paid"
-        ).length;
-
-      const pending =
-        filteredInvoices.filter(
-          (i) =>
-            i.status ===
-            "Pending"
-        ).length;
-
-      const overdue =
-        filteredInvoices.filter(
-          (i) =>
-            i.status ===
-            "Overdue"
-        ).length;
-
-      const cancelled =
-        filteredInvoices.filter(
-          (i) =>
-            i.status ===
-            "Cancelled"
-        ).length;
-
-      return [
-        {
-          name: "Paid",
-          value: paid,
-        },
-
-        {
-          name: "Pending",
-          value: pending,
-        },
-
-        {
-          name: "Overdue",
-          value: overdue,
-        },
-
-        {
-          name: "Cancelled",
-          value: cancelled,
-        },
-      ];
-    }, [filteredInvoices]);
-
-  /* COLORS */
+    fetchAnalytics();
+  }, [
+    fromDate,
+    toDate,
+    statusFilter,
+    clientFilter,
+  ]);
 
   const COLORS = [
     "#3b82f6",
@@ -291,13 +109,19 @@ export default function Revenue() {
     "#6b7280",
   ];
 
-  if (loading) {
+  if (loading || !analytics) {
     return (
       <div className="text-white p-8">
         Loading revenue...
       </div>
     );
   }
+
+  const {
+    totals,
+    revenueChartData,
+    invoiceStatusData,
+  } = analytics;
 
   return (
     <section
@@ -327,7 +151,7 @@ export default function Revenue() {
 
       <div className="relative z-10">
 
-        {/* TOP BAR */}
+        {/* HEADER */}
 
         <div
           className="
@@ -337,7 +161,7 @@ export default function Revenue() {
             xl:items-center
             xl:justify-between
             gap-5
-            mb-8
+            mb-7
           "
         >
 
@@ -492,13 +316,13 @@ export default function Revenue() {
 
         </div>
 
-        {/* KPI ROW */}
+        {/* KPI */}
 
         <div
           className="
             grid
             grid-cols-2
-            xl:grid-cols-4
+            xl:grid-cols-5
             gap-4
             mb-6
           "
@@ -507,8 +331,8 @@ export default function Revenue() {
           {[
             {
               label:
-                "Revenue",
-              value: `UGX ${analytics.totalRevenue.toLocaleString()}`,
+                "Net Profit",
+              value: `UGX ${totals.netProfit.toLocaleString()}`,
               icon: (
                 <DollarSign
                   size={16}
@@ -520,9 +344,8 @@ export default function Revenue() {
 
             {
               label:
-                "Paid",
-              value:
-                analytics.paidInvoices,
+                "Revenue",
+              value: `UGX ${totals.grossRevenue.toLocaleString()}`,
               icon: (
                 <FileText
                   size={16}
@@ -534,9 +357,22 @@ export default function Revenue() {
 
             {
               label:
+                "Expenses",
+              value: `UGX ${totals.totalExpenses.toLocaleString()}`,
+              icon: (
+                <Wallet
+                  size={16}
+                />
+              ),
+              color:
+                "text-red-400",
+            },
+
+            {
+              label:
                 "Pending",
               value:
-                analytics.pendingInvoices,
+                totals.pendingInvoices,
               icon: (
                 <Clock3
                   size={16}
@@ -550,14 +386,14 @@ export default function Revenue() {
               label:
                 "Overdue",
               value:
-                analytics.overdueInvoices,
+                totals.overdueInvoices,
               icon: (
                 <AlertTriangle
                   size={16}
                 />
               ),
               color:
-                "text-red-400",
+                "text-orange-400",
             },
           ].map((item, index) => (
 
@@ -584,10 +420,10 @@ export default function Revenue() {
 
                 <p
                   className="
-                    text-xs
+                    text-[10px]
                     text-gray-500
                     uppercase
-                    tracking-[0.15em]
+                    tracking-[0.18em]
                   "
                 >
                   {item.label}
@@ -603,7 +439,7 @@ export default function Revenue() {
 
               <h2
                 className="
-                  text-xl
+                  text-lg
                   font-semibold
                 "
               >
@@ -625,7 +461,7 @@ export default function Revenue() {
           "
         >
 
-          {/* REVENUE CHART */}
+          {/* LINE CHART */}
 
           <div
             className="
