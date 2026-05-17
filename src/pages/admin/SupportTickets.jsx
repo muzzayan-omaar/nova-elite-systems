@@ -8,6 +8,9 @@ import axios from "../../api/axios";
 import {
   Headphones,
   Trash2,
+  Eye,
+  Mail,
+  X,
 } from "lucide-react";
 
 import { toast } from "sonner";
@@ -19,6 +22,12 @@ export default function SupportTickets() {
 
   const [loading, setLoading] =
     useState(true);
+
+    const [selectedTicket, setSelectedTicket] =
+  useState(null);
+
+  const [loading, setLoading] =
+  useState(true);
 
   /* FETCH */
 
@@ -339,24 +348,55 @@ export default function SupportTickets() {
 
                     <td className="p-5">
 
-                      <button
-                        onClick={() =>
-                          deleteTicket(
-                            ticket._id
-                          )
-                        }
-                        className="
-                          text-red-400
-                          hover:text-red-300
-                          transition
-                        "
-                      >
-                        <Trash2
-                          size={18}
-                        />
-                      </button>
+  <div className="flex items-center gap-4">
 
-                    </td>
+    {/* VIEW */}
+
+    <button
+      onClick={() =>
+        setSelectedTicket(ticket)
+      }
+      className="
+        text-blue-400
+        hover:text-blue-300
+        transition
+      "
+    >
+      <Eye size={18} />
+    </button>
+
+    {/* REPLY */}
+
+    <button
+      className="
+        text-emerald-400
+        hover:text-emerald-300
+        transition
+      "
+    >
+      <Mail size={18} />
+    </button>
+
+    {/* DELETE */}
+
+    <button
+      onClick={() =>
+        deleteTicket(
+          ticket._id
+        )
+      }
+      className="
+        text-red-400
+        hover:text-red-300
+        transition
+      "
+    >
+      <Trash2 size={18} />
+    </button>
+
+  </div>
+
+</td>
 
                   </tr>
                 )
@@ -369,6 +409,189 @@ export default function SupportTickets() {
         </div>
 
       </div>
+
+      {/* VIEW MODAL */}
+
+{selectedTicket && (
+
+  <div
+    className="
+      fixed
+      inset-0
+      bg-black/70
+      backdrop-blur-sm
+      flex
+      items-center
+      justify-center
+      z-50
+      p-5
+    "
+  >
+
+    <div
+      className="
+        w-full
+        max-w-3xl
+        rounded-3xl
+        border border-white/10
+        bg-[#07111F]
+        p-8
+        relative
+      "
+    >
+
+      {/* CLOSE */}
+
+      <button
+        onClick={() =>
+          setSelectedTicket(null)
+        }
+        className="
+          absolute
+          top-5
+          right-5
+          text-gray-400
+          hover:text-white
+        "
+      >
+        <X size={22} />
+      </button>
+
+      {/* HEADER */}
+
+      <div className="mb-8">
+
+        <p
+          className="
+            uppercase
+            tracking-[0.25em]
+            text-[10px]
+            text-blue-400
+            mb-3
+          "
+        >
+          SUPPORT TICKET
+        </p>
+
+        <h2
+          className="
+            text-3xl
+            font-bold
+          "
+        >
+          {selectedTicket.fullName}
+        </h2>
+
+      </div>
+
+      {/* GRID */}
+
+      <div className="grid md:grid-cols-2 gap-6">
+
+        <div>
+          <p className="text-gray-500 text-sm mb-2">
+            Email
+          </p>
+
+          <p className="text-sm">
+            {selectedTicket.email}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-gray-500 text-sm mb-2">
+            Phone
+          </p>
+
+          <p className="text-sm">
+            {selectedTicket.phone}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-gray-500 text-sm mb-2">
+            Company
+          </p>
+
+          <p className="text-sm">
+            {selectedTicket.company || "-"}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-gray-500 text-sm mb-2">
+            Service
+          </p>
+
+          <p className="text-sm">
+            {selectedTicket.serviceType}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-gray-500 text-sm mb-2">
+            Priority
+          </p>
+
+          <p className="text-sm">
+            {selectedTicket.priority}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-gray-500 text-sm mb-2">
+            Status
+          </p>
+
+          <p className="text-sm">
+            {selectedTicket.status}
+          </p>
+        </div>
+
+      </div>
+
+      {/* ISSUE */}
+
+      <div className="mt-8">
+
+        <p
+          className="
+            text-gray-500
+            text-sm
+            mb-3
+          "
+        >
+          Issue Description
+        </p>
+
+        <div
+          className="
+            rounded-2xl
+            border border-white/10
+            bg-white/[0.03]
+            p-5
+          "
+        >
+
+          <p
+            className="
+              text-sm
+              text-gray-300
+              leading-relaxed
+              whitespace-pre-wrap
+            "
+          >
+            {selectedTicket.issue}
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
 
     </section>
   );
