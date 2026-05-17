@@ -9,11 +9,13 @@ import {
   Receipt,
   DollarSign,
   CreditCard,
+  Headphones,
 } from "lucide-react";
 
 import Invoice from "./admin/Invoice";
 import Revenue from "./admin/Revenue";
 import Expenses from "./admin/Expenses";
+import SupportTickets from "./admin/SupportTickets";
 
 export default function Admin() {
 
@@ -290,6 +292,11 @@ export default function Admin() {
                 id: "invoices",
                 label: "Invoices",
                 icon: <Receipt size={18} />,
+              },
+              {
+                id: "support",
+                label: "Support",
+                icon: <Headphones size={18} />,
               },
               {
                 id: "expenses",
@@ -739,6 +746,11 @@ export default function Admin() {
           {/* EXPENSES */}
           {activeTab === "expenses" && (
             <Expenses />
+          )}
+
+          {/* SUPPORT */}
+          {activeTab === "support" && (
+            <SupportTickets />
           )}
 
         </div>
