@@ -26,9 +26,6 @@ export default function SupportTickets() {
     const [selectedTicket, setSelectedTicket] =
   useState(null);
 
-  const [loading, setLoading] =
-  useState(true);
-
   /* FETCH */
 
   const fetchTickets =
