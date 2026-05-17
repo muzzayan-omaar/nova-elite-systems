@@ -1,6 +1,5 @@
 import {
   LifeBuoy,
-  ShieldCheck,
   Upload,
   MonitorSmartphone,
   Zap,
@@ -9,10 +8,79 @@ import {
   PhoneCall,
 } from "lucide-react";
 
+import {
+  useState,
+} from "react";
+
+import axios from "../api/axios";
+
+import { toast } from "sonner";
+
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export default function TechnicalSupport() {
+
+  const [loading, setLoading] =
+  useState(false);
+
+const [form, setForm] =
+  useState({
+    fullName: "",
+    company: "",
+    email: "",
+    phone: "",
+    serviceType:
+      "Web Development",
+    priority: "Medium",
+    issue: "",
+  });
+
+const handleChange = (e) => {
+  setForm({
+    ...form,
+    [e.target.name]:
+      e.target.value,
+  });
+};
+
+const handleSubmit =
+  async () => {
+    try {
+      setLoading(true);
+
+      await axios.post(
+        "/support",
+        form
+      );
+
+      toast.success(
+        "Support ticket submitted"
+      );
+
+      setForm({
+        fullName: "",
+        company: "",
+        email: "",
+        phone: "",
+        serviceType:
+          "Web Development",
+        priority:
+          "Medium",
+        issue: "",
+      });
+
+    } catch (err) {
+      console.log(err);
+
+      toast.error(
+        "Failed to submit ticket"
+      );
+
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       <Navbar />
@@ -266,8 +334,11 @@ export default function TechnicalSupport() {
                 </label>
 
                 <input
-                  type="text"
-                  placeholder="John Doe"
+  type="text"
+  name="fullName"
+  value={form.fullName}
+  onChange={handleChange}
+  placeholder="John Doe"
                   className="
                     w-full
                     bg-transparent
@@ -287,9 +358,12 @@ export default function TechnicalSupport() {
                   Company
                 </label>
 
-                <input
-                  type="text"
-                  placeholder="Your Company"
+               <input
+  type="text"
+  name="company"
+  value={form.company}
+  onChange={handleChange}
+  placeholder="Your Company"
                   className="
                     w-full
                     bg-transparent
@@ -310,8 +384,11 @@ export default function TechnicalSupport() {
                 </label>
 
                 <input
-                  type="email"
-                  placeholder="example@email.com"
+  type="email"
+  name="email"
+  value={form.email}
+  onChange={handleChange}
+  placeholder="example@email.com"
                   className="
                     w-full
                     bg-transparent
@@ -332,8 +409,11 @@ export default function TechnicalSupport() {
                 </label>
 
                 <input
-                  type="text"
-                  placeholder="+971 ..."
+  type="text"
+  name="phone"
+  value={form.phone}
+  onChange={handleChange}
+  placeholder="+971 ..."
                   className="
                     w-full
                     bg-transparent
@@ -354,6 +434,9 @@ export default function TechnicalSupport() {
                 </label>
 
                 <select
+                  name="serviceType"
+                  value={form.serviceType}
+                  onChange={handleChange}
                   className="
                     w-full
                     bg-transparent
@@ -390,6 +473,9 @@ export default function TechnicalSupport() {
                 </label>
 
                 <select
+  name="priority"
+  value={form.priority}
+  onChange={handleChange}
                   className="
                     w-full
                     bg-transparent
@@ -427,6 +513,9 @@ export default function TechnicalSupport() {
 
               <textarea
                 rows="5"
+                name="issue"
+                value={form.issue}
+                onChange={handleChange}
                 placeholder="Explain the issue you're facing..."
                 className="
                   w-full
@@ -457,6 +546,8 @@ export default function TechnicalSupport() {
             >
 
               <button
+                onClick={handleSubmit}
+                disabled={loading}
                 className="
                   flex items-center gap-3
                   px-6 py-3.5
@@ -470,7 +561,11 @@ export default function TechnicalSupport() {
                 "
               >
                 <Upload size={18} />
-                Submit Ticket
+                {
+  loading
+    ? "Submitting..."
+    : "Submit Ticket"
+}
               </button>
 
               <div
