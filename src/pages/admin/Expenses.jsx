@@ -258,21 +258,73 @@ export default function Expenses() {
             "
           />
 
-          <input
-            name="category"
-            value={form.category}
-            onChange={handleChange}
-            placeholder="Category"
-            className="
-              w-full
-              bg-[#0B1220]
-              border border-white/5
-              rounded-2xl
-              px-4 py-3
-              text-sm
-              outline-none
-            "
-          />
+                    <select
+              name="category"
+              value={form.category}
+              onChange={handleChange}
+              className="
+                w-full
+                bg-[#0B1220]
+                border border-white/5
+                rounded-2xl
+                px-4 py-3
+                text-sm
+                outline-none
+              "
+            >
+            <option value="">
+              Select Category
+            </option>
+
+            <option value="Salaries">
+              Salaries
+            </option>
+
+            <option value="Equipment">
+              Equipment
+            </option>
+
+            <option value="Transport">
+              Transport
+            </option>
+
+            <option value="Fuel">
+              Fuel
+            </option>
+
+            <option value="Hosting">
+              Hosting
+            </option>
+
+            <option value="Internet">
+              Internet
+            </option>
+
+            <option value="Marketing">
+              Marketing
+            </option>
+
+            <option value="Taxes">
+              Taxes
+            </option>
+
+            <option value="Software">
+              Software
+            </option>
+
+            <option value="Maintenance">
+              Maintenance
+            </option>
+
+            <option value="Utilities">
+              Utilities
+            </option>
+
+            <option value="Office Supplies">
+              Office Supplies
+            </option>
+
+          </select>
 
           <input
             name="amount"
@@ -307,21 +359,45 @@ export default function Expenses() {
             "
           />
 
-          <input
-            name="paymentMethod"
-            value={form.paymentMethod}
-            onChange={handleChange}
-            placeholder="Payment Method"
-            className="
-              w-full
-              bg-[#0B1220]
-              border border-white/5
-              rounded-2xl
-              px-4 py-3
-              text-sm
-              outline-none
-            "
-          />
+          <select
+  name="paymentMethod"
+  value={form.paymentMethod}
+  onChange={handleChange}
+  className="
+    w-full
+    bg-[#0B1220]
+    border border-white/5
+    rounded-2xl
+    px-4 py-3
+    text-sm
+    outline-none
+  "
+>
+  <option value="">
+    Payment Method
+  </option>
+
+  <option value="Cash">
+    Cash
+  </option>
+
+  <option value="Bank Transfer">
+    Bank Transfer
+  </option>
+
+  <option value="Mobile Money">
+    Mobile Money
+  </option>
+
+  <option value="Card">
+    Card
+  </option>
+
+  <option value="Cheque">
+    Cheque
+  </option>
+
+</select>
 
           <input
             name="expenseDate"
