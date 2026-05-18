@@ -21,6 +21,8 @@ from "./pages/admin/AdminLogin";
 import ProtectedRoute
 from "./components/admin/ProtectedRoute";
 
+import ServicePage from "./pages/ServicePage";
+
 function App() {
   return (
     <BrowserRouter>
@@ -101,6 +103,11 @@ function App() {
     path="/"
     element={<Home />}
   />
+
+<Route
+  path="/services/:slug"
+  element={<ServicePage />}
+/>
 
   <Route
     path="/contact"

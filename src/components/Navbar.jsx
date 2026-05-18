@@ -29,16 +29,19 @@ export default function Navbar() {
       icon: <Code2 size={18} />,
       title: "Web Development",
       desc: "Modern responsive business websites",
+      link: "/services/web-development",
     },
     {
       icon: <Smartphone size={18} />,
       title: "App Development",
       desc: "Custom mobile app solutions",
+      link: "/services/app-development",
     },
     {
       icon: <Cloud size={18} />,
       title: "SaaS Applications",
       desc: "Cloud automation platforms",
+      link: "/services/saas-applications",
     },
   ];
 
@@ -47,16 +50,19 @@ export default function Navbar() {
       icon: <Camera size={18} />,
       title: "CCTV Systems",
       desc: "Enterprise surveillance systems",
+      link: "/services/cctv-systems",
     },
     {
       icon: <Fingerprint size={18} />,
       title: "Access Control",
       desc: "Smart secure access systems",
+      link: "/services/access-control",
     },
     {
       icon: <Network size={18} />,
       title: "Networking",
       desc: "Reliable infrastructure solutions",
+      link: "/services/networking",
     },
   ];
 
@@ -191,9 +197,9 @@ const support = [
 
                       <div className="space-y-4">
                         {digitalSolutions.map((item, index) => (
-                          <a
-                            key={index}
-                            href="#"
+  <a
+    key={index}
+    href={item.link}
                             className="
                               flex items-start gap-3
                               group
@@ -253,10 +259,10 @@ const support = [
                       </p>
 
                       <div className="space-y-4">
-                        {infraSolutions.map((item, index) => (
-                          <a
-                            key={index}
-                            href="#"
+                       {infraSolutions.map((item, index) => (
+  <a
+    key={index}
+    href={item.link}
                             className="
                               flex items-start gap-3
                               group
