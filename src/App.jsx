@@ -15,25 +15,129 @@ import Expenses from "./pages/admin/Expenses";
 import SupportTickets from "./pages/admin/SupportTickets";
 import Consultations from "./pages/admin/Consultations";
 
+import AdminLogin
+from "./pages/admin/AdminLogin";
+
+import ProtectedRoute
+from "./components/admin/ProtectedRoute";
+
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/admin/invoice" element={<Invoice />} />
-        <Route path="/admin/revenue" element={<Revenue />} />
-        <Route path="/admin/expenses" element={<Expenses />} />
-        <Route path="/admin/support-tickets" element={<SupportTickets />} />
-        <Route path="/admin/consultations" element={<Consultations />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/pricing" element={<Pricing />} />
-        <Route path="/technical-support" element={<TechnicalSupport />} />
-        <Route path="/book-consultation" element={<BookConsultation />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/industries" element={<Industries />} />
-        <Route path="/blog" element={<Blog />} />
-      </Routes>
+<Routes>
+
+  {/* =========================
+      ADMIN AUTH
+  ========================= */}
+
+  <Route
+    path="/admin-login"
+    element={<AdminLogin />}
+  />
+
+  {/* =========================
+      PROTECTED ADMIN ROUTES
+  ========================= */}
+
+  <Route
+    path="/admin"
+    element={
+      <ProtectedRoute>
+        <Admin />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/admin/invoice"
+    element={
+      <ProtectedRoute>
+        <Invoice />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/admin/revenue"
+    element={
+      <ProtectedRoute>
+        <Revenue />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/admin/expenses"
+    element={
+      <ProtectedRoute>
+        <Expenses />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/admin/support-tickets"
+    element={
+      <ProtectedRoute>
+        <SupportTickets />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/admin/consultations"
+    element={
+      <ProtectedRoute>
+        <Consultations />
+      </ProtectedRoute>
+    }
+  />
+
+  {/* =========================
+      FRONTEND ROUTES
+  ========================= */}
+
+  <Route
+    path="/"
+    element={<Home />}
+  />
+
+  <Route
+    path="/contact"
+    element={<Contact />}
+  />
+
+  <Route
+    path="/pricing"
+    element={<Pricing />}
+  />
+
+  <Route
+    path="/technical-support"
+    element={<TechnicalSupport />}
+  />
+
+  <Route
+    path="/book-consultation"
+    element={<BookConsultation />}
+  />
+
+  <Route
+    path="/about"
+    element={<About />}
+  />
+
+  <Route
+    path="/industries"
+    element={<Industries />}
+  />
+
+  <Route
+    path="/blog"
+    element={<Blog />}
+  />
+
+</Routes>
     </BrowserRouter>
   );
 }

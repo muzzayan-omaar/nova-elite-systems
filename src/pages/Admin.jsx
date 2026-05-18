@@ -18,9 +18,34 @@ import Expenses from "./admin/Expenses";
 import SupportTickets from "./admin/SupportTickets";
 import Consultations from "./admin/Consultations";
 
+import {
+  LogOut,
+} from "lucide-react";
+
+import {
+  useNavigate,
+} from "react-router-dom";
+
 export default function Admin() {
 
   const [activeTab, setActiveTab] = useState("dashboard");
+  const navigate = useNavigate();
+
+  const logout =
+  () => {
+
+    localStorage.removeItem(
+      "adminToken"
+    );
+
+    localStorage.removeItem(
+      "adminData"
+    );
+
+    navigate(
+      "/admin-login"
+    );
+  };
 
   // ===============================
   // CASE STUDIES STATE
@@ -309,6 +334,11 @@ export default function Admin() {
                 label: "Consultations",
                 icon: <Briefcase size={18} />,
               },
+              {
+                id: "logout",
+                label: "Logout",
+                icon: <LogOut size={18} />,
+              }
 
             ].map((item) => (
 
@@ -762,6 +792,16 @@ export default function Admin() {
           {/* CONSULTATIONS */}
           {activeTab === "consultations" && (
             <Consultations />
+          )}
+
+          {/* LOGOUT */}
+          {activeTab === "logout" && (
+            <button
+              onClick={logout}
+              className="bg-red-500 px-6 py-3 rounded-2xl text-white"
+            >
+              Logout
+            </button>
           )}
 
         </div>
