@@ -17,15 +17,24 @@ import { toast } from "sonner";
 
 export default function SupportTickets() {
 
-  const [tickets, setTickets] =
-    useState([]);
+/* =========================
+   STATE
+========================= */
 
-  const [loading, setLoading] =
-    useState(true);
+const [tickets, setTickets] =
+  useState([]);
 
-    const [selectedTicket, setSelectedTicket] =
+const [loading, setLoading] =
+  useState(true);
+
+/* VIEW MODAL */
+
+const [selectedTicket, setSelectedTicket] =
   useState(null);
-  const [replyTicket, setReplyTicket] =
+
+/* REPLY MODAL */
+
+const [replyTicket, setReplyTicket] =
   useState(null);
 
 const [replyLoading, setReplyLoading] =
@@ -40,7 +49,11 @@ const [replyMessage, setReplyMessage] =
 const [selectedTemplate, setSelectedTemplate] =
   useState("received");
 
-  const generateTemplate =
+/* =========================
+   EMAIL TEMPLATES
+========================= */
+
+const generateTemplate =
   (template, ticket) => {
 
     if (!ticket) return "";
@@ -49,6 +62,7 @@ const [selectedTemplate, setSelectedTemplate] =
 
       case "received":
         return `
+
 Hello ${ticket.fullName},
 
 We have received your support request regarding ${ticket.serviceType}.
@@ -61,6 +75,7 @@ NOVA Elite Systems
 
       case "progress":
         return `
+
 Hello ${ticket.fullName},
 
 Your support request is currently being worked on by our technical team.
@@ -73,6 +88,7 @@ NOVA Elite Systems
 
       case "resolved":
         return `
+
 Hello ${ticket.fullName},
 
 Your support request has been resolved.
@@ -88,7 +104,11 @@ NOVA Elite Systems
     }
   };
 
-  const openReplyModal =
+/* =========================
+   OPEN REPLY MODAL
+========================= */
+
+const openReplyModal =
   (ticket) => {
 
     setReplyTicket(ticket);
@@ -98,7 +118,7 @@ NOVA Elite Systems
     );
 
     setReplySubject(
-      "Support Ticket Update"
+      "We Received Your Support Request"
     );
 
     setReplyMessage(
@@ -109,8 +129,24 @@ NOVA Elite Systems
     );
   };
 
-  const sendReply =
+/* =========================
+   SEND EMAIL REPLY
+========================= */
+
+const sendReply =
   async () => {
+
+    if (
+      !replySubject ||
+      !replyMessage
+    ) {
+      toast.error(
+        "Subject and message required"
+      );
+
+      return;
+    }
+
     try {
 
       setReplyLoading(true);
@@ -130,7 +166,7 @@ NOVA Elite Systems
       );
 
       toast.success(
-        "Reply sent"
+        "Reply sent successfully"
       );
 
       setReplyTicket(null);
@@ -149,78 +185,98 @@ NOVA Elite Systems
     }
   };
 
-  /* FETCH */
+/* =========================
+   FETCH TICKETS
+========================= */
 
-  const fetchTickets =
-    async () => {
-      try {
-        const res =
-          await axios.get(
-            "/support"
-          );
+const fetchTickets =
+  async () => {
 
-        setTickets(res.data);
+    try {
 
-      } catch (err) {
-        console.log(err);
-
-      } finally {
-        setLoading(false);
-      }
-    };
-
-  useEffect(() => {
-    fetchTickets();
-  }, []);
-
-  /* UPDATE STATUS */
-
-  const updateStatus =
-    async (id, status) => {
-      try {
-        await axios.patch(
-          `/support/${id}`,
-          { status }
+      const res =
+        await axios.get(
+          "/support"
         );
 
-        fetchTickets();
+      setTickets(res.data);
 
-        toast.success(
-          "Ticket updated"
-        );
+    } catch (err) {
 
-      } catch (err) {
-        console.log(err);
+      console.log(err);
 
-        toast.error(
-          "Failed to update"
-        );
-      }
-    };
+    } finally {
 
-  /* DELETE */
+      setLoading(false);
+    }
+  };
 
-  const deleteTicket =
-    async (id) => {
-      try {
-        await axios.delete(
-          `/support/${id}`
-        );
+/* =========================
+   INITIAL FETCH
+========================= */
 
-        fetchTickets();
+useEffect(() => {
+  fetchTickets();
+}, []);
 
-        toast.success(
-          "Ticket deleted"
-        );
+/* =========================
+   UPDATE TICKET STATUS
+========================= */
 
-      } catch (err) {
-        console.log(err);
+const updateStatus =
+  async (id, status) => {
 
-        toast.error(
-          "Delete failed"
-        );
-      }
-    };
+    try {
+
+      await axios.patch(
+        `/support/${id}`,
+        { status }
+      );
+
+      fetchTickets();
+
+      toast.success(
+        "Ticket updated"
+      );
+
+    } catch (err) {
+
+      console.log(err);
+
+      toast.error(
+        "Failed to update"
+      );
+    }
+  };
+
+/* =========================
+   DELETE TICKET
+========================= */
+
+const deleteTicket =
+  async (id) => {
+
+    try {
+
+      await axios.delete(
+        `/support/${id}`
+      );
+
+      fetchTickets();
+
+      toast.success(
+        "Ticket deleted"
+      );
+
+    } catch (err) {
+
+      console.log(err);
+
+      toast.error(
+        "Delete failed"
+      );
+    }
+  };
 
   if (loading) {
     return (
@@ -552,9 +608,11 @@ NOVA Elite Systems
   >
 
     <div
-      className="
-        w-full
-        max-w-3xl
+     className="
+  w-full
+  max-w-2xl
+  max-h-[90vh]
+  overflow-y-auto
         rounded-3xl
         border border-white/10
         bg-[#07111F]
@@ -736,8 +794,10 @@ NOVA Elite Systems
 
     <div
       className="
-        w-full
-        max-w-2xl
+  w-full
+  max-w-3xl
+  max-h-[90vh]
+  overflow-y-auto
         rounded-3xl
         border border-white/10
         bg-[#07111F]
@@ -811,17 +871,38 @@ NOVA Elite Systems
           value={selectedTemplate}
           onChange={(e) => {
 
-            setSelectedTemplate(
-              e.target.value
-            );
+  const template =
+    e.target.value;
 
-            setReplyMessage(
-              generateTemplate(
-                e.target.value,
-                replyTicket
-              )
-            );
-          }}
+  setSelectedTemplate(
+    template
+  );
+
+  setReplyMessage(
+    generateTemplate(
+      template,
+      replyTicket
+    )
+  );
+
+  if (template === "received") {
+    setReplySubject(
+      "We Received Your Support Request"
+    );
+  }
+
+  if (template === "progress") {
+    setReplySubject(
+      "Your Support Ticket Is In Progress"
+    );
+  }
+
+  if (template === "resolved") {
+    setReplySubject(
+      "Your Support Ticket Has Been Resolved"
+    );
+  }
+}}
           className="
             w-full
             bg-[#0B1220]
