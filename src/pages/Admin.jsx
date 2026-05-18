@@ -10,12 +10,14 @@ import {
   DollarSign,
   CreditCard,
   Headphones,
+  Briefcase,
 } from "lucide-react";
 
 import Invoice from "./admin/Invoice";
 import Revenue from "./admin/Revenue";
 import Expenses from "./admin/Expenses";
 import SupportTickets from "./admin/SupportTickets";
+import Consultations from "./admin/Consultations";
 
 export default function Admin() {
 
@@ -302,7 +304,12 @@ export default function Admin() {
                 id: "expenses",
                 label: "Expenses",
                 icon: <CreditCard size={18} />,
-              }
+              },
+              {
+                id: "consultations",
+                label: "Consultations",
+                icon: <Briefcase size={18} />,
+              },
 
             ].map((item) => (
 
@@ -751,6 +758,11 @@ export default function Admin() {
           {/* SUPPORT */}
           {activeTab === "support" && (
             <SupportTickets />
+          )}
+
+          {/* CONSULTATIONS */}
+          {activeTab === "consultations" && (
+            <Consultations />
           )}
 
         </div>

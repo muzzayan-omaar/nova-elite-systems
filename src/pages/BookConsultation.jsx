@@ -1,3 +1,6 @@
+import { useState } from "react";
+import axios from "../api/axios";
+import { toast } from "sonner";
 import {
   CalendarDays,
   Briefcase,
@@ -12,6 +15,89 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export default function BookConsultation() {
+const [formData, setFormData] =
+  useState({
+    fullName: "",
+    businessName: "",
+    email: "",
+    phone: "",
+    serviceInterest:
+      "Website Development",
+    preferredDate: "",
+    projectDetails: "",
+  });
+
+  const updateField =
+  (field, value) => {
+
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const submitConsultation =
+  async () => {
+
+    try {
+
+      await axios.post(
+        "/consultations",
+        formData
+      );
+
+      toast.success(
+        "Consultation request submitted"
+      );
+
+      setFormData({
+        fullName: "",
+        businessName: "",
+        email: "",
+        phone: "",
+        serviceInterest:
+          "Website Development",
+        preferredDate: "",
+        projectDetails: "",
+      });
+
+    } catch (err) {
+
+      console.log(err);
+
+      toast.error(
+        "Submission failed"
+      );
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.post("/api/consultations", formData);
+      toast.success("Consultation booked successfully!");
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        message: "",
+      });
+    } catch (error) {
+      toast.error("Failed to book consultation.");
+      console.error("Error booking consultation:", error);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -360,6 +446,13 @@ export default function BookConsultation() {
 
                 <input
                   type="text"
+                    value={formData.fullName}
+  onChange={(e) =>
+    updateField(
+      "fullName",
+      e.target.value
+    )
+  }
                   placeholder="John Doe"
                   className="
                     w-full
@@ -383,6 +476,13 @@ export default function BookConsultation() {
                 <input
                   type="text"
                   placeholder="Your Company"
+                    value={formData.businessName}
+  onChange={(e) =>
+    updateField(
+      "businessName",
+      e.target.value
+    )
+  }
                   className="
                     w-full
                     bg-transparent
@@ -405,6 +505,13 @@ export default function BookConsultation() {
                 <input
                   type="email"
                   placeholder="example@email.com"
+                    value={formData.email}
+  onChange={(e) =>
+    updateField(
+      "email",
+      e.target.value
+    )
+  }
                   className="
                     w-full
                     bg-transparent
@@ -427,6 +534,13 @@ export default function BookConsultation() {
                 <input
                   type="text"
                   placeholder="+971 ..."
+                    value={formData.phone}
+  onChange={(e) =>
+    updateField(
+      "phone",
+      e.target.value
+    )
+  }
                   className="
                     w-full
                     bg-transparent
@@ -447,6 +561,13 @@ export default function BookConsultation() {
                 </label>
 
                 <select
+                    value={formData.serviceInterest}
+                    onChange={(e) =>
+                      updateField(
+                        "serviceInterest",
+                        e.target.value
+                      )
+                    }
                   className="
                     w-full
                     bg-transparent
@@ -484,6 +605,13 @@ export default function BookConsultation() {
 
                 <input
                   type="date"
+                  value={formData.preferredDate}
+                  onChange={(e) =>
+                    updateField(
+                      "preferredDate",
+                      e.target.value
+                    )
+                  }
                   className="
                     w-full
                     bg-transparent
@@ -510,6 +638,13 @@ export default function BookConsultation() {
               <textarea
                 rows="5"
                 placeholder="Tell us about your project or business goals..."
+                value={formData.projectDetails}
+                onChange={(e) =>
+                  updateField(
+                    "projectDetails",
+                    e.target.value
+                  )
+                }
                 className="
                   w-full
                   bg-transparent
@@ -531,6 +666,7 @@ export default function BookConsultation() {
             <div className="mt-8">
 
               <button
+                onClick={submitConsultation}
                 className="
                   px-6 py-3.5
                   rounded-2xl

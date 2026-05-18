@@ -12,6 +12,8 @@ import Blog from "./pages/Blog";
 import Invoice from "./pages/admin/Invoice";
 import Revenue from "./pages/admin/Revenue";
 import Expenses from "./pages/admin/Expenses";
+import SupportTickets from "./pages/admin/SupportTickets";
+import Consultations from "./pages/admin/Consultations";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path="/admin/invoice" element={<Invoice />} />
         <Route path="/admin/revenue" element={<Revenue />} />
         <Route path="/admin/expenses" element={<Expenses />} />
+        <Route path="/admin/support-tickets" element={<SupportTickets />} />
+        <Route path="/admin/consultations" element={<Consultations />} />
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/pricing" element={<Pricing />} />
