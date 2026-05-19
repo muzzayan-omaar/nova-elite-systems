@@ -1,12 +1,8 @@
+
 import {
-  Code2,
-  Smartphone,
-  Cloud,
-  Camera,
-  Fingerprint,
-  Network,
+  CheckCircle2,
   ArrowRight,
-  Check,
+  ShieldCheck,
   Sparkles,
 } from "lucide-react";
 
@@ -15,166 +11,35 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
+import { servicesData }
+from "../data/servicesData";
+
 export default function ServicePage() {
 
   const { slug } = useParams();
 
-  const services = {
-
-    "web-development": {
-      icon: <Code2 size={26} />,
-      title: "Web Development",
-      subtitle:
-        "Modern websites engineered for growth, performance and conversion.",
-
-      features: [
-        "Business Websites",
-        "Ecommerce Platforms",
-        "Admin Dashboards",
-        "Booking Systems",
-        "SEO Optimization",
-        "API Integrations",
-      ],
-
-      process: [
-        "Discovery & Planning",
-        "UI/UX Design",
-        "Development",
-        "Testing & Optimization",
-        "Deployment",
-      ],
-    },
-
-    "app-development": {
-      icon: <Smartphone size={26} />,
-      title: "App Development",
-      subtitle:
-        "Custom mobile applications built for Android, iOS and enterprise use.",
-
-      features: [
-        "Android Apps",
-        "iOS Applications",
-        "Cross Platform Apps",
-        "Realtime Systems",
-        "Push Notifications",
-        "API Connectivity",
-      ],
-
-      process: [
-        "Project Analysis",
-        "Architecture Planning",
-        "UI/UX Design",
-        "App Development",
-        "Publishing & Support",
-      ],
-    },
-
-    "saas-applications": {
-      icon: <Cloud size={26} />,
-      title: "SaaS Applications",
-      subtitle:
-        "Scalable cloud platforms and automation systems for businesses.",
-
-      features: [
-        "Cloud Platforms",
-        "CRM Systems",
-        "Automation Dashboards",
-        "Subscription Systems",
-        "Secure APIs",
-        "Analytics Integration",
-      ],
-
-      process: [
-        "Requirement Gathering",
-        "System Architecture",
-        "Backend Development",
-        "Frontend Development",
-        "Deployment & Scaling",
-      ],
-    },
-
-    "cctv-systems": {
-      icon: <Camera size={26} />,
-      title: "CCTV Systems",
-      subtitle:
-        "Enterprise surveillance systems designed for security and monitoring.",
-
-      features: [
-        "IP Cameras",
-        "Remote Monitoring",
-        "NVR/DVR Setup",
-        "Video Analytics",
-        "Night Vision Systems",
-        "Commercial Installations",
-      ],
-
-      process: [
-        "Site Assessment",
-        "System Planning",
-        "Installation",
-        "Configuration",
-        "Maintenance & Support",
-      ],
-    },
-
-    "access-control": {
-      icon: <Fingerprint size={26} />,
-      title: "Access Control",
-      subtitle:
-        "Smart access management systems for businesses and facilities.",
-
-      features: [
-        "Biometric Systems",
-        "RFID Access",
-        "Door Controllers",
-        "Attendance Systems",
-        "Smart Locks",
-        "Centralized Monitoring",
-      ],
-
-      process: [
-        "Security Assessment",
-        "System Design",
-        "Hardware Installation",
-        "Configuration",
-        "Testing & Deployment",
-      ],
-    },
-
-    "networking": {
-      icon: <Network size={26} />,
-      title: "Networking",
-      subtitle:
-        "Reliable enterprise network infrastructure and connectivity solutions.",
-
-      features: [
-        "Structured Cabling",
-        "Enterprise WiFi",
-        "Router Configuration",
-        "Switch Management",
-        "VPN Solutions",
-        "Network Security",
-      ],
-
-      process: [
-        "Infrastructure Audit",
-        "Network Design",
-        "Installation",
-        "Configuration",
-        "Optimization & Monitoring",
-      ],
-    },
-  };
-
-  const service = services[slug];
+  const service =
+    servicesData[slug];
 
   if (!service) {
     return (
-      <div className="bg-[#050816] min-h-screen text-white flex items-center justify-center">
+      <div
+        className="
+          min-h-screen
+          bg-[#050816]
+          text-white
+          flex
+          items-center
+          justify-center
+        "
+      >
         Service not found
       </div>
     );
   }
+
+  const Icon =
+    service.icon;
 
   return (
     <>
@@ -182,52 +47,70 @@ export default function ServicePage() {
 
       <section
         className="
-          relative
-          min-h-screen
           bg-[#050816]
           text-white
-          pt-28
-          pb-24
-          px-6
           overflow-hidden
         "
       >
 
-        {/* BACKGROUND GLOW */}
-
-        <div
-          className="
-            absolute
-            top-[-250px]
-            left-1/2
-            -translate-x-1/2
-            w-[1000px]
-            h-[1000px]
-            rounded-full
-            bg-blue-500/10
-            blur-[180px]
-            pointer-events-none
-          "
-        />
+        {/* HERO */}
 
         <div
           className="
             relative
-            z-10
-            max-w-7xl
-            mx-auto
+            min-h-[760px]
+            flex
+            items-center
           "
         >
 
-          {/* HERO */}
+          <img
+            src={service.heroImage}
+            alt={service.title}
+            className="
+              absolute
+              inset-0
+              w-full
+              h-full
+              object-cover
+            "
+          />
 
           <div
             className="
+              absolute
+              inset-0
+              bg-[#020617]/85
+            "
+          />
+
+          <div
+            className="
+              absolute
+              top-[-200px]
+              left-1/2
+              -translate-x-1/2
+              w-[1000px]
+              h-[1000px]
+              rounded-full
+              bg-blue-500/10
+              blur-[180px]
+            "
+          />
+
+          <div
+            className="
+              relative
+              z-10
+              max-w-7xl
+              mx-auto
+              px-6
+              pt-40
+              pb-20
               grid
               md:grid-cols-2
-              gap-14
+              gap-16
               items-center
-              min-h-[450px]
             "
           >
 
@@ -237,38 +120,30 @@ export default function ServicePage() {
 
               <div
                 className="
-                  w-16 h-16
-                  rounded-3xl
-                  bg-blue-500/10
+                  inline-flex
+                  items-center
+                  gap-2
+                  px-4 py-2
+                  rounded-full
                   border border-blue-500/20
-                  flex items-center justify-center
-                  text-blue-400
-                  mb-6
-                "
-              >
-                {service.icon}
-              </div>
-
-              <p
-                className="
+                  bg-blue-500/10
+                  text-blue-300
+                  text-xs
                   uppercase
-                  tracking-[0.28em]
-                  text-[11px]
-                  text-blue-400
-                  mb-5
-                  font-semibold
+                  tracking-[0.25em]
+                  mb-8
                 "
               >
-                NOVA ELITE SYSTEMS
-              </p>
+                <Sparkles size={14} />
+                Enterprise Solutions
+              </div>
 
               <h1
                 className="
-                  text-4xl
-                  md:text-6xl
+                  text-5xl
+                  md:text-7xl
                   font-bold
-                  leading-[1]
-                  max-w-[650px]
+                  leading-[0.95]
                 "
               >
                 {service.title}
@@ -276,23 +151,31 @@ export default function ServicePage() {
 
               <p
                 className="
-                  mt-6
-                  text-gray-400
+                  mt-8
+                  text-gray-300
+                  text-lg
                   leading-relaxed
                   max-w-xl
-                  text-sm
-                  md:text-[15px]
                 "
               >
                 {service.subtitle}
               </p>
 
-              <div className="flex gap-4 mt-8">
+              {/* CTA */}
+
+              <div
+                className="
+                  flex
+                  flex-wrap
+                  gap-4
+                  mt-10
+                "
+              >
 
                 <a
                   href="/book-consultation"
                   className="
-                    px-6 py-3.5
+                    px-7 py-4
                     rounded-2xl
                     bg-blue-600
                     hover:bg-blue-500
@@ -300,10 +183,26 @@ export default function ServicePage() {
                     text-sm
                     font-medium
                     flex items-center gap-3
+                    shadow-[0_0_40px_rgba(59,130,246,0.35)]
                   "
                 >
                   Book Consultation
                   <ArrowRight size={18} />
+                </a>
+
+                <a
+                  href="/technical-support"
+                  className="
+                    px-7 py-4
+                    rounded-2xl
+                    border border-white/10
+                    bg-white/[0.03]
+                    hover:bg-white/[0.06]
+                    transition
+                    text-sm
+                  "
+                >
+                  Technical Support
                 </a>
 
               </div>
@@ -314,69 +213,135 @@ export default function ServicePage() {
 
             <div
               className="
-                rounded-[32px]
-                border border-white/10
-                bg-white/[0.03]
-                p-8
+                grid
+                grid-cols-3
+                gap-5
               "
             >
 
-              <p
-                className="
-                  text-sm
-                  text-blue-400
-                  mb-6
-                  tracking-[0.2em]
-                "
-              >
-                INCLUDED SERVICES
-              </p>
+              {service.stats.map(
+                (item, index) => (
 
-              <div className="grid gap-5">
+                  <div
+                    key={index}
+                    className="
+                      rounded-3xl
+                      border border-white/10
+                      bg-white/[0.04]
+                      backdrop-blur-xl
+                      p-6
+                    "
+                  >
 
-                {service.features.map(
-                  (item, index) => (
-
-                    <div
-                      key={index}
+                    <h3
                       className="
-                        flex items-center gap-4
+                        text-3xl
+                        font-bold
+                        text-blue-400
                       "
                     >
+                      {item.value}
+                    </h3>
 
-                      <div
-                        className="
-                          w-10 h-10
-                          rounded-2xl
-                          bg-blue-500/10
-                          border border-blue-500/20
-                          flex items-center justify-center
-                          text-blue-400
-                          shrink-0
-                        "
-                      >
-                        <Check size={18} />
-                      </div>
+                    <p
+                      className="
+                        mt-3
+                        text-sm
+                        text-gray-400
+                      "
+                    >
+                      {item.label}
+                    </p>
 
-                      <p className="text-gray-300 text-sm">
-                        {item}
-                      </p>
+                  </div>
 
-                    </div>
-                  )
-                )}
-
-              </div>
+                )
+              )}
 
             </div>
 
           </div>
 
-          {/* PROCESS */}
+        </div>
 
-          <div className="mt-20">
+        {/* OVERVIEW */}
 
-            <div className="mb-10">
+        <div
+          className="
+            max-w-7xl
+            mx-auto
+            px-6
+            py-24
+          "
+        >
+
+          <div
+            className="
+              max-w-4xl
+            "
+          >
+
+            <p
+              className="
+                uppercase
+                tracking-[0.25em]
+                text-[11px]
+                text-blue-400
+                mb-4
+              "
+            >
+              OVERVIEW
+            </p>
+
+            <h2
+              className="
+                text-4xl
+                md:text-5xl
+                font-bold
+                leading-tight
+              "
+            >
+              Premium infrastructure
+              and scalable digital systems
+            </h2>
+
+            <p
+              className="
+                mt-8
+                text-gray-400
+                text-lg
+                leading-relaxed
+                max-w-3xl
+              "
+            >
+              {service.overview}
+            </p>
+
+          </div>
+
+        </div>
+
+        {/* FEATURES */}
+
+        <div
+          className="
+            max-w-7xl
+            mx-auto
+            px-6
+            pb-24
+          "
+        >
+
+          <div
+            className="
+              flex
+              items-center
+              justify-between
+              mb-12
+            "
+          >
+
+            <div>
 
               <p
                 className="
@@ -387,27 +352,134 @@ export default function ServicePage() {
                   mb-3
                 "
               >
-                OUR PROCESS
+                FEATURES
               </p>
 
               <h2
                 className="
-                  text-3xl
+                  text-4xl
                   font-bold
                 "
               >
-                How We Deliver
+                What’s Included
               </h2>
 
             </div>
 
             <div
               className="
-                grid
-                md:grid-cols-5
-                gap-6
+                hidden md:flex
+                w-16 h-16
+                rounded-3xl
+                bg-blue-500/10
+                border border-blue-500/20
+                items-center justify-center
+                text-blue-400
               "
             >
+              <Icon size={30} />
+            </div>
+
+          </div>
+
+          <div
+            className="
+              grid
+              md:grid-cols-2
+              lg:grid-cols-4
+              gap-6
+            "
+          >
+
+            {service.features.map(
+              (feature, index) => (
+
+                <div
+                  key={index}
+                  className="
+                    rounded-3xl
+                    border border-white/10
+                    bg-white/[0.03]
+                    p-7
+                    hover:border-blue-500/30
+                    transition
+                  "
+                >
+
+                  <div
+                    className="
+                      w-12 h-12
+                      rounded-2xl
+                      bg-blue-500/10
+                      border border-blue-500/20
+                      flex items-center justify-center
+                      text-blue-400
+                      mb-5
+                    "
+                  >
+                    <CheckCircle2 size={20} />
+                  </div>
+
+                  <h3
+                    className="
+                      text-lg
+                      font-medium
+                    "
+                  >
+                    {feature}
+                  </h3>
+
+                </div>
+
+              )
+            )}
+
+          </div>
+
+        </div>
+
+        {/* PROCESS */}
+
+        <div
+          className="
+            border-y
+            border-white/10
+            bg-white/[0.02]
+          "
+        >
+
+          <div
+            className="
+              max-w-7xl
+              mx-auto
+              px-6
+              py-24
+            "
+          >
+
+            <p
+              className="
+                uppercase
+                tracking-[0.25em]
+                text-[11px]
+                text-blue-400
+                mb-4
+              "
+            >
+              WORKFLOW
+            </p>
+
+            <h2
+              className="
+                text-4xl
+                font-bold
+                mb-14
+              "
+            >
+              Our Process
+            </h2>
+
+            <div className="space-y-6">
 
               {service.process.map(
                 (step, index) => (
@@ -415,39 +487,50 @@ export default function ServicePage() {
                   <div
                     key={index}
                     className="
-                      rounded-3xl
+                      flex
+                      items-center
+                      justify-between
                       border border-white/10
+                      rounded-3xl
                       bg-white/[0.03]
                       p-6
                     "
                   >
 
-                    <div
-                      className="
-                        w-12 h-12
-                        rounded-2xl
-                        bg-blue-500/10
-                        border border-blue-500/20
-                        flex items-center justify-center
-                        text-blue-400
-                        mb-5
-                        font-bold
-                      "
-                    >
-                      0{index + 1}
+                    <div className="flex items-center gap-5">
+
+                      <div
+                        className="
+                          w-14 h-14
+                          rounded-2xl
+                          bg-blue-500/10
+                          border border-blue-500/20
+                          flex items-center justify-center
+                          text-blue-400
+                          font-bold
+                        "
+                      >
+                        0{index + 1}
+                      </div>
+
+                      <h3
+                        className="
+                          text-lg
+                          font-medium
+                        "
+                      >
+                        {step}
+                      </h3>
+
                     </div>
 
-                    <p
-                      className="
-                        text-sm
-                        text-gray-300
-                        leading-relaxed
-                      "
-                    >
-                      {step}
-                    </p>
+                    <ArrowRight
+                      size={20}
+                      className="text-blue-400"
+                    />
 
                   </div>
+
                 )
               )}
 
@@ -455,86 +538,151 @@ export default function ServicePage() {
 
           </div>
 
-          {/* CTA */}
+        </div>
+
+        {/* INDUSTRIES */}
+
+        <div
+          className="
+            max-w-7xl
+            mx-auto
+            px-6
+            py-24
+          "
+        >
+
+          <p
+            className="
+              uppercase
+              tracking-[0.25em]
+              text-[11px]
+              text-blue-400
+              mb-4
+            "
+          >
+            INDUSTRIES
+          </p>
+
+          <h2
+            className="
+              text-4xl
+              font-bold
+              mb-12
+            "
+          >
+            Industries We Serve
+          </h2>
 
           <div
             className="
-              mt-24
-              rounded-[40px]
-              border border-white/10
-              bg-gradient-to-r
-              from-blue-600/20
-              to-blue-500/5
-              p-10
-              md:p-14
+              flex
+              flex-wrap
+              gap-4
             "
           >
 
-            <div
-              className="
-                flex
-                flex-col
-                md:flex-row
-                items-start
-                md:items-center
-                justify-between
-                gap-8
-              "
-            >
-
-              <div>
+            {service.industries.map(
+              (industry, index) => (
 
                 <div
+                  key={index}
                   className="
-                    flex items-center gap-3
-                    text-blue-400
-                    mb-4
+                    px-6 py-4
+                    rounded-2xl
+                    border border-white/10
+                    bg-white/[0.03]
+                    text-sm
+                    text-gray-300
                   "
                 >
-                  <Sparkles size={18} />
-
-                  <span
-                    className="
-                      uppercase
-                      tracking-[0.25em]
-                      text-[11px]
-                    "
-                  >
-                    START YOUR PROJECT
-                  </span>
+                  {industry}
                 </div>
 
-                <h2
-                  className="
-                    text-3xl
-                    md:text-4xl
-                    font-bold
-                    max-w-[700px]
-                    leading-tight
-                  "
-                >
-                  Ready to build your next solution with NOVA Elite Systems?
-                </h2>
+              )
+            )}
 
-              </div>
+          </div>
 
-              <a
-                href="/book-consultation"
-                className="
-                  px-7 py-4
-                  rounded-2xl
-                  bg-blue-600
-                  hover:bg-blue-500
-                  transition
-                  text-sm
-                  font-medium
-                  flex items-center gap-3
-                  shrink-0
-                "
-              >
-                Schedule Consultation
-                <ArrowRight size={18} />
-              </a>
+        </div>
+
+        {/* FAQ */}
+
+        <div
+          className="
+            border-t
+            border-white/10
+          "
+        >
+
+          <div
+            className="
+              max-w-5xl
+              mx-auto
+              px-6
+              py-24
+            "
+          >
+
+            <p
+              className="
+                uppercase
+                tracking-[0.25em]
+                text-[11px]
+                text-blue-400
+                mb-4
+              "
+            >
+              FAQ
+            </p>
+
+            <h2
+              className="
+                text-4xl
+                font-bold
+                mb-12
+              "
+            >
+              Frequently Asked Questions
+            </h2>
+
+            <div className="space-y-5">
+
+              {service.faqs.map(
+                (faq, index) => (
+
+                  <div
+                    key={index}
+                    className="
+                      rounded-3xl
+                      border border-white/10
+                      bg-white/[0.03]
+                      p-7
+                    "
+                  >
+
+                    <h3
+                      className="
+                        text-lg
+                        font-medium
+                        mb-4
+                      "
+                    >
+                      {faq.question}
+                    </h3>
+
+                    <p
+                      className="
+                        text-gray-400
+                        leading-relaxed
+                      "
+                    >
+                      {faq.answer}
+                    </p>
+
+                  </div>
+
+                )
+              )}
 
             </div>
 
@@ -542,8 +690,112 @@ export default function ServicePage() {
 
         </div>
 
-        <br />
-        <br />
+        {/* CTA */}
+
+        <div
+          className="
+            px-6
+            pb-24
+          "
+        >
+
+          <div
+            className="
+              max-w-7xl
+              mx-auto
+              rounded-[40px]
+              border border-blue-500/20
+              bg-blue-500/10
+              p-12
+              md:p-16
+              relative
+              overflow-hidden
+            "
+          >
+
+            <div
+              className="
+                absolute
+                top-[-120px]
+                right-[-120px]
+                w-[320px]
+                h-[320px]
+                rounded-full
+                bg-blue-500/20
+                blur-[120px]
+              "
+            />
+
+            <div className="relative z-10">
+
+              <div
+                className="
+                  flex
+                  flex-col
+                  md:flex-row
+                  md:items-center
+                  md:justify-between
+                  gap-10
+                "
+              >
+
+                <div>
+
+                  <div
+                    className="
+                      flex
+                      items-center
+                      gap-3
+                      text-blue-300
+                      mb-5
+                    "
+                  >
+                    <ShieldCheck size={18} />
+
+                    Enterprise Infrastructure
+                  </div>
+
+                  <h2
+                    className="
+                      text-4xl
+                      md:text-5xl
+                      font-bold
+                      leading-tight
+                      max-w-3xl
+                    "
+                  >
+                    Ready to modernize
+                    your infrastructure
+                    and digital operations?
+                  </h2>
+
+                </div>
+
+                <a
+                  href="/book-consultation"
+                  className="
+                    shrink-0
+                    px-8 py-4
+                    rounded-2xl
+                    bg-blue-600
+                    hover:bg-blue-500
+                    transition
+                    flex items-center gap-3
+                    text-sm
+                    font-medium
+                  "
+                >
+                  Start Consultation
+                  <ArrowRight size={18} />
+                </a>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
 
         <Footer />
 
