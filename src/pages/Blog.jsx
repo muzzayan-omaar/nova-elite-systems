@@ -56,7 +56,7 @@ export default function Blog() {
   {/* GRID + NOISE LAYER */}
   <div className="absolute inset-0 opacity-[0.06] bg-[radial-gradient(circle,#ffffff_1px,transparent_1px)] bg-[size:30px_30px]" />
 
-  {/* FLOATING KPI CARDS (NEW PREMIUM FEEL) */}
+  {/* FLOATING KPI CARDS (NEW PREMIUM FEEL) 
   <div className="absolute top-32 left-10 hidden md:block">
     <div className="w-64 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-xl rotate-[-6deg]">
       <p className="text-xs text-gray-400">System Uptime</p>
@@ -76,7 +76,7 @@ export default function Blog() {
       <p className="text-xs text-gray-400">Security Systems</p>
       <p className="text-2xl font-bold text-cyan-400 mt-1">Active</p>
     </div>
-  </div>
+  </div>*/}
 
   {/* FLOATING LIGHT ORBS */}
   <div className="absolute top-20 left-1/3 w-72 h-72 bg-blue-500/20 blur-[120px] rounded-full animate-pulse" />
