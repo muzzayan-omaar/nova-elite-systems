@@ -18,24 +18,50 @@ export default function Hero() {
       {/* BACKGROUND IMAGE */}
 {/* BACKGROUND VIDEO */}
 {/* BACKGROUND VIDEO */}
+{/* VIDEO BACKGROUND */}
 <video
   autoPlay
   muted
   loop
   playsInline
+  preload="auto"
   className="
     absolute inset-0
     w-full h-full
     object-cover
-    scale-110 md:scale-100
-    opacity-45
+    opacity-30
   "
 >
   <source
-    src="https://cdn.coverr.co/videos/coverr-working-on-a-laptop-5176/1080p.mp4"
+    src="https://www.w3schools.com/howto/rain.mp4"
     type="video/mp4"
   />
 </video>
+
+{/* DARK OVERLAY */}
+<div className="absolute inset-0 bg-[#02050D]/75" />
+
+{/* LEFT CINEMATIC FADE */}
+<div
+  className="
+    absolute inset-0
+    bg-gradient-to-r
+    from-[#05070F]
+    via-[#05070F]/92
+    to-transparent
+  "
+/>
+
+{/* VIGNETTE */}
+<div
+  className="
+    absolute inset-0
+    bg-gradient-to-t
+    from-[#05070F]
+    via-transparent
+    to-[#05070F]/30
+  "
+/>
 
 {/* DARK OVERLAY */}
 <div
