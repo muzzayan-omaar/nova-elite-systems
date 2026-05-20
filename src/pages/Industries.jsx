@@ -11,6 +11,7 @@ import {
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
 
 export default function Industries() {
   const industries = [
@@ -686,7 +687,8 @@ export default function Industries() {
             </span>
           </h2>
 
-          <button
+          <Link
+            to="/pricing"
             className="
               mt-10
               inline-flex
@@ -702,9 +704,9 @@ export default function Industries() {
               shadow-[0_0_35px_rgba(59,130,246,0.35)]
             "
           >
-            Book Consultation
+            Get Started Now
             <ArrowRight size={18} />
-          </button>
+          </Link>
 
         </div>
 

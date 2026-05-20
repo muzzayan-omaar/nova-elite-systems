@@ -14,6 +14,9 @@ import Revenue from "./pages/admin/Revenue";
 import Expenses from "./pages/admin/Expenses";
 import SupportTickets from "./pages/admin/SupportTickets";
 import Consultations from "./pages/admin/Consultations";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import RefundPolicy from "./pages/RefundPolicy";
 
 import AdminLogin
 from "./pages/admin/AdminLogin";
@@ -23,6 +26,7 @@ from "./components/admin/ProtectedRoute";
 
 import ServicePage from "./pages/ServicePage";
 import { services } from "./data/servicesData";
+import StartProject from "./pages/StartProject";
 
 function App() {
   return (
@@ -145,6 +149,25 @@ function App() {
     element={<Blog />}
   />
 
+  <Route
+    path="/privacy-policy"
+    element={<PrivacyPolicy />}
+  />
+
+  <Route
+    path="/terms-of-service"
+    element={<TermsOfService />}
+  />
+
+  <Route
+    path="/refund-policy"
+    element={<RefundPolicy />}
+  />
+
+  <Route
+    path="/start-project"
+    element={<StartProject />}
+  />
 </Routes>
     </BrowserRouter>
   );

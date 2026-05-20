@@ -1,6 +1,6 @@
 import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
 import { FaInstagram, FaLinkedinIn, FaFacebookF, FaGlobe } from "react-icons/fa";
-
+import { Link } from "react-router-dom";
 export default function Footer() {
   return (
     <footer className="px-6 pb-10 text-white">
@@ -77,7 +77,7 @@ export default function Footer() {
 
   {/* Instagram */}
   <a
-    href="#"
+    href="https://www.instagram.com/ssekateraymond/"
     className="w-10 h-10 rounded-xl border border-white/10 bg-white/[0.03] hover:border-pink-500/40 hover:bg-pink-500/10 transition flex items-center justify-center text-gray-300"
   >
     <FaInstagram size={18} />
@@ -85,7 +85,7 @@ export default function Footer() {
 
   {/* LinkedIn */}
   <a
-    href="#"
+    href="https://www.linkedin.com/in/ssekateraymond/"
     className="w-10 h-10 rounded-xl border border-white/10 bg-white/[0.03] hover:border-blue-500/40 hover:bg-blue-500/10 transition flex items-center justify-center text-gray-300"
   >
     <FaLinkedinIn size={18} />
@@ -93,7 +93,7 @@ export default function Footer() {
 
   {/* Facebook */}
   <a
-    href="#"
+    href="https://www.facebook.com/ssekateraymond/"
     className="w-10 h-10 rounded-xl border border-white/10 bg-white/[0.03] hover:border-blue-400/40 hover:bg-blue-400/10 transition flex items-center justify-center text-gray-300"
   >
     <FaFacebookF size={18} />
@@ -101,7 +101,9 @@ export default function Footer() {
 
   {/* Website */}
   <a
-    href="#"
+    href="https://www.novaelitesystems.com"
+    target="_blank"
+    rel="noopener noreferrer"
     className="w-10 h-10 rounded-xl border border-white/10 bg-white/[0.03] hover:border-green-500/40 hover:bg-green-500/10 transition flex items-center justify-center text-gray-300"
   >
     <FaGlobe size={18} />
@@ -115,15 +117,43 @@ export default function Footer() {
               <h3 className="font-semibold text-lg mb-5">
                 Services
               </h3>
+<ul className="space-y-3 text-gray-400 text-sm">
+  <li>
+    <Link to="/services/web-development" className="hover:text-white transition">
+      Web Development
+    </Link>
+  </li>
 
-              <ul className="space-y-3 text-gray-400 text-sm">
-                <li>Web Development</li>
-                <li>App Development</li>
-                <li>SaaS Applications</li>
-                <li>Digital Menus</li>
-                <li>CCTV Systems</li>
-                <li>Networking Solutions</li>
-              </ul>
+  <li>
+    <Link to="/services/app-development" className="hover:text-white transition">
+      App Development
+    </Link>
+  </li>
+
+  <li>
+    <Link to="/services/saas-applications" className="hover:text-white transition">
+      SaaS Applications
+    </Link>
+  </li>
+
+  <li>
+    <Link to="/services/access-control" className="hover:text-white transition">
+      Access Control Systems
+    </Link>
+  </li>
+
+  <li>
+    <Link to="/services/cctv-systems" className="hover:text-white transition">
+      CCTV Systems
+    </Link>
+  </li>
+
+  <li>
+    <Link to="/services/networking" className="hover:text-white transition">
+      Networking Solutions
+    </Link>
+  </li>
+</ul>
             </div>
 
             {/* COMPANY */}
@@ -133,11 +163,31 @@ export default function Footer() {
               </h3>
 
               <ul className="space-y-3 text-gray-400 text-sm">
-                <li>About Us</li>
-                <li>Case Studies</li>
-                <li>Blog</li>
-                <li>Contact</li>
-                <li>Get a Quote</li>
+                <li>
+                  <Link to="/about" className="hover:text-white transition">
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/case-studies" className="hover:text-white transition">
+                    Case Studies
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/blog" className="hover:text-white transition">
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/technical-support" className="hover:text-white transition">
+                    Technical Support
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/book-consultation" className="hover:text-white transition">
+                    Get a Quote
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -155,7 +205,7 @@ export default function Footer() {
                     className="text-blue-500 mt-0.5"
                   />
 
-                  <p>Abu Dhabi, United Arab Emirates</p>
+                  <p>Abu Dhabi, United Arab Emirates & Kampala, Uganda</p>
                 </div>
 
                 <div className="flex gap-3 items-center">
@@ -164,7 +214,7 @@ export default function Footer() {
                     className="text-blue-500"
                   />
 
-                  <p>+971 XX XXX XXXX</p>
+                  <p>+971 52 494 7730</p>
                 </div>
 
                 <div className="flex gap-3 items-center">
@@ -173,7 +223,7 @@ export default function Footer() {
                     className="text-blue-500"
                   />
 
-                  <p>hello@novaelitesystems.com</p>
+                  <p>support@novaelitesystems.com</p>
                 </div>
 
               </div>
@@ -194,15 +244,30 @@ export default function Footer() {
               © 2026 NOVA Elite Systems. All rights reserved.
             </p>
 
-            <div className="flex gap-6 text-sm text-gray-500">
-              <button className="hover:text-white transition">
-                Privacy Policy
-              </button>
+<div className="flex gap-6 text-sm text-gray-500">
+  
+  <Link
+    to="/privacy-policy"
+    className="hover:text-white transition"
+  >
+    Privacy Policy
+  </Link>
 
-              <button className="hover:text-white transition">
-                Terms of Service
-              </button>
-            </div>
+  <Link
+    to="/terms-of-service"
+    className="hover:text-white transition"
+  >
+    Terms of Service
+  </Link>
+
+  <Link
+    to="/refund-policy"
+    className="hover:text-white transition"
+  >
+    Refund Policy
+  </Link> 
+
+</div>
           </div>
         </div>
       </div>

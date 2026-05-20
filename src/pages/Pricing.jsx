@@ -1,25 +1,32 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import FAQ from "../components/FAQ";
+
 import {
   Check,
   Sparkles,
   Shield,
-  Globe,
-  Smartphone,
-  Camera,
   ArrowRight,
   ChevronDown,
   ChevronUp,
+  ServerCog,
+  Network,
+  LockKeyhole,
 } from "lucide-react";
 
 export default function Pricing() {
+
   const [activeFilter, setActiveFilter] =
     useState("Web Development");
 
   const [expandedCard, setExpandedCard] =
     useState(null);
+
+  const [currency, setCurrency] =
+    useState("USD");
 
   const filters = [
     "Web Development",
@@ -30,14 +37,22 @@ export default function Pricing() {
     "Access Control",
   ];
 
+  /* =========================
+     STANDARD PRICING SERVICES
+  ========================== */
+
   const pricingData = {
+
     "Web Development": [
       {
         title: "Essential",
         subtitle:
           "Perfect for startups & growing brands",
-        price: "AED 2,500",
+
+        price: "$272.25",
+
         popular: false,
+
         features: [
           "Modern responsive website",
           "Premium UI/UX design",
@@ -51,10 +66,14 @@ export default function Pricing() {
 
       {
         title: "Business Elite",
+
         subtitle:
           "Built for serious businesses ready to scale",
-        price: "AED 6,500",
+
+        price: "$680.63",
+
         popular: true,
+
         features: [
           "Advanced business platform",
           "Admin dashboard",
@@ -69,10 +88,14 @@ export default function Pricing() {
 
       {
         title: "Enterprise",
+
         subtitle:
           "Complete digital infrastructure",
+
         price: "Custom",
+
         popular: false,
+
         features: [
           "Enterprise-grade architecture",
           "Custom SaaS systems",
@@ -87,9 +110,14 @@ export default function Pricing() {
     "Mobile Apps": [
       {
         title: "Starter App",
-        subtitle: "Launch your mobile presence",
-        price: "AED 5,000",
+
+        subtitle:
+          "Launch your mobile presence",
+
+        price: "$217.80",
+
         popular: false,
+
         features: [
           "Android/iOS app",
           "Modern UI",
@@ -101,9 +129,14 @@ export default function Pricing() {
 
       {
         title: "Business App",
-        subtitle: "Powerful scalable mobile apps",
-        price: "AED 12,000",
+
+        subtitle:
+          "Powerful scalable mobile apps",
+
+        price: "$888.99",
+
         popular: true,
+
         features: [
           "Custom backend",
           "Authentication",
@@ -119,12 +152,16 @@ export default function Pricing() {
     "CCTV Systems": [
       {
         title: "Office Security",
+
         subtitle:
           "Reliable monitoring solutions",
-        price: "AED 3,500",
+
+        price: "$277.80",
+
         popular: false,
+
         features: [
-          "HD CCTV cameras",
+          "4 HD CCTV cameras",
           "Remote monitoring",
           "Installation included",
           "Mobile viewing",
@@ -134,10 +171,14 @@ export default function Pricing() {
 
       {
         title: "Enterprise Security",
+
         subtitle:
           "Advanced surveillance infrastructure",
+
         price: "Custom",
+
         popular: true,
+
         features: [
           "AI monitoring",
           "24/7 surveillance",
@@ -150,9 +191,123 @@ export default function Pricing() {
     ],
   };
 
+  /* =========================
+     ENTERPRISE CONSULTATIONS
+  ========================== */
+
+  const consultationData = {
+
+    "SaaS Platforms": {
+      icon: <ServerCog size={26} />,
+
+      title:
+        "Custom SaaS Platforms",
+
+      description:
+        "Enterprise-grade SaaS systems engineered for automation, scalability and operational efficiency.",
+
+      features: [
+        "ERP Systems",
+        "CRM Platforms",
+        "Inventory Systems",
+        "Booking Platforms",
+        "HR Management Systems",
+        "Client Portals",
+        "Cloud Infrastructure",
+        "Advanced API Integrations",
+      ],
+    },
+
+    "Networking": {
+      icon: <Network size={26} />,
+
+      title:
+        "Professional Networking Solutions",
+
+      description:
+        "Reliable and scalable networking infrastructure for offices, apartments, schools and enterprise facilities.",
+
+      features: [
+        "Structured Cabling",
+        "WiFi Deployment",
+        "Router Configuration",
+        "Switch Management",
+        "Rack Installation",
+        "Network Security",
+        "Multi-floor Coverage",
+        "Enterprise Maintenance",
+      ],
+    },
+
+    "Access Control": {
+      icon: <LockKeyhole size={26} />,
+
+      title:
+        "Smart Access Control Systems",
+
+      description:
+        "Modern security systems designed to control access, attendance and facility protection.",
+
+      features: [
+        "Biometric Systems",
+        "RFID Access",
+        "Attendance Systems",
+        "Smart Locks",
+        "Gate Automation",
+        "Multi-door Management",
+        "Remote Access Control",
+        "Security Integration",
+      ],
+    },
+  };
+
+  /* =========================
+     PRICE FORMATTER
+  ========================== */
+
+  const USD_TO_UGX = 3800;
+
+  const formatPrice = (price) => {
+
+    if (
+      !price ||
+      price.toLowerCase() === "custom"
+    ) {
+      return "Custom";
+    }
+
+    const numeric = parseFloat(
+      price
+        .replace("$", "")
+        .replace(",", "")
+    );
+
+    if (isNaN(numeric)) {
+      return price;
+    }
+
+    if (currency === "USD") {
+      return `$${numeric.toFixed(2)}`;
+    }
+
+    const ugx = numeric * USD_TO_UGX;
+
+    return `UGX ${ugx.toLocaleString()}`;
+  };
+
+  /* =========================
+     HELPERS
+  ========================== */
+
+  const isConsultation =
+    [
+      "SaaS Platforms",
+      "Networking",
+      "Access Control",
+    ].includes(activeFilter);
+
   const plans =
-    pricingData[activeFilter] ||
-    pricingData["Web Development"];
+    pricingData[activeFilter] || [];
 
   return (
     <>
@@ -169,9 +324,11 @@ export default function Pricing() {
           px-5 md:px-8
         "
       >
+
         <div className="max-w-7xl mx-auto">
 
           {/* HERO */}
+
           <div
             className="
               text-center
@@ -222,26 +379,30 @@ export default function Pricing() {
                 leading-relaxed
               "
             >
-              Premium digital systems built for
-              ambitious businesses.
+              Premium digital systems built
+              for ambitious businesses.
             </p>
           </div>
 
           {/* FILTERS */}
+
           <div
             className="
               flex flex-wrap
               justify-center
               gap-3
-              mb-14
+              mb-10
             "
           >
             {filters.map((item, index) => (
+
               <button
                 key={index}
+
                 onClick={() =>
                   setActiveFilter(item)
                 }
+
                 className={`
                   px-5 py-2.5
                   rounded-full
@@ -270,830 +431,481 @@ export default function Pricing() {
             ))}
           </div>
 
-          {/* CARDS */}
-          <div
-            className="
-              grid lg:grid-cols-3
-              gap-6
-              items-start
-              mb-16
-            "
-          >
-            {plans.map((plan, index) => {
+          {/* CURRENCY TOGGLE */}
 
-              const expanded =
-                expandedCard === index;
+          {!isConsultation && (
 
-              const visibleFeatures =
-                expanded
-                  ? plan.features
-                  : plan.features.slice(0, 4);
+            <div className="flex justify-center mb-8">
 
-              return (
-                <div
-                  key={index}
+              <div
+                className="
+                  flex items-center
+                  gap-2
+                  p-1
+                  bg-white/5
+                  border border-white/10
+                  rounded-xl
+                "
+              >
+
+                <button
+                  onClick={() =>
+                    setCurrency("USD")
+                  }
+
                   className={`
-                    relative
-                    rounded-[28px]
-                    border
-                    overflow-hidden
-                    backdrop-blur-2xl
-                    transition-all duration-500
+                    px-4 py-2
+                    text-sm
+                    rounded-lg
+                    transition
 
                     ${
-                      plan.popular
-                        ? `
-                          border-blue-500/40
-                          bg-blue-500/[0.08]
-                          shadow-[0_0_50px_rgba(59,130,246,0.16)]
-                        `
-                        : `
-                          border-white/10
-                          bg-white/[0.03]
-                        `
+                      currency === "USD"
+                        ? "bg-blue-600 text-white"
+                        : "text-gray-400 hover:text-white"
                     }
                   `}
                 >
+                  USD
+                </button>
 
-                  {plan.popular && (
-                    <div
-                      className="
-                        absolute
-                        top-4 right-4
-                        px-3 py-1
-                        rounded-full
-                        bg-blue-600
-                        text-[10px]
-                        font-semibold
-                      "
-                    >
-                      POPULAR
-                    </div>
-                  )}
+                <button
+                  onClick={() =>
+                    setCurrency("UGX")
+                  }
 
-                  <div className="p-6">
+                  className={`
+                    px-4 py-2
+                    text-sm
+                    rounded-lg
+                    transition
 
-                    <div className="mb-6">
-                      <h3
-                        className="
-                          text-xl
-                          font-bold
-                          mb-2
-                        "
-                      >
-                        {plan.title}
-                      </h3>
+                    ${
+                      currency === "UGX"
+                        ? "bg-blue-600 text-white"
+                        : "text-gray-400 hover:text-white"
+                    }
+                  `}
+                >
+                  UGX
+                </button>
 
-                      <p
-                        className="
-                          text-gray-400
-                          text-sm
-                        "
-                      >
-                        {plan.subtitle}
-                      </p>
-                    </div>
+              </div>
 
-                    <div className="mb-6">
-                      <h2
-                        className="
-                          text-3xl
-                          font-bold
-                        "
-                      >
-                        {plan.price}
-                      </h2>
-                    </div>
+            </div>
+          )}
 
-                    <div className="space-y-3 mb-5">
-                      {visibleFeatures.map(
-                        (feature, idx) => (
-                          <div
-                            key={idx}
-                            className="
-                              flex items-start
-                              gap-3
-                            "
-                          >
-                            <div
-                              className="
-                                w-5 h-5
-                                rounded-full
-                                bg-blue-500/15
-                                flex items-center
-                                justify-center
-                                shrink-0 mt-0.5
-                              "
-                            >
-                              <Check
-                                size={12}
-                                className="text-blue-400"
-                              />
-                            </div>
+          {/* =========================
+              CONSULTATION SERVICES
+          ========================== */}
 
-                            <span
-                              className="
-                                text-gray-300
-                                text-sm
-                              "
-                            >
-                              {feature}
-                            </span>
-                          </div>
-                        )
-                      )}
-                    </div>
-
-                    {plan.features.length > 4 && (
-                      <button
-                        onClick={() =>
-                          setExpandedCard(
-                            expanded
-                              ? null
-                              : index
-                          )
-                        }
-                        className="
-                          flex items-center
-                          gap-2
-                          text-blue-400
-                          text-sm
-                          mb-6
-                        "
-                      >
-                        {expanded
-                          ? "Show Less"
-                          : "Show More"}
-
-                        {expanded ? (
-                          <ChevronUp size={15} />
-                        ) : (
-                          <ChevronDown size={15} />
-                        )}
-                      </button>
-                    )}
-
-                    <button
-                      className={`
-                        w-full
-                        py-3
-                        rounded-2xl
-                        text-sm
-                        font-medium
-                        transition-all duration-300
-                        flex items-center
-                        justify-center
-                        gap-2
-
-                        ${
-                          plan.popular
-                            ? `
-                              bg-blue-600
-                              hover:bg-blue-500
-                            `
-                            : `
-                              bg-white/[0.05]
-                              border border-white/10
-                              hover:border-blue-500/40
-                            `
-                        }
-                      `}
-                    >
-                      Get Started
-                      <ArrowRight size={15} />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* VISUAL */}
-          <div
-            className="
-              relative
-              rounded-[32px]
-              overflow-hidden
-              border border-white/10
-              bg-[#091120]
-              mb-20
-            "
-          >
+          {isConsultation && (
 
             <div
               className="
-                absolute inset-0
-                bg-gradient-to-r
-                from-[#050816]/95
-                via-[#050816]/70
-                to-transparent
-                z-10
-              "
-            />
-
-            <img
-              src="https://res.cloudinary.com/diszilwhc/image/upload/v1777984942/globe1_g9sjcl.jpg"
-              alt="NOVA"
-              className="
-                w-full
-                h-[300px]
-                object-cover
-                scale-110
-              "
-            />
-
-            <div
-              className="
-                absolute inset-0
-                z-20
-                flex items-center
-                px-8 md:px-14
+                max-w-5xl
+                mx-auto
+                rounded-[32px]
+                border border-white/10
+                bg-white/[0.03]
+                backdrop-blur-2xl
+                overflow-hidden
+                mb-20
               "
             >
-              <div className="max-w-xl">
+
+              <div className="p-8 md:p-12">
 
                 <div
                   className="
-                    inline-flex
-                    items-center
-                    gap-2
-                    px-4 py-2
-                    rounded-full
+                    w-14 h-14
+                    rounded-2xl
                     bg-blue-500/10
                     border border-blue-500/20
                     text-blue-400
-                    text-sm
-                    mb-5
+                    flex items-center
+                    justify-center
+                    mb-6
                   "
                 >
-                  <Shield size={15} />
-                  Trusted Technology Partner
+                  {
+                    consultationData[
+                      activeFilter
+                    ].icon
+                  }
                 </div>
 
                 <h2
                   className="
-                    text-3xl md:text-4xl
+                    text-3xl
+                    md:text-4xl
                     font-bold
-                    leading-tight
                     mb-5
                   "
                 >
-                  Technology That Makes
-                  <span className="text-blue-500">
-                    {" "}
-                    Businesses Stand Out.
-                  </span>
+                  {
+                    consultationData[
+                      activeFilter
+                    ].title
+                  }
                 </h2>
 
                 <p
                   className="
-                    text-gray-300
-                    text-sm md:text-base
+                    text-gray-400
                     leading-relaxed
+                    max-w-3xl
+                    mb-10
                   "
                 >
-                  We create modern premium systems
-                  engineered to increase trust,
-                  growth and business credibility.
+                  {
+                    consultationData[
+                      activeFilter
+                    ].description
+                  }
                 </p>
+
+                <div
+                  className="
+                    grid
+                    md:grid-cols-2
+                    gap-4
+                    mb-10
+                  "
+                >
+
+                  {
+                    consultationData[
+                      activeFilter
+                    ].features.map(
+                      (feature, index) => (
+
+                        <div
+                          key={index}
+
+                          className="
+                            flex items-center
+                            gap-3
+                            p-4
+                            rounded-2xl
+                            border border-white/10
+                            bg-white/[0.02]
+                          "
+                        >
+
+                          <div
+                            className="
+                              w-5 h-5
+                              rounded-full
+                              bg-blue-500/15
+                              flex items-center
+                              justify-center
+                              shrink-0
+                            "
+                          >
+                            <Check
+                              size={12}
+                              className="text-blue-400"
+                            />
+                          </div>
+
+                          <span className="text-sm text-gray-300">
+                            {feature}
+                          </span>
+
+                        </div>
+                      )
+                    )
+                  }
+
+                </div>
+
+                <div className="flex flex-wrap gap-4">
+
+                  <Link
+                    to="/contact"
+
+                    className="
+                      inline-flex
+                      items-center
+                      gap-2
+                      px-6 py-3
+                      rounded-xl
+                      bg-blue-600
+                      hover:bg-blue-500
+                      transition
+                      text-sm
+                      font-medium
+                    "
+                  >
+                    Request Consultation
+                    <ArrowRight size={16} />
+                  </Link>
+
+                  <Link
+                    to="/pricing"
+
+                    className="
+                      inline-flex
+                      items-center
+                      gap-2
+                      px-6 py-3
+                      rounded-xl
+                      border border-white/10
+                      hover:border-blue-500/30
+                      hover:bg-white/[0.03]
+                      transition
+                      text-sm
+                    "
+                  >
+                    Discuss Requirements
+                  </Link>
+
+                </div>
+
               </div>
+
             </div>
-          </div>
+          )}
 
-{/* PROJECT SHOWCASE */}
-<section className="relative mt-24">
+          {/* =========================
+              STANDARD PRICING CARDS
+          ========================== */}
 
-  <div
-    className="
-      relative
-      overflow-hidden
-      rounded-[34px]
-      border border-white/10
-      bg-[#09101d]
-      min-h-[520px]
-      flex items-center
-    "
-  >
+          {!isConsultation && (
 
-    {/* STACKED WEBSITES */}
-    <div
-      className="
-        absolute
-        right-[-80px]
-        top-1/2
-        -translate-y-1/2
-        w-[75%]
-        h-full
-        pointer-events-none
-      "
-    >
+            <div
+              className="
+                grid lg:grid-cols-3
+                gap-6
+                items-start
+                mb-16
+              "
+            >
 
-      {/* IMAGE 1 */}
-      <img
-        src="https://res.cloudinary.com/diszilwhc/image/upload/v1778424694/web1_iq30vk.jpg"
-        alt=""
-        className="
-          absolute
-          top-[60px]
-          right-[220px]
-          w-[420px]
-          rounded-[24px]
+              {plans.map((plan, index) => {
+
+                const expanded =
+                  expandedCard === index;
+
+                const visibleFeatures =
+                  expanded
+                    ? plan.features
+                    : plan.features.slice(0, 4);
+
+                return (
+
+                  <div
+                    key={index}
+
+                    className={`
+                      relative
+                      rounded-[28px]
+                      border
+                      overflow-hidden
+                      backdrop-blur-2xl
+                      transition-all duration-500
+
+                      ${
+                        plan.popular
+                          ? `
+                            border-blue-500/40
+                            bg-blue-500/[0.08]
+                            shadow-[0_0_50px_rgba(59,130,246,0.16)]
+                          `
+                          : `
+                            border-white/10
+                            bg-white/[0.03]
+                          `
+                      }
+                    `}
+                  >
+
+                    {plan.popular && (
+
+                      <div
+                        className="
+                          absolute
+                          top-4 right-4
+                          px-3 py-1
+                          rounded-full
+                          bg-blue-600
+                          text-[10px]
+                          font-semibold
+                        "
+                      >
+                        POPULAR
+                      </div>
+                    )}
+
+                    <div className="p-6">
+
+                      <div className="mb-6">
+
+                        <h3
+                          className="
+                            text-xl
+                            font-bold
+                            mb-2
+                          "
+                        >
+                          {plan.title}
+                        </h3>
+
+                        <p
+                          className="
+                            text-gray-400
+                            text-sm
+                          "
+                        >
+                          {plan.subtitle}
+                        </p>
+
+                      </div>
+
+                      <div className="mb-6">
+
+                        <h2
+                          className="
+                            text-3xl
+                            font-bold
+                          "
+                        >
+                          {formatPrice(plan.price)}
+                        </h2>
+
+                      </div>
+
+                      <div className="space-y-3 mb-5">
+
+                        {visibleFeatures.map(
+                          (feature, idx) => (
+
+                            <div
+                              key={idx}
+
+                              className="
+                                flex items-start
+                                gap-3
+                              "
+                            >
+
+                              <div
+                                className="
+                                  w-5 h-5
+                                  rounded-full
+                                  bg-blue-500/15
+                                  flex items-center
+                                  justify-center
+                                  shrink-0 mt-0.5
+                                "
+                              >
+                                <Check
+                                  size={12}
+                                  className="text-blue-400"
+                                />
+                              </div>
+
+                              <span
+                                className="
+                                  text-gray-300
+                                  text-sm
+                                "
+                              >
+                                {feature}
+                              </span>
+
+                            </div>
+                          )
+                        )}
+
+                      </div>
+
+                      {plan.features.length > 4 && (
+
+                        <button
+                          onClick={() =>
+                            setExpandedCard(
+                              expanded
+                                ? null
+                                : index
+                            )
+                          }
+
+                          className="
+                            flex items-center
+                            gap-2
+                            text-blue-400
+                            text-sm
+                            mb-6
+                          "
+                        >
+
+                          {
+                            expanded
+                              ? "Show Less"
+                              : "Show More"
+                          }
+
+                          {
+                            expanded
+                              ? <ChevronUp size={15} />
+                              : <ChevronDown size={15} />
+                          }
+
+                        </button>
+                      )}
+
+<Link
+  to="/start-project"
+  state={{
+    service: activeFilter,
+    packageData: plan,
+  }}
+  className={`
+    w-full
+    py-3
+    rounded-2xl
+    text-sm
+    font-medium
+    transition-all duration-300
+    flex items-center
+    justify-center
+    gap-2
+
+    ${
+      plan.popular
+        ? `
+          bg-blue-600
+          hover:bg-blue-500
+        `
+        : `
+          bg-white/[0.05]
           border border-white/10
-          shadow-[0_25px_80px_rgba(0,0,0,0.45)]
-          rotate-[-10deg]
-          hover:rotate-[-6deg]
-          transition-all duration-500
-        "
-      />
-
-      {/* IMAGE 2 */}
-      <img
-        src="https://res.cloudinary.com/diszilwhc/image/upload/v1778424694/web2_by84l5.jpg"
-        alt=""
-        className="
-          absolute
-          top-[140px]
-          right-[60px]
-          w-[460px]
-          rounded-[24px]
-          border border-white/10
-          shadow-[0_25px_80px_rgba(0,0,0,0.5)]
-          rotate-[8deg]
-          z-10
-          hover:rotate-[4deg]
-          transition-all duration-500
-        "
-      />
-
-      {/* IMAGE 3 */}
-      <img
-        src="https://res.cloudinary.com/diszilwhc/image/upload/v1778424694/web3_qljmjj.jpg"
-        alt=""
-        className="
-          absolute
-          bottom-[40px]
-          right-[260px]
-          w-[390px]
-          rounded-[24px]
-          border border-white/10
-          shadow-[0_25px_80px_rgba(0,0,0,0.45)]
-          rotate-[12deg]
-          hover:rotate-[6deg]
-          transition-all duration-500
-        "
-      />
-    </div>
-
-    {/* LEFT OVERLAY */}
-    <div
-      className="
-        absolute
-        inset-0
-        bg-gradient-to-r
-        from-[#08101c]
-        via-[#08101cf2]
-        via-[#08101cd8]
-        to-transparent
-        z-10
-      "
-    />
-
-    {/* CONTENT */}
-    <div
-      className="
-        relative
-        z-20
-        max-w-xl
-        px-8
-        md:px-16
-        py-16
-      "
-    >
-
-      <p
-        className="
-          text-blue-400
-          uppercase
-          tracking-[0.28em]
-          text-xs
-          font-semibold
-          mb-5
-        "
-      >
-        REAL CLIENT WORK
-      </p>
-
-      <h2
-        className="
-          text-4xl
-          md:text-5xl
-          font-bold
-          leading-tight
-        "
-      >
-        Real Projects.
-        <br />
-        <span className="text-blue-500">
-          Yours Is Next.
-        </span>
-      </h2>
-
-      <p
-        className="
-          mt-6
-          text-gray-400
-          leading-relaxed
-          text-sm
-          md:text-base
-          max-w-md
-        "
-      >
-        From premium business websites to scalable
-        platforms and enterprise systems — NOVA builds
-        digital experiences designed to elevate brands,
-        increase trust and drive real business growth.
-      </p>
-
-      <div className="flex gap-4 mt-8">
-
-        <button
-          className="
-            bg-blue-600
-            hover:bg-blue-500
-            px-6 py-3
-            rounded-xl
-            text-sm
-            font-medium
-            transition
-            shadow-[0_0_30px_rgba(59,130,246,0.25)]
-          "
-        >
-          Start Your Project
-        </button>
-
-        <button
-          className="
-            border border-white/10
-            hover:border-blue-500/30
-            hover:bg-white/[0.03]
-            px-6 py-3
-            rounded-xl
-            text-sm
-            transition
-          "
-        >
-          View Portfolio
-        </button>
-
-      </div>
-    </div>
-  </div>
-</section>
-
-{/* TESTIMONIAL EXPERIENCE */}
-<section
-  className="
-    relative
-    py-28
-    overflow-hidden
-  "
+          hover:border-blue-500/40
+        `
+    }
+  `}
 >
+  Get Started
+  <ArrowRight size={15} />
+</Link>
 
-  {/* BACKGROUND GLOW */}
-  <div
-    className="
-      absolute
-      top-0
-      left-1/2
-      -translate-x-1/2
-      w-[900px]
-      h-[900px]
-      bg-blue-500/10
-      blur-[180px]
-      rounded-full
-      pointer-events-none
-    "
-  />
+                    </div>
 
-  {/* HUGE QUOTE */}
-  <div
-    className="
-      absolute
-      top-10
-      left-8
-      text-[220px]
-      md:text-[340px]
-      font-bold
-      leading-none
-      text-white/[0.03]
-      pointer-events-none
-      select-none
-    "
-  >
-    “
-  </div>
+                  </div>
+                );
+              })}
 
-  <div
-    className="
-      relative
-      z-10
-      max-w-7xl
-      mx-auto
-      px-6
-      grid
-      md:grid-cols-2
-      gap-20
-      items-center
-    "
-  >
+            </div>
+          )}
 
-    {/* LEFT CONTENT */}
-    <div>
-
-      <p
-        className="
-          text-blue-400
-          uppercase
-          tracking-[0.3em]
-          text-xs
-          font-semibold
-          mb-5
-        "
-      >
-        CLIENT EXPERIENCES
-      </p>
-
-      <h2
-        className="
-          text-4xl
-          md:text-6xl
-          font-bold
-          leading-[1.05]
-        "
-      >
-        Trusted By
-        <br />
-
-        Businesses
-        <br />
-
-        <span className="text-blue-500">
-          That Expect More.
-        </span>
-      </h2>
-
-      <p
-        className="
-          mt-7
-          text-gray-400
-          leading-relaxed
-          text-sm
-          md:text-base
-          max-w-lg
-        "
-      >
-        NOVA helps businesses elevate their image,
-        modernize operations and create digital
-        experiences that build trust and drive growth.
-      </p>
-
-      {/* METRICS */}
-      <div
-        className="
-          flex
-          flex-wrap
-          gap-8
-          mt-10
-        "
-      >
-
-        {[
-          {
-            value: "120+",
-            label: "Projects Delivered",
-          },
-
-          {
-            value: "98%",
-            label: "Client Satisfaction",
-          },
-
-          {
-            value: "24hr",
-            label: "Fast Turnaround",
-          },
-        ].map((item, index) => (
-          <div key={index}>
-            <h3
-              className="
-                text-2xl
-                md:text-3xl
-                font-bold
-                text-white
-              "
-            >
-              {item.value}
-            </h3>
-
-            <p
-              className="
-                text-sm
-                text-gray-500
-                mt-1
-              "
-            >
-              {item.label}
-            </p>
-          </div>
-        ))}
-
-      </div>
-    </div>
-
-    {/* FLOATING TESTIMONIALS */}
-    <div
-      className="
-        relative
-        h-[520px]
-        hidden md:block
-      "
-    >
-
-      {/* TESTIMONIAL 1 */}
-      <div
-        className="
-          absolute
-          top-0
-          left-0
-          max-w-[280px]
-          animate-[float_6s_ease-in-out_infinite]
-        "
-      >
-
-        <p
-          className="
-            text-2xl
-            leading-relaxed
-            text-white/90
-            font-light
-          "
-        >
-          “NOVA completely transformed our online
-          presence. Clients immediately noticed the
-          difference.”
-        </p>
-
-        <div className="mt-5">
-          <p className="text-sm text-white font-medium">
-            Ahmed Kareem
-          </p>
-
-          <p className="text-xs text-gray-500 uppercase tracking-[0.2em]">
-            AK Logistics
-          </p>
-        </div>
-      </div>
-
-      {/* TESTIMONIAL 2 */}
-      <div
-        className="
-          absolute
-          top-[140px]
-          right-0
-          max-w-[260px]
-          animate-[float_8s_ease-in-out_infinite]
-        "
-      >
-
-        <p
-          className="
-            text-xl
-            leading-relaxed
-            text-white/80
-            font-light
-          "
-        >
-          “The professionalism and execution felt like
-          working with a much larger agency.”
-        </p>
-
-        <div className="mt-5">
-          <p className="text-sm text-white font-medium">
-            Sarah Malik
-          </p>
-
-          <p className="text-xs text-gray-500 uppercase tracking-[0.2em]">
-            Elevate Clinics
-          </p>
-        </div>
-      </div>
-
-      {/* TESTIMONIAL 3 */}
-      <div
-        className="
-          absolute
-          bottom-0
-          left-[80px]
-          max-w-[320px]
-          animate-[float_7s_ease-in-out_infinite]
-        "
-      >
-
-        <p
-          className="
-            text-2xl
-            leading-relaxed
-            text-white/90
-            font-light
-          "
-        >
-          “Fast delivery. Premium quality.
-          The entire process felt effortless.”
-        </p>
-
-        <div className="mt-5">
-          <p className="text-sm text-white font-medium">
-            Daniel Moyo
-          </p>
-
-          <p className="text-xs text-gray-500 uppercase tracking-[0.2em]">
-            NovaFit Gym
-          </p>
-        </div>
-      </div>
-
-    </div>
-
-    {/* MOBILE TESTIMONIALS */}
-    <div className="space-y-10 md:hidden">
-
-      {[
-        {
-          quote:
-            "NOVA completely transformed our online presence.",
-          name: "Ahmed Kareem",
-          company: "AK Logistics",
-        },
-
-        {
-          quote:
-            "The professionalism felt world-class from start to finish.",
-          name: "Sarah Malik",
-          company: "Elevate Clinics",
-        },
-
-        {
-          quote:
-            "Fast delivery and premium quality throughout.",
-          name: "Daniel Moyo",
-          company: "NovaFit Gym",
-        },
-      ].map((item, index) => (
-        <div key={index}>
-
-          <p
-            className="
-              text-xl
-              text-white/90
-              leading-relaxed
-              font-light
-            "
-          >
-            “{item.quote}”
-          </p>
-
-          <div className="mt-4">
-            <p className="text-sm font-medium text-white">
-              {item.name}
-            </p>
-
-            <p
-              className="
-                text-xs
-                uppercase
-                tracking-[0.2em]
-                text-gray-500
-                mt-1
-              "
-            >
-              {item.company}
-            </p>
-          </div>
+          <FAQ />
+          <Footer />
 
         </div>
-      ))}
 
-    </div>
-
-  </div>
-</section>
-
-        </div>
-        <FAQ />
-        <Footer />
       </section>
-        
-      
     </>
   );
 }

@@ -10,6 +10,7 @@ import {
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import {Link} from "react-router-dom";
 
 export default function About() {
   return (
@@ -303,12 +304,12 @@ export default function About() {
       {
         year: "2023",
         title: "Foundation Stage",
-        desc: "Started with CCTV installations and basic website development for small businesses."
+        desc: "Started with CCTV installations and basic website development for businesses around Kampala, including hardware suppliers and fuel stations. "
       },
       {
         year: "2024",
         title: "Growth & Expansion",
-        desc: "Expanded into networking systems, structured web platforms, and business-focused solutions."
+        desc: "Officially registered as a company and expanded into networking systems, structured web platforms, and business-focused solutions."
       },
       {
         year: "2025+",
@@ -482,16 +483,16 @@ export default function About() {
 
       {[
         {
-          name: "YAWHEY GENERAL HARDWARE",
+          name: "YAWEY GENERAL HARDWARE",
           location: "Uganda",
-          type: "Retail / Hardware Systems Support",
-          note: "Long-term systems support and digital presence setup."
+          type: "CCTV Installations & Support",
+          note: "Comprehensive security solutions for retail and storage facilities."
         },
         {
           name: "MBS GENERAL HARDWARE",
           location: "Nsangi, Uganda",
-          type: "Inventory & Business Systems",
-          note: "Structured digital support for business operations."
+          type: "CCTV Installations & Support",
+          note: "Security systems for retail and storage facilities, ensuring safety and monitoring."
         },
         {
           name: "GERTMIL UGANDA",
@@ -502,20 +503,20 @@ export default function About() {
         {
           name: "CHART PETROL STATION",
           location: "Kitemu, Uganda",
-          type: "Fuel Station Systems",
-          note: "Operational infrastructure and system reliability support."
+          type: "CCTV Installations & Support",
+          note: "Security solutions for fuel station monitoring and safety. "
         },
         {
           name: "NSANGI PARENTS SCHOOL",
           location: "Uganda",
-          type: "Education Systems Support",
-          note: "Digital and operational systems assistance for school environment."
+          type: "CCTV Installations & Support",
+          note: "Comprehensive security solutions for educational institutions."
         },
         {
-          name: "MAYA (PRIVATE CLIENT)",
+          name: "EYENET UGANDA LIMITED",
           location: "Uganda",
-          type: "Individual Client",
-          note: "Personalized digital and technical support services."
+          type: "Web development",
+          note: "Modern website development for one of the leading security solutions companies in Uganda, enhancing their online presence and customer engagement."
         }
       ].map((c, i) => (
         <div
@@ -678,26 +679,26 @@ export default function About() {
             </span>
             {" "}That Actually Stand Out
           </h2>
-
-          <button
-            className="
-              mt-10
-              inline-flex
-              items-center
-              gap-3
-              px-7 py-4
-              rounded-2xl
-              bg-blue-600
-              hover:bg-blue-500
-              transition
-              text-sm
-              font-medium
-              shadow-[0_0_35px_rgba(59,130,246,0.35)]
-            "
-          >
-            Start Your Project
-            <ArrowRight size={18} />
-          </button>
+<Link
+  to="/pricing"
+  className="
+    mt-10
+    inline-flex
+    items-center
+    gap-3
+    px-7 py-4
+    rounded-2xl
+    bg-blue-600
+    hover:bg-blue-500
+    transition
+    text-sm
+    font-medium
+    shadow-[0_0_35px_rgba(59,130,246,0.35)]
+  "
+>
+  Start Your Project
+  <ArrowRight size={18} />
+</Link>
 
         </div>
 

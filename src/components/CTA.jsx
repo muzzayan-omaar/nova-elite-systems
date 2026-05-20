@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function CTA() {
   return (
@@ -138,69 +139,69 @@ text-base
           >
 
             {/* PRIMARY BUTTON */}
-            <button
-              className="
-                group
-                relative overflow-hidden
-                min-w-[210px]
-                px-8 py-4
-                rounded-xl
-                bg-blue-600
-                hover:bg-blue-500
-                transition-all duration-300
-                font-semibold
-                text-base
-                shadow-[0_0_35px_rgba(59,130,246,0.35)]
-              "
-            >
+<Link
+  to="/book-consultation"
+  className="
+    group
+    relative overflow-hidden
+    min-w-[210px]
+    px-8 py-4
+    rounded-xl
+    bg-blue-600
+    hover:bg-blue-500
+    transition-all duration-300
+    font-semibold
+    text-base
+    shadow-[0_0_35px_rgba(59,130,246,0.35)]
+    inline-flex items-center justify-center
+  "
+>
+  {/* BUTTON GLOW */}
+  <div
+    className="
+      absolute inset-0
+      bg-gradient-to-r
+      from-white/10
+      to-transparent
+      opacity-40
+    "
+  />
 
-              {/* BUTTON GLOW */}
-              <div
-                className="
-                  absolute inset-0
-                  bg-gradient-to-r
-                  from-white/10
-                  to-transparent
-                  opacity-40
-                "
-              />
-
-              <span className="relative z-10 flex items-center justify-center gap-3">
-                Get a Quote
-
-                <ArrowRight
-                  size={20}
-                  className="group-hover:translate-x-1 transition"
-                />
-              </span>
-            </button>
+  <span className="relative z-10 flex items-center justify-center gap-3">
+    Get a Quote
+    <ArrowRight
+      size={20}
+      className="group-hover:translate-x-1 transition"
+    />
+  </span>
+</Link>
 
             {/* SECONDARY BUTTON */}
-            <button
-              className="
-                group
-                min-w-[210px]
-                px-8 py-4
-                rounded-xl
-                border border-white/10
-                bg-white/[0.02]
-                hover:border-green-500/40
-                hover:bg-white/[0.04]
-                transition-all duration-300
-                font-semibold
-                text-lg
-                backdrop-blur-xl
-              "
-            >
-
-              <span className="flex items-center justify-center gap-3">
-
-                {/* whatsapp */}
-               <FaWhatsapp className="text-green-500" size={18} />
-
-                WhatsApp Us
-              </span>
-            </button>
+    <a
+  href="https://wa.me/971582469913"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="
+    group
+    min-w-[210px]
+    px-8 py-4
+    rounded-xl
+    border border-white/10
+    bg-white/[0.02]
+    hover:border-green-500/40
+    hover:bg-white/[0.04]
+    transition-all duration-300
+    font-semibold
+    text-lg
+    backdrop-blur-xl
+    inline-flex items-center justify-center
+  "
+>
+  <span className="flex items-center justify-center gap-3">
+    <FaWhatsapp className="text-green-500" size={18} />
+    WhatsApp Us
+  </span>
+</a>
           </div>
         </div>
       </div>
