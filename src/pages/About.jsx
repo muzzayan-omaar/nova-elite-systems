@@ -452,6 +452,109 @@ export default function About() {
 
         </div>
 
+        {/* original clients */}
+        {/* CLIENT TRUST SECTION */}
+<div className="mt-32 relative">
+
+  {/* TOP INTRO */}
+  <div className="max-w-4xl mx-auto text-center px-6">
+
+    <p className="uppercase tracking-[0.3em] text-[11px] text-blue-400 font-semibold mb-5">
+      Trusted By Real Businesses
+    </p>
+
+    <h2 className="text-3xl md:text-5xl font-bold leading-tight">
+      Built With Businesses That
+      <span className="text-blue-500"> Rely On Us Daily</span>
+    </h2>
+
+    <p className="mt-6 text-gray-400 text-sm md:text-base leading-relaxed">
+      Our work is trusted by real companies across Uganda — from hardware suppliers to fuel stations and schools —
+      who depend on stable systems, reliable support, and long-term digital solutions.
+    </p>
+
+  </div>
+
+  {/* CLIENT WALL (NO CARDS - JUST LIST STYLE) */}
+  <div className="mt-20 max-w-5xl mx-auto px-6">
+
+    <div className="space-y-10">
+
+      {[
+        {
+          name: "YAWHEY GENERAL HARDWARE",
+          location: "Uganda",
+          type: "Retail / Hardware Systems Support",
+          note: "Long-term systems support and digital presence setup."
+        },
+        {
+          name: "MBS GENERAL HARDWARE",
+          location: "Nsangi, Uganda",
+          type: "Inventory & Business Systems",
+          note: "Structured digital support for business operations."
+        },
+        {
+          name: "GERTMIL UGANDA",
+          location: "Uganda",
+          type: "Equipment Supply Partner",
+          note: "Trusted supplier for technical and installation equipment."
+        },
+        {
+          name: "CHART PETROL STATION",
+          location: "Kitemu, Uganda",
+          type: "Fuel Station Systems",
+          note: "Operational infrastructure and system reliability support."
+        },
+        {
+          name: "NSANGI PARENTS SCHOOL",
+          location: "Uganda",
+          type: "Education Systems Support",
+          note: "Digital and operational systems assistance for school environment."
+        },
+        {
+          name: "MAYA (PRIVATE CLIENT)",
+          location: "Uganda",
+          type: "Individual Client",
+          note: "Personalized digital and technical support services."
+        }
+      ].map((c, i) => (
+        <div
+          key={i}
+          className="group flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6"
+        >
+
+          {/* LEFT */}
+          <div>
+            <h3 className="text-lg font-semibold group-hover:text-blue-400 transition">
+              {c.name}
+            </h3>
+
+            <p className="text-sm text-gray-500 mt-1">
+              {c.type} • {c.location}
+            </p>
+          </div>
+
+          {/* RIGHT NOTE */}
+          <p className="text-sm text-gray-400 md:max-w-md leading-relaxed md:text-right">
+            {c.note}
+          </p>
+
+        </div>
+      ))}
+
+    </div>
+
+  </div>
+
+  {/* SUBTLE FOOT NOTE */}
+  <div className="text-center mt-16 px-6">
+    <p className="text-xs text-gray-500 tracking-[0.2em] uppercase">
+      Real clients. Real systems. Real reliability.
+    </p>
+  </div>
+
+</div>
+
         {/* WHY NOVA */}
         <div
           className="
