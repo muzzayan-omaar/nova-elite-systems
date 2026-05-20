@@ -13,6 +13,50 @@ export default function Home() {
     <div className="bg-[#0B0F1A]">
       <Navbar />
       <Hero />
+        <div className="text-center">
+
+    <p
+      className="
+        uppercase
+        tracking-[0.28em]
+        text-[11px]
+        text-blue-400
+        font-semibold
+        mb-5
+      "
+    >
+      TECHNOLOGY ECOSYSTEM
+    </p>
+
+    <h2
+      className="
+        text-3xl
+        md:text-4xl
+        font-semibold
+      "
+    >
+      Trusted Technologies &
+      <span className="text-blue-500">
+        {" "}Infrastructure
+      </span>
+    </h2>
+
+    <p
+      className="
+        mt-5
+        text-gray-400
+        text-sm
+        max-w-2xl
+        mx-auto
+        leading-relaxed
+      "
+    >
+      NOVA leverages trusted platforms,
+      cloud infrastructure and enterprise-grade
+      technologies used globally.
+    </p>
+
+  </div>
        <div
     className="
       flex
