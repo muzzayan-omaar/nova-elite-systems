@@ -31,10 +31,10 @@ export default function Hero() {
     opacity-40
   "
 >
-  <source
-    src="https://www.w3schools.com/howto/rain.mp4"
-    type="video/mp4"
-  />
+<source
+  src="https://assets.mixkit.co/videos/preview/mixkit-man-working-on-his-laptop-5075-large.mp4"
+  type="video/mp4"
+/>
 </video>
 
 {/* MAIN OVERLAY */}
