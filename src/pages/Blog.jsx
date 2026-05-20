@@ -36,33 +36,56 @@ export default function Blog() {
       <Navbar />
 
       {/* HERO */}
-<div className="relative pt-40 pb-24 px-6 overflow-hidden">
+<div className="relative pt-40 pb-28 px-6 overflow-hidden">
 
-  {/* GLOW BASE */}
-  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full bg-blue-500/10 blur-[180px]" />
-  <div className="absolute top-[-200px] right-[-200px] w-[500px] h-[500px] rounded-full bg-purple-500/10 blur-[140px]" />
+  {/* BASE GLOW FIELD */}
+  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full bg-blue-500/10 blur-[200px]" />
+  <div className="absolute top-[-250px] right-[-200px] w-[600px] h-[600px] rounded-full bg-purple-500/10 blur-[160px]" />
+  <div className="absolute bottom-[-200px] left-[-200px] w-[500px] h-[500px] rounded-full bg-cyan-500/10 blur-[160px]" />
 
-  {/* BACKGROUND IMAGE LAYER (NEW LIFESTYLE FEEL) */}
-  <div className="absolute inset-0 opacity-20">
+  {/* CINEMATIC BACKGROUND IMAGE */}
+  <div className="absolute inset-0 opacity-25">
     <img
-      src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31"
-      alt="background"
+      src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b"
+      alt="bg"
       className="w-full h-full object-cover scale-110 blur-sm"
     />
     <div className="absolute inset-0 bg-gradient-to-b from-[#050816] via-[#050816]/70 to-[#050816]" />
   </div>
 
-  {/* FLOATING GLASS SHAPES (MAKES IT LIVING / MODERN) */}
-  <div className="absolute top-32 left-10 w-64 h-40 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-xl rotate-[-6deg]" />
-  <div className="absolute bottom-20 right-16 w-72 h-44 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-xl rotate-[8deg]" />
-  <div className="absolute top-20 right-1/3 w-40 h-40 bg-blue-500/10 rounded-2xl blur-2xl" />
+  {/* GRID + NOISE LAYER */}
+  <div className="absolute inset-0 opacity-[0.06] bg-[radial-gradient(circle,#ffffff_1px,transparent_1px)] bg-[size:30px_30px]" />
 
-  {/* GRID NOISE LAYER */}
-  <div className="absolute inset-0 opacity-[0.06] bg-[radial-gradient(circle,#ffffff_1px,transparent_1px)] bg-[size:28px_28px]" />
+  {/* FLOATING KPI CARDS (NEW PREMIUM FEEL) */}
+  <div className="absolute top-32 left-10 hidden md:block">
+    <div className="w-64 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-xl rotate-[-6deg]">
+      <p className="text-xs text-gray-400">System Uptime</p>
+      <p className="text-2xl font-bold text-blue-400 mt-1">99.98%</p>
+    </div>
+  </div>
 
-  {/* CONTENT */}
+  <div className="absolute bottom-24 right-16 hidden md:block">
+    <div className="w-72 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-xl rotate-[7deg]">
+      <p className="text-xs text-gray-400">Projects Delivered</p>
+      <p className="text-2xl font-bold text-purple-400 mt-1">120+</p>
+    </div>
+  </div>
+
+  <div className="absolute top-40 right-1/3 hidden md:block">
+    <div className="w-56 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-xl rotate-[3deg]">
+      <p className="text-xs text-gray-400">Security Systems</p>
+      <p className="text-2xl font-bold text-cyan-400 mt-1">Active</p>
+    </div>
+  </div>
+
+  {/* FLOATING LIGHT ORBS */}
+  <div className="absolute top-20 left-1/3 w-72 h-72 bg-blue-500/20 blur-[120px] rounded-full animate-pulse" />
+  <div className="absolute bottom-10 right-1/4 w-80 h-80 bg-purple-500/20 blur-[140px] rounded-full animate-pulse" />
+
+  {/* MAIN CONTENT */}
   <div className="relative z-10 max-w-7xl mx-auto">
 
+    {/* TEXT BLOCK */}
     <div className="max-w-3xl">
       <p className="uppercase tracking-[0.35em] text-xs text-blue-400 font-semibold mb-6">
         Case Studies
@@ -70,35 +93,32 @@ export default function Blog() {
 
       <h1 className="text-4xl md:text-6xl font-bold leading-tight">
         Real Projects, <br />
-        <span className="text-blue-500">Real Results.</span>
+        <span className="text-blue-500">Real Impact.</span>
       </h1>
 
-      <p className="mt-6 text-gray-400 max-w-2xl">
-        Explore how NOVA Elite Systems transforms brands, businesses, and infrastructures through premium digital and security solutions.
+      <p className="mt-6 text-gray-400 max-w-2xl leading-relaxed">
+        Explore how NOVA Elite Systems transforms brands, infrastructures, and security systems into high-performance digital ecosystems.
       </p>
     </div>
 
     {/* SEARCH */}
     <div className="mt-12 max-w-xl relative">
-      <Search
-        className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-500"
-        size={18}
-      />
+      <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
 
       <input
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search case studies..."
-        className="w-full h-[58px] pl-14 pr-5 rounded-2xl bg-white/[0.04] border border-white/10 backdrop-blur-xl outline-none text-sm focus:border-blue-500/50 transition"
+        className="w-full h-[60px] pl-14 pr-5 rounded-2xl bg-white/[0.04] border border-white/10 backdrop-blur-xl text-sm outline-none focus:border-blue-500/50 transition"
       />
     </div>
 
-    {/* UI FILTER CHIPS */}
-    <div className="mt-8 flex gap-3 flex-wrap">
-      {["All", "Web", "CCTV", "Networking", "Security"].map((c) => (
+    {/* FILTER CHIPS */}
+    <div className="mt-8 flex flex-wrap gap-3">
+      {["All", "Web Systems", "CCTV", "Networking", "Security", "Automation"].map((c) => (
         <div
           key={c}
-          className="px-4 py-2 rounded-full text-xs border border-white/10 bg-white/[0.03] text-gray-300 hover:border-blue-500/40 hover:text-blue-400 cursor-pointer transition"
+          className="px-4 py-2 rounded-full text-xs border border-white/10 bg-white/[0.03] text-gray-300 hover:border-blue-500/40 hover:text-blue-400 transition cursor-pointer"
         >
           {c}
         </div>
