@@ -1,5 +1,7 @@
 import { useState, useRef } from "react";
+import { useEffect } from "react";
 import { useLanguage } from "../context/LanguageContext";
+
 import {
   Menu,
   X,
@@ -22,6 +24,8 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileDropdown, setMobileDropdown] = useState(null);
+  const [intentOpen, setIntentOpen] = useState(false);
+const [intent, setIntent] = useState("");
 
   const closeTimeout = useRef(null);
 
@@ -35,6 +39,13 @@ export default function Navbar() {
       setActiveDropdown(null);
     }, 150);
   };
+
+  useEffect(() => {
+  const handleClickOutside = () => setIntentOpen(false);
+  if (intentOpen) window.addEventListener("click", handleClickOutside);
+
+  return () => window.removeEventListener("click", handleClickOutside);
+}, [intentOpen]);
 
   const digitalSolutions = [
     {
@@ -231,9 +242,75 @@ export default function Navbar() {
           {/* RIGHT */}
           <div className="flex items-center gap-2">
 
-            <button className="hidden md:flex bg-blue-600 hover:bg-blue-700 px-5 py-2.5 rounded-xl text-white text-sm transition">
-              Get Started
-            </button>
+<div className="relative hidden md:flex flex-col items-end">
+
+  <button
+    onClick={() => setIntentOpen(!intentOpen)}
+    className="
+      bg-blue-600 hover:bg-blue-700
+      px-5 py-2.5
+      rounded-xl
+      text-white text-sm
+      shadow-[0_0_20px_rgba(59,130,246,0.25)]
+      transition
+    "
+  >
+    Get Your Website
+  </button>
+
+  {/* INTENT PANEL */}
+  {intentOpen && (
+    <div className="
+      absolute top-[120%] right-0
+      w-[260px]
+      rounded-2xl
+      border border-white/10
+      bg-[#081120]/95
+      backdrop-blur-2xl
+      p-4
+      shadow-[0_20px_60px_rgba(0,0,0,0.45)]
+      z-50
+    ">
+
+      <p className="text-xs text-gray-400 mb-3 tracking-[0.2em] uppercase">
+        What are you building?
+      </p>
+
+      <div className="space-y-2">
+
+        {[
+          { label: "Business Website", route: "/templates/web" },
+          { label: "E-commerce Store", route: "/templates/ecommerce" },
+          { label: "CCTV / Security", route: "/templates/security" },
+          { label: "SaaS Platform", route: "/templates/saas" },
+          { label: "Custom System", route: "/templates/custom" },
+        ].map((item, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              setIntentOpen(false);
+              window.location.href = item.route;
+            }}
+            className="
+              w-full text-left
+              px-3 py-2
+              rounded-xl
+              text-sm
+              text-gray-300
+              hover:text-white
+              hover:bg-white/[0.05]
+              transition
+            "
+          >
+            {item.label}
+          </button>
+        ))}
+
+      </div>
+
+    </div>
+  )}
+</div>
 
             <button
               onClick={() => setMenuOpen(!menuOpen)}
