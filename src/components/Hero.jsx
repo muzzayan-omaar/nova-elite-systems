@@ -155,35 +155,60 @@ export default function Hero() {
 <Link
   to="/pricing"
   className="
-    bg-blue-600 hover:bg-blue-700
-    px-6 py-3
-    rounded-xl
-    text-sm
-    font-medium
-    shadow-[0_0_30px_rgba(59,130,246,0.28)]
-    transition-all duration-300
+    relative
     inline-flex items-center justify-center
+    px-7 py-3.5
+    rounded-2xl
+    text-sm font-medium text-white
+
+    bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500
+    shadow-[0_12px_45px_rgba(59,130,246,0.35)]
+
+    transition-all duration-300
+    hover:shadow-[0_18px_70px_rgba(59,130,246,0.55)]
+    hover:scale-[1.04]
+    active:scale-[0.98]
+
+    overflow-hidden
   "
 >
-  Get Started →
+  {/* glow sweep */}
+  <span className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition" />
+
+  <span className="relative flex items-center gap-2">
+    Get Started <span className="text-blue-100">→</span>
+  </span>
 </Link>
 
 <Link
   to="/technical-support"
   className="
+    relative
+    inline-flex items-center justify-center
+    px-7 py-3.5
+    rounded-2xl
+    text-sm font-medium text-white
+
     border border-white/10
     bg-white/[0.03]
-    hover:bg-white/[0.06]
     backdrop-blur-xl
-    px-6 py-3
-    rounded-xl
-    text-sm
-    font-medium
+
     transition-all duration-300
-    inline-flex items-center justify-center
+    hover:bg-white/[0.06]
+    hover:border-white/20
+    hover:scale-[1.02]
+
+    active:scale-[0.98]
+
+    overflow-hidden
   "
 >
-  Technical Support
+  {/* subtle light sweep */}
+  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-120%] hover:translate-x-[120%] transition-transform duration-700" />
+
+  <span className="relative">
+    Technical Support
+  </span>
 </Link>
 
           </div>
