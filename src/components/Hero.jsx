@@ -24,7 +24,7 @@ export default function Hero() {
           w-full h-full
           object-cover
           scale-110 md:scale-100
-          opacity-60
+          opacity-25
         "
       />
 
