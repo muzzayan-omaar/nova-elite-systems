@@ -16,57 +16,32 @@ export default function Hero() {
     >
 
       {/* BACKGROUND IMAGE */}
-{/* BACKGROUND VIDEO */}
-{/* VIDEO BACKGROUND */}
-<video
-  autoPlay
-  muted
-  loop
-  playsInline
-  preload="auto"
-  className="
-    absolute inset-0
-    w-full h-full
-    object-cover
-    opacity-40
-  "
->
-<source
-  src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-city-at-night-1173-large.mp4"
-  type="video/mp4"
-/>
-</video>
+      <img
+        src="https://res.cloudinary.com/diszilwhc/image/upload/v1777984942/globe1_g9sjcl.jpg"
+        alt="hero"
+        className="
+          absolute inset-0
+          w-full h-full
+          object-cover
+          scale-110 md:scale-100
+          opacity-60
+        "
+      />
 
-{/* MAIN OVERLAY */}
-<div
-  className="
-    absolute inset-0
-    bg-[#05070F]/55
-  "
-/>
+      {/* DARK OVERLAY */}
+      <div className="absolute inset-0 bg-black/50" />
 
-{/* LEFT CINEMATIC FADE */}
-<div
-  className="
-    absolute inset-0
-    bg-gradient-to-r
-    from-[#05070F]
-    via-[#05070F]/75
-    to-transparent
-  "
-/>
-
-{/* TOP/BOTTOM VIGNETTE */}
-<div
-  className="
-    absolute inset-0
-    bg-gradient-to-t
-    from-[#05070F]
-    via-transparent
-    to-[#05070F]/40
-  "
-/>
-
+      {/* LEFT FADE */}
+      <div
+        className="
+          absolute inset-0
+          bg-gradient-to-r
+          from-[#05070F]
+          via-[#05070F]/90
+          via-[#05070F]/70
+          to-transparent
+        "
+      />
 
       {/* GLOW */}
       <div
