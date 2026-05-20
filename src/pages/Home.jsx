@@ -13,7 +13,10 @@ export default function Home() {
     <div className="bg-[#0B0F1A]">
       <Navbar />
       <Hero />
-        <div className="text-center">
+{/* TECHNOLOGY STACK */}
+<div className="mt-32">
+
+  <div className="text-center">
 
     <p
       className="
@@ -57,7 +60,8 @@ export default function Home() {
     </p>
 
   </div>
-       <div
+
+  <div
     className="
       flex
       flex-wrap
@@ -179,6 +183,8 @@ export default function Home() {
     ))}
 
   </div>
+
+</div>
       <OfferBanner />
       <Services />
       <CaseStudies />
