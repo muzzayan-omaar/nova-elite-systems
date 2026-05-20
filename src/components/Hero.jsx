@@ -1,5 +1,6 @@
 import { useLanguage } from "../context/LanguageContext";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
   const { t } = useLanguage();
@@ -151,36 +152,39 @@ export default function Hero() {
             "
           >
 
-            <button
-              url="/pricing"
-              className="
-                bg-blue-600 hover:bg-blue-700
-                px-6 py-3
-                rounded-xl
-                text-sm
-                font-medium
-                shadow-[0_0_30px_rgba(59,130,246,0.28)]
-                transition-all duration-300
-              "
-            >
-              Get Started →
-            </button>
+<Link
+  to="/pricing"
+  className="
+    bg-blue-600 hover:bg-blue-700
+    px-6 py-3
+    rounded-xl
+    text-sm
+    font-medium
+    shadow-[0_0_30px_rgba(59,130,246,0.28)]
+    transition-all duration-300
+    inline-flex items-center justify-center
+  "
+>
+  Get Started →
+</Link>
 
-            <button
-              className="
-                border border-white/10
-                bg-white/[0.03]
-                hover:bg-white/[0.06]
-                backdrop-blur-xl
-                px-6 py-3
-                rounded-xl
-                text-sm
-                font-medium
-                transition-all duration-300
-              "
-            >
-              View Our Work
-            </button>
+<Link
+  to="/technical-support"
+  className="
+    border border-white/10
+    bg-white/[0.03]
+    hover:bg-white/[0.06]
+    backdrop-blur-xl
+    px-6 py-3
+    rounded-xl
+    text-sm
+    font-medium
+    transition-all duration-300
+    inline-flex items-center justify-center
+  "
+>
+  Technical Support
+</Link>
 
           </div>
 
