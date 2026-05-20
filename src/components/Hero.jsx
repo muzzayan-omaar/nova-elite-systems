@@ -17,6 +17,7 @@ export default function Hero() {
 
       {/* BACKGROUND IMAGE */}
 {/* BACKGROUND VIDEO */}
+{/* BACKGROUND VIDEO */}
 <video
   autoPlay
   muted
@@ -31,7 +32,7 @@ export default function Hero() {
   "
 >
   <source
-    src="https://res.cloudinary.com/diszilwhc/video/upload/v1778448235/technology_bg_qwzj9x.mp4"
+    src="https://cdn.coverr.co/videos/coverr-working-on-a-laptop-5176/1080p.mp4"
     type="video/mp4"
   />
 </video>
