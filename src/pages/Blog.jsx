@@ -36,51 +36,77 @@ export default function Blog() {
       <Navbar />
 
       {/* HERO */}
-      <div className="relative pt-40 pb-24 px-6">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full bg-blue-500/10 blur-[180px]" />
-        <div className="absolute top-[-200px] right-[-200px] w-[500px] h-[500px] rounded-full bg-purple-500/10 blur-[140px]" />
+<div className="relative pt-40 pb-24 px-6 overflow-hidden">
 
-        <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="max-w-3xl">
-            <p className="uppercase tracking-[0.35em] text-xs text-blue-400 font-semibold mb-6">
-              Case Studies
-            </p>
+  {/* GLOW BASE */}
+  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full bg-blue-500/10 blur-[180px]" />
+  <div className="absolute top-[-200px] right-[-200px] w-[500px] h-[500px] rounded-full bg-purple-500/10 blur-[140px]" />
 
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-              Real Projects, <br />
-              <span className="text-blue-500">Real Results.</span>
-            </h1>
+  {/* BACKGROUND IMAGE LAYER (NEW LIFESTYLE FEEL) */}
+  <div className="absolute inset-0 opacity-20">
+    <img
+      src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31"
+      alt="background"
+      className="w-full h-full object-cover scale-110 blur-sm"
+    />
+    <div className="absolute inset-0 bg-gradient-to-b from-[#050816] via-[#050816]/70 to-[#050816]" />
+  </div>
 
-            <p className="mt-6 text-gray-400 max-w-2xl">
-              Explore how NOVA Elite Systems transforms brands, businesses, and infrastructures through premium digital and security solutions.
-            </p>
-          </div>
+  {/* FLOATING GLASS SHAPES (MAKES IT LIVING / MODERN) */}
+  <div className="absolute top-32 left-10 w-64 h-40 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-xl rotate-[-6deg]" />
+  <div className="absolute bottom-20 right-16 w-72 h-44 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-xl rotate-[8deg]" />
+  <div className="absolute top-20 right-1/3 w-40 h-40 bg-blue-500/10 rounded-2xl blur-2xl" />
 
-          {/* SEARCH */}
-          <div className="mt-12 max-w-xl relative">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+  {/* GRID NOISE LAYER */}
+  <div className="absolute inset-0 opacity-[0.06] bg-[radial-gradient(circle,#ffffff_1px,transparent_1px)] bg-[size:28px_28px]" />
 
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search case studies..."
-              className="w-full h-[58px] pl-14 pr-5 rounded-2xl bg-white/[0.04] border border-white/10 backdrop-blur-xl outline-none text-sm focus:border-blue-500/50 transition"
-            />
-          </div>
+  {/* CONTENT */}
+  <div className="relative z-10 max-w-7xl mx-auto">
 
-          {/* UI FILTER CHIPS (NO LOGIC) */}
-          <div className="mt-8 flex gap-3 flex-wrap">
-            {["All", "Web", "CCTV", "Networking", "Security"].map((c) => (
-              <div
-                key={c}
-                className="px-4 py-2 rounded-full text-xs border border-white/10 bg-white/[0.03] text-gray-300 hover:border-blue-500/40 hover:text-blue-400 cursor-pointer transition"
-              >
-                {c}
-              </div>
-            ))}
-          </div>
+    <div className="max-w-3xl">
+      <p className="uppercase tracking-[0.35em] text-xs text-blue-400 font-semibold mb-6">
+        Case Studies
+      </p>
+
+      <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+        Real Projects, <br />
+        <span className="text-blue-500">Real Results.</span>
+      </h1>
+
+      <p className="mt-6 text-gray-400 max-w-2xl">
+        Explore how NOVA Elite Systems transforms brands, businesses, and infrastructures through premium digital and security solutions.
+      </p>
+    </div>
+
+    {/* SEARCH */}
+    <div className="mt-12 max-w-xl relative">
+      <Search
+        className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-500"
+        size={18}
+      />
+
+      <input
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search case studies..."
+        className="w-full h-[58px] pl-14 pr-5 rounded-2xl bg-white/[0.04] border border-white/10 backdrop-blur-xl outline-none text-sm focus:border-blue-500/50 transition"
+      />
+    </div>
+
+    {/* UI FILTER CHIPS */}
+    <div className="mt-8 flex gap-3 flex-wrap">
+      {["All", "Web", "CCTV", "Networking", "Security"].map((c) => (
+        <div
+          key={c}
+          className="px-4 py-2 rounded-full text-xs border border-white/10 bg-white/[0.03] text-gray-300 hover:border-blue-500/40 hover:text-blue-400 cursor-pointer transition"
+        >
+          {c}
         </div>
-      </div>
+      ))}
+    </div>
+
+  </div>
+</div>
 
       {/* CONTENT */}
       <div className="px-6 pb-28">
