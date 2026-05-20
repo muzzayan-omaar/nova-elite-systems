@@ -96,7 +96,7 @@ export default function Hero() {
                 font-medium
               "
             >
-              UAE DIGITAL & INFRASTRUCTURE SOLUTIONS
+              DIGITAL & INFRASTRUCTURE SOLUTIONS
             </span>
           </div>
 
@@ -152,6 +152,7 @@ export default function Hero() {
           >
 
             <button
+              url="/pricing"
               className="
                 bg-blue-600 hover:bg-blue-700
                 px-6 py-3
