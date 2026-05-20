@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
 import { useLanguage } from "../context/LanguageContext";
 
 import {
@@ -251,76 +253,269 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
 
             {/* ✅ INTENT CTA (FIXED) */}
-            <div ref={intentRef} className="relative hidden md:flex flex-col items-end">
+            {/* RIGHT */}
+<div className="flex items-center gap-2">
 
+  {/* WEBSITE CTA */}
+  <div
+    className="relative hidden md:flex"
+    onClick={(e) => e.stopPropagation()}
+  >
+
+    <button
+      onClick={() => setIntentOpen((prev) => !prev)}
+      className="
+        relative
+        overflow-hidden
+        bg-blue-600 hover:bg-blue-700
+        px-5 py-2.5
+        rounded-xl
+        text-white text-sm font-medium
+        shadow-[0_0_25px_rgba(59,130,246,0.35)]
+        transition-all duration-300
+      "
+    >
+
+      {/* GLOW */}
+      <span
+        className="
+          absolute inset-0
+          bg-gradient-to-r
+          from-blue-400/0
+          via-white/10
+          to-blue-400/0
+          translate-x-[-100%]
+          hover:translate-x-[100%]
+          transition-transform duration-1000
+        "
+      />
+
+      <span className="relative z-10">
+        Get Your Website
+      </span>
+
+    </button>
+
+    {/* ANIMATED PANEL */}
+    <AnimatePresence>
+
+      {intentOpen && (
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: -12,
+            scale: 0.96,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            scale: 1,
+          }}
+          exit={{
+            opacity: 0,
+            y: -10,
+            scale: 0.96,
+          }}
+          transition={{
+            duration: 0.22,
+            ease: "easeOut",
+          }}
+          className="
+            absolute
+            top-[125%]
+            right-0
+            w-[290px]
+            rounded-[26px]
+            border border-white/10
+            bg-[#081120]/95
+            backdrop-blur-2xl
+            overflow-hidden
+            shadow-[0_30px_80px_rgba(0,0,0,0.55)]
+            z-[999]
+          "
+        >
+
+          {/* TOP */}
+          <div
+            className="
+              px-5
+              pt-5
+              pb-4
+              border-b border-white/5
+            "
+          >
+
+            <p
+              className="
+                text-[11px]
+                tracking-[0.25em]
+                uppercase
+                text-blue-400
+                font-semibold
+              "
+            >
+              START HERE
+            </p>
+
+            <h3
+              className="
+                text-white
+                text-lg
+                font-semibold
+                mt-3
+                leading-tight
+              "
+            >
+              What are you building?
+            </h3>
+
+            <p
+              className="
+                text-sm
+                text-gray-400
+                mt-2
+                leading-relaxed
+              "
+            >
+              Choose a category and explore
+              premium solutions tailored for
+              your business.
+            </p>
+
+          </div>
+
+          {/* OPTIONS */}
+          <div className="p-3">
+
+            {[
+              {
+                label: "Business Website",
+                desc: "Corporate & service websites",
+                route: "/templates/web",
+              },
+
+              {
+                label: "E-Commerce Store",
+                desc: "Online stores & product systems",
+                route: "/templates/ecommerce",
+              },
+
+              {
+                label: "CCTV & Security",
+                desc: "Security & infrastructure setups",
+                route: "/templates/security",
+              },
+
+              {
+                label: "SaaS Platform",
+                desc: "Cloud software platforms",
+                route: "/templates/saas",
+              },
+
+              {
+                label: "Custom System",
+                desc: "Tailored business solutions",
+                route: "/templates/custom",
+              },
+            ].map((item, i) => (
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIntentOpen((prev) => !prev);
+                key={i}
+                onClick={() => {
+                  setIntentOpen(false);
+                  window.location.href = item.route;
                 }}
                 className="
-                  bg-blue-600 hover:bg-blue-700
-                  px-5 py-2.5
-                  rounded-xl
-                  text-white text-sm
-                  shadow-[0_0_20px_rgba(59,130,246,0.25)]
-                  transition
+                  group
+                  w-full
+                  text-left
+                  p-4
+                  rounded-2xl
+                  hover:bg-white/[0.04]
+                  transition-all duration-300
+                  border border-transparent
+                  hover:border-blue-500/20
                 "
               >
-                Get Your Website
-              </button>
 
-              {intentOpen && (
-                <div
-                  onClick={(e) => e.stopPropagation()}
-                  className="
-                    absolute top-[120%] right-0
-                    w-[260px]
-                    rounded-2xl
-                    border border-white/10
-                    bg-[#081120]/95
-                    backdrop-blur-2xl
-                    p-4
-                    shadow-[0_20px_60px_rgba(0,0,0,0.45)]
-                    z-50
-                  "
-                >
-                  <p className="text-xs text-gray-400 mb-3 tracking-[0.2em] uppercase">
-                    What are you building?
-                  </p>
+                <div className="flex items-center justify-between">
 
-                  <div className="space-y-2">
-                    {[
-                      { label: "Business Website", route: "/templates/web" },
-                      { label: "E-commerce Store", route: "/templates/ecommerce" },
-                      { label: "CCTV / Security", route: "/templates/security" },
-                      { label: "SaaS Platform", route: "/templates/saas" },
-                      { label: "Custom System", route: "/templates/custom" },
-                    ].map((item, i) => (
-                      <button
-                        key={i}
-                        onClick={() => {
-                          setIntentOpen(false);
-                          window.location.href = item.route;
-                        }}
-                        className="
-                          w-full text-left
-                          px-3 py-2
-                          rounded-xl
-                          text-sm
-                          text-gray-300
-                          hover:text-white
-                          hover:bg-white/[0.05]
-                          transition
-                        "
-                      >
-                        {item.label}
-                      </button>
-                    ))}
+                  <div>
+
+                    <h4
+                      className="
+                        text-sm
+                        font-medium
+                        text-white
+                        group-hover:text-blue-400
+                        transition
+                      "
+                    >
+                      {item.label}
+                    </h4>
+
+                    <p
+                      className="
+                        text-xs
+                        text-gray-400
+                        mt-1
+                      "
+                    >
+                      {item.desc}
+                    </p>
+
                   </div>
+
+                  <div
+                    className="
+                      w-8 h-8
+                      rounded-xl
+                      bg-white/[0.04]
+                      border border-white/5
+                      flex items-center justify-center
+                      text-gray-400
+                      group-hover:text-blue-400
+                      group-hover:border-blue-500/20
+                      transition
+                    "
+                  >
+                    →
+                  </div>
+
                 </div>
-              )}
-            </div>
+
+              </button>
+            ))}
+
+          </div>
+
+        </motion.div>
+      )}
+
+    </AnimatePresence>
+
+  </div>
+
+  {/* MOBILE BUTTON */}
+  <button
+    onClick={() => setMenuOpen(!menuOpen)}
+    className="
+      md:hidden
+      w-10 h-10
+      rounded-xl
+      border border-white/10
+      bg-white/[0.04]
+      flex items-center justify-center
+      text-white
+    "
+  >
+    {menuOpen ? (
+      <X size={20} />
+    ) : (
+      <Menu size={20} />
+    )}
+  </button>
+
+</div>
 
             <button
               onClick={() => setMenuOpen(!menuOpen)}
