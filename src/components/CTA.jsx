@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 
 export default function CTA() {
   return (
@@ -194,15 +195,8 @@ text-base
 
               <span className="flex items-center justify-center gap-3">
 
-                {/* GREEN DOT */}
-                <span
-                  className="
-                    w-3 h-3
-                    rounded-full
-                    bg-green-500
-                    shadow-[0_0_15px_rgba(34,197,94,0.9)]
-                  "
-                />
+                {/* whatsapp */}
+               <FaWhatsapp className="text-green-500" size={18} />
 
                 WhatsApp Us
               </span>
