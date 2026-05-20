@@ -2,6 +2,10 @@ import {
   Mail,
   Phone,
   MapPin,
+  Instagram,
+  Linkedin,
+  Facebook,
+  Globe,
 } from "lucide-react";
 
 export default function Footer() {
@@ -74,46 +78,82 @@ export default function Footer() {
                 systems built for modern businesses across the UAE.
               </p>
 
-              {/* SOCIALS */}
-              <div className="flex gap-4 mt-6">
+{/* SOCIALS */}
+<div className="flex gap-4 mt-6">
 
-                <a
-                  href="#"
-                  className="
-                    w-10 h-10
-                    rounded-xl
-                    border border-white/10
-                    bg-white/[0.03]
-                    hover:border-blue-500/40
-                    hover:bg-blue-500/10
-                    transition
-                    flex items-center justify-center
-                    text-gray-300
-                    text-sm font-bold
-                  "
-                >
-                  IG
-                </a>
+  {/* Instagram */}
+  <a
+    href="#"
+    className="
+      w-10 h-10
+      rounded-xl
+      border border-white/10
+      bg-white/[0.03]
+      hover:border-pink-500/40
+      hover:bg-pink-500/10
+      transition
+      flex items-center justify-center
+      text-gray-300
+    "
+  >
+    <Instagram size={18} />
+  </a>
 
-                <a
-                  href="#"
-                  className="
-                    w-10 h-10
-                    rounded-xl
-                    border border-white/10
-                    bg-white/[0.03]
-                    hover:border-blue-500/40
-                    hover:bg-blue-500/10
-                    transition
-                    flex items-center justify-center
-                    text-gray-300
-                    text-sm font-bold
-                  "
-                >
-                  IN
-                </a>
+  {/* LinkedIn */}
+  <a
+    href="#"
+    className="
+      w-10 h-10
+      rounded-xl
+      border border-white/10
+      bg-white/[0.03]
+      hover:border-blue-500/40
+      hover:bg-blue-500/10
+      transition
+      flex items-center justify-center
+      text-gray-300
+    "
+  >
+    <Linkedin size={18} />
+  </a>
 
-              </div>
+  {/* Facebook (optional but professional for Uganda biz presence) */}
+  <a
+    href="#"
+    className="
+      w-10 h-10
+      rounded-xl
+      border border-white/10
+      bg-white/[0.03]
+      hover:border-blue-400/40
+      hover:bg-blue-400/10
+      transition
+      flex items-center justify-center
+      text-gray-300
+    "
+  >
+    <Facebook size={18} />
+  </a>
+
+  {/* Website / Portfolio */}
+  <a
+    href="#"
+    className="
+      w-10 h-10
+      rounded-xl
+      border border-white/10
+      bg-white/[0.03]
+      hover:border-green-500/40
+      hover:bg-green-500/10
+      transition
+      flex items-center justify-center
+      text-gray-300
+    "
+  >
+    <Globe size={18} />
+  </a>
+
+</div>
             </div>
 
             {/* SERVICES */}
