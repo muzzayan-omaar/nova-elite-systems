@@ -115,102 +115,77 @@ export default function Industries() {
         {/* HERO */}
 
         {/* INDUSTRIES */}
-<div className="mt-24">
+<div className="mt-24 relative overflow-hidden">
 
-  <div className="text-center max-w-3xl mx-auto">
+  {/* BACKGROUND IMAGE LAYER */}
+  <div className="absolute inset-0">
+    <img
+      src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a"
+      alt="industries background"
+      className="w-full h-full object-cover opacity-20 scale-110"
+    />
 
-    <p
-      className="
-        uppercase
-        tracking-[0.28em]
-        text-[11px]
-        text-blue-400
-        font-semibold
-        mb-5
-      "
-    >
-      INDUSTRIES WE SUPPORT
-    </p>
-
-    <h2
-      className="
-        text-3xl
-        md:text-5xl
-        font-bold
-        leading-tight
-      "
-    >
-      Built Around
-      <span className="text-blue-500">
-        {" "}Real Business Operations
-      </span>
-    </h2>
-
+    {/* DARK OVERLAY */}
+    <div className="absolute inset-0 bg-gradient-to-b from-[#050816] via-[#050816]/85 to-[#050816]" />
   </div>
 
-  <div
-    className="
-      grid
-      md:grid-cols-2
-      lg:grid-cols-3
-      gap-6
-      mt-16
-    "
-  >
+  {/* GLOW EFFECTS */}
+  <div className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-blue-500/10 blur-[160px]" />
+  <div className="absolute bottom-[-200px] right-[-100px] w-[600px] h-[600px] bg-purple-500/10 blur-[160px]" />
 
-    {industries.map((item, index) => (
-      <div
-        key={index}
-        className="
-          rounded-[28px]
-          border border-white/10
-          bg-white/[0.03]
-          backdrop-blur-xl
-          p-7
-          hover:border-blue-500/20
-          hover:bg-blue-500/[0.03]
-          transition-all duration-300
-        "
-      >
+  {/* NOISE GRID */}
+  <div className="absolute inset-0 opacity-[0.05] bg-[radial-gradient(circle,#ffffff_1px,transparent_1px)] bg-[size:28px_28px]" />
 
+  {/* CONTENT WRAPPER */}
+  <div className="relative z-10">
+
+    {/* HEADER */}
+    <div className="text-center max-w-3xl mx-auto px-6">
+      <p className="uppercase tracking-[0.28em] text-[11px] text-blue-400 font-semibold mb-5">
+        Industries We Support
+      </p>
+
+      <h2 className="text-3xl md:text-5xl font-bold leading-tight text-white">
+        Built Around{" "}
+        <span className="text-blue-500">Real Business Operations</span>
+      </h2>
+
+      <p className="mt-6 text-gray-400 text-sm md:text-base">
+        We design systems that integrate seamlessly into real-world environments — from security infrastructure to enterprise networking.
+      </p>
+    </div>
+
+    {/* GRID (NO BOX FEEL ANYMORE) */}
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 mt-20 px-6 max-w-7xl mx-auto">
+
+      {industries.map((item, index) => (
         <div
-          className="
-            w-14 h-14
-            rounded-2xl
-            bg-blue-500/10
-            flex items-center justify-center
-            text-blue-400
-            mb-6
-          "
+          key={index}
+          className="group relative"
         >
-          {item.icon}
+
+          {/* SOFT FLOATING ICON */}
+          <div className="flex items-center gap-4 mb-5">
+            <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500/20 transition">
+              {item.icon}
+            </div>
+
+            <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition">
+              {item.title}
+            </h3>
+          </div>
+
+          {/* DESCRIPTION (NO BOX) */}
+          <p className="text-gray-400 text-sm leading-relaxed pl-16 border-l border-white/10 group-hover:border-blue-500/40 transition">
+            {item.desc}
+          </p>
+
         </div>
+      ))}
 
-        <h3
-          className="
-            text-xl
-            font-semibold
-            mb-4
-          "
-        >
-          {item.title}
-        </h3>
-
-        <p
-          className="
-            text-gray-400
-            text-sm
-            leading-relaxed
-          "
-        >
-          {item.desc}
-        </p>
-
-      </div>
-    ))}
+    </div>
 
   </div>
-
 </div>
 
 {/* TECHNOLOGY STACK */}
