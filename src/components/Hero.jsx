@@ -32,7 +32,7 @@ export default function Hero() {
   "
 >
 <source
-  src="https://assets.mixkit.co/videos/preview/mixkit-man-working-on-his-laptop-5075-large.mp4"
+  src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-city-at-night-1173-large.mp4"
   type="video/mp4"
 />
 </video>
