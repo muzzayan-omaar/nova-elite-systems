@@ -1,5 +1,4 @@
-import { useState, useRef } from "react";
-import { useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useLanguage } from "../context/LanguageContext";
 
 import {
@@ -25,9 +24,9 @@ export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileDropdown, setMobileDropdown] = useState(null);
   const [intentOpen, setIntentOpen] = useState(false);
-const [intent, setIntent] = useState("");
 
   const closeTimeout = useRef(null);
+  const intentRef = useRef(null);
 
   const safeOpen = (id) => {
     if (closeTimeout.current) clearTimeout(closeTimeout.current);
@@ -40,12 +39,20 @@ const [intent, setIntent] = useState("");
     }, 150);
   };
 
+  // ✅ FIXED OUTSIDE CLICK HANDLER (NO WINDOW LISTENERS)
   useEffect(() => {
-  const handleClickOutside = () => setIntentOpen(false);
-  if (intentOpen) window.addEventListener("click", handleClickOutside);
+    const handleClickOutside = (e) => {
+      if (intentRef.current && !intentRef.current.contains(e.target)) {
+        setIntentOpen(false);
+      }
+    };
 
-  return () => window.removeEventListener("click", handleClickOutside);
-}, [intentOpen]);
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const digitalSolutions = [
     {
@@ -167,7 +174,6 @@ const [intent, setIntent] = useState("");
 
                   <div className="grid grid-cols-2 gap-8">
 
-                    {/* LEFT */}
                     <div>
                       <p className="text-[11px] tracking-[0.2em] text-blue-500 font-semibold mb-4">
                         DIGITAL SOLUTIONS
@@ -190,7 +196,6 @@ const [intent, setIntent] = useState("");
                       </div>
                     </div>
 
-                    {/* RIGHT */}
                     <div>
                       <p className="text-[11px] tracking-[0.2em] text-blue-500 font-semibold mb-4">
                         INFRASTRUCTURE & SECURITY
@@ -218,23 +223,26 @@ const [intent, setIntent] = useState("");
               )}
             </div>
 
-            {/* PRICING */}
             <a href="/pricing" className="px-4 py-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/[0.04] transition text-sm">
               Pricing
             </a>
 
-            {/* EXPLORE */}
-            <SimpleDropdown title="Explore" items={explore} id="explore"
+            <SimpleDropdown
+              title="Explore"
+              items={explore}
+              id="explore"
               activeDropdown={activeDropdown}
               setActiveDropdown={safeOpen}
-              onClose={safeClose}
+              safeClose={safeClose}
             />
 
-            {/* SUPPORT */}
-            <SimpleDropdown title="Support" items={support} id="support"
+            <SimpleDropdown
+              title="Support"
+              items={support}
+              id="support"
               activeDropdown={activeDropdown}
               setActiveDropdown={safeOpen}
-              onClose={safeClose}
+              safeClose={safeClose}
             />
 
           </div>
@@ -242,75 +250,77 @@ const [intent, setIntent] = useState("");
           {/* RIGHT */}
           <div className="flex items-center gap-2">
 
-<div className="relative hidden md:flex flex-col items-end">
+            {/* ✅ INTENT CTA (FIXED) */}
+            <div ref={intentRef} className="relative hidden md:flex flex-col items-end">
 
-  <button
-    onClick={() => setIntentOpen(!intentOpen)}
-    className="
-      bg-blue-600 hover:bg-blue-700
-      px-5 py-2.5
-      rounded-xl
-      text-white text-sm
-      shadow-[0_0_20px_rgba(59,130,246,0.25)]
-      transition
-    "
-  >
-    Get Your Website
-  </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIntentOpen((prev) => !prev);
+                }}
+                className="
+                  bg-blue-600 hover:bg-blue-700
+                  px-5 py-2.5
+                  rounded-xl
+                  text-white text-sm
+                  shadow-[0_0_20px_rgba(59,130,246,0.25)]
+                  transition
+                "
+              >
+                Get Your Website
+              </button>
 
-  {/* INTENT PANEL */}
-  {intentOpen && (
-    <div className="
-      absolute top-[120%] right-0
-      w-[260px]
-      rounded-2xl
-      border border-white/10
-      bg-[#081120]/95
-      backdrop-blur-2xl
-      p-4
-      shadow-[0_20px_60px_rgba(0,0,0,0.45)]
-      z-50
-    ">
+              {intentOpen && (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="
+                    absolute top-[120%] right-0
+                    w-[260px]
+                    rounded-2xl
+                    border border-white/10
+                    bg-[#081120]/95
+                    backdrop-blur-2xl
+                    p-4
+                    shadow-[0_20px_60px_rgba(0,0,0,0.45)]
+                    z-50
+                  "
+                >
+                  <p className="text-xs text-gray-400 mb-3 tracking-[0.2em] uppercase">
+                    What are you building?
+                  </p>
 
-      <p className="text-xs text-gray-400 mb-3 tracking-[0.2em] uppercase">
-        What are you building?
-      </p>
-
-      <div className="space-y-2">
-
-        {[
-          { label: "Business Website", route: "/templates/web" },
-          { label: "E-commerce Store", route: "/templates/ecommerce" },
-          { label: "CCTV / Security", route: "/templates/security" },
-          { label: "SaaS Platform", route: "/templates/saas" },
-          { label: "Custom System", route: "/templates/custom" },
-        ].map((item, i) => (
-          <button
-            key={i}
-            onClick={() => {
-              setIntentOpen(false);
-              window.location.href = item.route;
-            }}
-            className="
-              w-full text-left
-              px-3 py-2
-              rounded-xl
-              text-sm
-              text-gray-300
-              hover:text-white
-              hover:bg-white/[0.05]
-              transition
-            "
-          >
-            {item.label}
-          </button>
-        ))}
-
-      </div>
-
-    </div>
-  )}
-</div>
+                  <div className="space-y-2">
+                    {[
+                      { label: "Business Website", route: "/templates/web" },
+                      { label: "E-commerce Store", route: "/templates/ecommerce" },
+                      { label: "CCTV / Security", route: "/templates/security" },
+                      { label: "SaaS Platform", route: "/templates/saas" },
+                      { label: "Custom System", route: "/templates/custom" },
+                    ].map((item, i) => (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          setIntentOpen(false);
+                          window.location.href = item.route;
+                        }}
+                        className="
+                          w-full text-left
+                          px-3 py-2
+                          rounded-xl
+                          text-sm
+                          text-gray-300
+                          hover:text-white
+                          hover:bg-white/[0.05]
+                          transition
+                        "
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
             <button
               onClick={() => setMenuOpen(!menuOpen)}
@@ -322,22 +332,19 @@ const [intent, setIntent] = useState("");
           </div>
         </div>
 
-        {/* MOBILE MENU unchanged */}
-        {/* (kept as-is to avoid breaking your structure) */}
-
       </div>
     </div>
   );
 }
 
-/* SIMPLE DROPDOWN FIX */
+/* DROPDOWN */
 function SimpleDropdown({
   title,
   items,
   activeDropdown,
   id,
   setActiveDropdown,
-  onClose,
+  safeClose,
 }) {
   const closeTimeout = useRef(null);
 
@@ -363,8 +370,6 @@ function SimpleDropdown({
       {activeDropdown === id && (
         <div
           className="absolute top-[120%] left-0 w-[280px] rounded-[22px] border border-white/10 bg-[#081120]/95 backdrop-blur-2xl p-5 shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
-          onMouseEnter={open}
-          onMouseLeave={close}
         >
           <div className="space-y-4">
             {items.map((item, index) => (
