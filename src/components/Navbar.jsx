@@ -297,201 +297,186 @@ export default function Navbar() {
     </button>
 
     {/* ANIMATED PANEL */}
-    <AnimatePresence>
+{/* ANIMATED PANEL */}
+<AnimatePresence>
 
-      {intentOpen && (
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: -12,
-            scale: 0.96,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-            scale: 1,
-          }}
-          exit={{
-            opacity: 0,
-            y: -10,
-            scale: 0.96,
-          }}
-          transition={{
-            duration: 0.22,
-            ease: "easeOut",
-          }}
+  {intentOpen && (
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: -10,
+        scale: 0.97,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        scale: 1,
+      }}
+      exit={{
+        opacity: 0,
+        y: -10,
+        scale: 0.97,
+      }}
+      transition={{
+        duration: 0.2,
+        ease: "easeOut",
+      }}
+      className="
+        absolute
+        top-[125%]
+        right-0
+        w-[430px]
+        rounded-[28px]
+        border border-white/10
+        bg-[#0B1423]/80
+        backdrop-blur-xl
+        overflow-hidden
+        shadow-[0_25px_80px_rgba(0,0,0,0.45)]
+        z-[999]
+      "
+    >
+
+      {/* HEADER */}
+      <div
+        className="
+          px-5
+          pt-5
+          pb-4
+          border-b border-white/5
+        "
+      >
+
+        <p
           className="
-            absolute
-            top-[125%]
-            right-0
-            w-[290px]
-            rounded-[26px]
-            border border-white/10
-            bg-[#081120]/95
-            backdrop-blur-2xl
-            overflow-hidden
-            shadow-[0_30px_80px_rgba(0,0,0,0.55)]
-            z-[999]
+            text-[10px]
+            tracking-[0.28em]
+            uppercase
+            text-blue-400
+            font-semibold
           "
         >
+          QUICK START
+        </p>
 
-          {/* TOP */}
-          <div
+        <h3
+          className="
+            text-white
+            text-lg
+            font-semibold
+            mt-2
+          "
+        >
+          Choose Your Solution
+        </h3>
+
+      </div>
+
+      {/* GRID */}
+      <div
+        className="
+          grid
+          grid-cols-2
+          gap-3
+          p-4
+        "
+      >
+
+        {[
+          {
+            label: "Business Website",
+            icon: "🌐",
+            route: "/templates/web",
+          },
+
+          {
+            label: "E-Commerce",
+            icon: "🛒",
+            route: "/templates/ecommerce",
+          },
+
+          {
+            label: "CCTV & Security",
+            icon: "📹",
+            route: "/templates/security",
+          },
+
+          {
+            label: "SaaS Platform",
+            icon: "⚡",
+            route: "/templates/saas",
+          },
+        ].map((item, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              setIntentOpen(false);
+              window.location.href =
+                item.route;
+            }}
             className="
-              px-5
-              pt-5
-              pb-4
-              border-b border-white/5
+              group
+              relative
+              overflow-hidden
+              rounded-2xl
+              border border-white/8
+              bg-white/[0.025]
+              hover:bg-blue-500/[0.06]
+              hover:border-blue-500/20
+              p-4
+              text-left
+              transition-all duration-300
             "
           >
 
-            <p
+            {/* HOVER GLOW */}
+            <div
               className="
-                text-[11px]
-                tracking-[0.25em]
-                uppercase
-                text-blue-400
-                font-semibold
+                absolute
+                inset-0
+                opacity-0
+                group-hover:opacity-100
+                bg-gradient-to-br
+                from-blue-500/10
+                to-transparent
+                transition
               "
-            >
-              START HERE
-            </p>
+            />
 
-            <h3
-              className="
-                text-white
-                text-lg
-                font-semibold
-                mt-3
-                leading-tight
-              "
-            >
-              What are you building?
-            </h3>
+            <div className="relative z-10">
 
-            <p
-              className="
-                text-sm
-                text-gray-400
-                mt-2
-                leading-relaxed
-              "
-            >
-              Choose a category and explore
-              premium solutions tailored for
-              your business.
-            </p>
-
-          </div>
-
-          {/* OPTIONS */}
-          <div className="p-3">
-
-            {[
-              {
-                label: "Business Website",
-                desc: "Corporate & service websites",
-                route: "/templates/web",
-              },
-
-              {
-                label: "E-Commerce Store",
-                desc: "Online stores & product systems",
-                route: "/templates/ecommerce",
-              },
-
-              {
-                label: "CCTV & Security",
-                desc: "Security & infrastructure setups",
-                route: "/templates/security",
-              },
-
-              {
-                label: "SaaS Platform",
-                desc: "Cloud software platforms",
-                route: "/templates/saas",
-              },
-
-              {
-                label: "Custom System",
-                desc: "Tailored business solutions",
-                route: "/templates/custom",
-              },
-            ].map((item, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  setIntentOpen(false);
-                  window.location.href = item.route;
-                }}
+              <div
                 className="
-                  group
-                  w-full
-                  text-left
-                  p-4
-                  rounded-2xl
-                  hover:bg-white/[0.04]
-                  transition-all duration-300
-                  border border-transparent
-                  hover:border-blue-500/20
+                  text-2xl
+                  mb-3
                 "
               >
+                {item.icon}
+              </div>
 
-                <div className="flex items-center justify-between">
+              <h4
+                className="
+                  text-sm
+                  font-medium
+                  text-white
+                  group-hover:text-blue-400
+                  transition
+                  leading-snug
+                "
+              >
+                {item.label}
+              </h4>
 
-                  <div>
+            </div>
 
-                    <h4
-                      className="
-                        text-sm
-                        font-medium
-                        text-white
-                        group-hover:text-blue-400
-                        transition
-                      "
-                    >
-                      {item.label}
-                    </h4>
+          </button>
+        ))}
 
-                    <p
-                      className="
-                        text-xs
-                        text-gray-400
-                        mt-1
-                      "
-                    >
-                      {item.desc}
-                    </p>
+      </div>
 
-                  </div>
+    </motion.div>
+  )}
 
-                  <div
-                    className="
-                      w-8 h-8
-                      rounded-xl
-                      bg-white/[0.04]
-                      border border-white/5
-                      flex items-center justify-center
-                      text-gray-400
-                      group-hover:text-blue-400
-                      group-hover:border-blue-500/20
-                      transition
-                    "
-                  >
-                    →
-                  </div>
-
-                </div>
-
-              </button>
-            ))}
-
-          </div>
-
-        </motion.div>
-      )}
-
-    </AnimatePresence>
+</AnimatePresence>
 
   </div>
 
