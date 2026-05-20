@@ -1,12 +1,5 @@
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Instagram,
-  Linkedin,
-  Facebook,
-  Globe,
-} from "lucide-react";
+import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
+import { FaInstagram, FaLinkedinIn, FaFacebookF, FaGlobe } from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -79,78 +72,39 @@ export default function Footer() {
               </p>
 
 {/* SOCIALS */}
+{/* SOCIALS */}
 <div className="flex gap-4 mt-6">
 
   {/* Instagram */}
   <a
     href="#"
-    className="
-      w-10 h-10
-      rounded-xl
-      border border-white/10
-      bg-white/[0.03]
-      hover:border-pink-500/40
-      hover:bg-pink-500/10
-      transition
-      flex items-center justify-center
-      text-gray-300
-    "
+    className="w-10 h-10 rounded-xl border border-white/10 bg-white/[0.03] hover:border-pink-500/40 hover:bg-pink-500/10 transition flex items-center justify-center text-gray-300"
   >
-    <Instagram size={18} />
+    <FaInstagram size={18} />
   </a>
 
   {/* LinkedIn */}
   <a
     href="#"
-    className="
-      w-10 h-10
-      rounded-xl
-      border border-white/10
-      bg-white/[0.03]
-      hover:border-blue-500/40
-      hover:bg-blue-500/10
-      transition
-      flex items-center justify-center
-      text-gray-300
-    "
+    className="w-10 h-10 rounded-xl border border-white/10 bg-white/[0.03] hover:border-blue-500/40 hover:bg-blue-500/10 transition flex items-center justify-center text-gray-300"
   >
-    <Linkedin size={18} />
+    <FaLinkedinIn size={18} />
   </a>
 
-  {/* Facebook (optional but professional for Uganda biz presence) */}
+  {/* Facebook */}
   <a
     href="#"
-    className="
-      w-10 h-10
-      rounded-xl
-      border border-white/10
-      bg-white/[0.03]
-      hover:border-blue-400/40
-      hover:bg-blue-400/10
-      transition
-      flex items-center justify-center
-      text-gray-300
-    "
+    className="w-10 h-10 rounded-xl border border-white/10 bg-white/[0.03] hover:border-blue-400/40 hover:bg-blue-400/10 transition flex items-center justify-center text-gray-300"
   >
-    <Facebook size={18} />
+    <FaFacebookF size={18} />
   </a>
 
-  {/* Website / Portfolio */}
+  {/* Website */}
   <a
     href="#"
-    className="
-      w-10 h-10
-      rounded-xl
-      border border-white/10
-      bg-white/[0.03]
-      hover:border-green-500/40
-      hover:bg-green-500/10
-      transition
-      flex items-center justify-center
-      text-gray-300
-    "
+    className="w-10 h-10 rounded-xl border border-white/10 bg-white/[0.03] hover:border-green-500/40 hover:bg-green-500/10 transition flex items-center justify-center text-gray-300"
   >
-    <Globe size={18} />
+    <FaGlobe size={18} />
   </a>
 
 </div>
@@ -196,7 +150,7 @@ export default function Footer() {
               <div className="space-y-4 text-sm text-gray-400">
 
                 <div className="flex gap-3 items-start">
-                  <MapPin
+                  <FiMapPin
                     size={18}
                     className="text-blue-500 mt-0.5"
                   />
@@ -205,7 +159,7 @@ export default function Footer() {
                 </div>
 
                 <div className="flex gap-3 items-center">
-                  <Phone
+                  <FiPhone
                     size={18}
                     className="text-blue-500"
                   />
@@ -214,7 +168,7 @@ export default function Footer() {
                 </div>
 
                 <div className="flex gap-3 items-center">
-                  <Mail
+                  <FiMail
                     size={18}
                     className="text-blue-500"
                   />
