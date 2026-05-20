@@ -1,75 +1,19 @@
-import { useEffect, useState } from "react";
-import {
-  X,
-  ArrowRight,
-  Phone,
-} from "lucide-react";
+import { useState } from "react";
+import { X, Phone, ArrowRight } from "lucide-react";
 
 export default function AIAssistant() {
   const [open, setOpen] = useState(false);
 
   const [state, setState] = useState({
-    step: "home",
+    mode: "home",
     service: null,
   });
-
-  const [messages, setMessages] = useState([
-    {
-      type: "bot",
-      text: "Hi, I’m NOVA. Choose a service to get started.",
-    },
-  ]);
 
   const services = [
     {
       name: "Web Development",
       intro:
-        "We build high-performance business websites, SaaS platforms, and scalable digital systems for growth-focused companies.",
-    },
-    {
-      name: "Mobile Apps",
-      intro:
-        "We design and develop Android & iOS applications with modern UI, backend systems, and real-time features.",
-    },
-    {
-      name: "CCTV Systems",
-      intro:
-        "We install intelligent surveillance systems including HD cameras, AI monitoring, and remote access security solutions.",
-    },
-    {
-      name: "Networking & Access",
-      intro:
-        "We deliver enterprise networking, structured cabling, and access control systems for secure infrastructure.",
-    },
-  ];
-
-  const serviceData = {
-    "CCTV Systems": {
-      packages: [
-        {
-          name: "Office Security",
-          price: "AED 3,500",
-          features: [
-            "HD CCTV cameras",
-            "Remote monitoring",
-            "Mobile viewing",
-            "Storage setup",
-          ],
-        },
-        {
-          name: "Enterprise Security",
-          price: "Custom",
-          features: [
-            "AI monitoring",
-            "24/7 surveillance",
-            "Multi-site support",
-            "Access integration",
-          ],
-        },
-      ],
-    },
-
-    "Web Development": {
+        "We build modern websites, SaaS platforms, and scalable digital systems designed for business growth.",
       packages: [
         {
           name: "Essential",
@@ -77,7 +21,6 @@ export default function AIAssistant() {
           features: [
             "Responsive website",
             "SEO optimized",
-            "Contact forms",
             "Fast deployment",
           ],
         },
@@ -88,14 +31,13 @@ export default function AIAssistant() {
             "Admin dashboard",
             "Backend integration",
             "API systems",
-            "Premium UI",
           ],
         },
         {
           name: "Enterprise",
           price: "Custom",
           features: [
-            "Full SaaS systems",
+            "Full SaaS system",
             "Scalable architecture",
             "Advanced integrations",
           ],
@@ -103,121 +45,81 @@ export default function AIAssistant() {
       ],
     },
 
-    "Mobile Apps": {
+    {
+      name: "Mobile Apps",
+      intro:
+        "We design and develop Android & iOS apps with modern UI and powerful backend systems.",
       packages: [
         {
           name: "Starter App",
           price: "AED 5,000",
-          features: [
-            "Android/iOS app",
-            "Modern UI",
-            "Basic backend",
-          ],
+          features: ["Android/iOS app", "Modern UI", "Basic backend"],
         },
         {
           name: "Business App",
           price: "AED 12,000",
+          features: ["Realtime features", "Admin dashboard", "Cloud sync"],
+        },
+      ],
+    },
+
+    {
+      name: "CCTV Systems",
+      intro:
+        "We install intelligent CCTV systems with remote monitoring, AI detection, and enterprise security.",
+      packages: [
+        {
+          name: "Office Security",
+          price: "AED 3,500",
+          features: ["HD cameras", "Remote access", "Mobile viewing"],
+        },
+        {
+          name: "Enterprise Security",
+          price: "Custom",
           features: [
-            "Custom backend",
-            "Realtime features",
-            "Admin dashboard",
+            "AI monitoring",
+            "24/7 surveillance",
+            "Multi-site support",
           ],
         },
       ],
     },
-  };
 
-  const handleServiceClick = (service) => {
+    {
+      name: "Networking & Access",
+      intro:
+        "We provide enterprise networking, structured cabling, and access control systems for secure infrastructure.",
+      packages: [],
+    },
+  ];
+
+  const selectedService = services.find(
+    (s) => s.name === state.service
+  );
+
+  function selectService(service) {
     setState({
-      step: "service",
+      mode: "service",
       service: service.name,
     });
+  }
 
-    setMessages((prev) => [
+  function go(mode) {
+    setState((prev) => ({
       ...prev,
-      { type: "user", text: service.name },
-      {
-        type: "bot",
-        text: service.intro,
-      },
-      {
-        type: "bot",
-        type: "buttons",
-        buttons: [
-          "View Packages",
-          "Budget Planner",
-          "How It Works",
-          "Get Quote",
-        ],
-      },
-    ]);
-  };
-
-  const handleAction = (action) => {
-    const service = state.service;
-    const data = serviceData[service];
-
-    if (action === "View Packages") {
-      setMessages((prev) => [
-        ...prev,
-        { type: "user", text: action },
-        {
-          type: "bot",
-          text: `${service} Packages:`,
-        },
-        {
-          type: "bot",
-          packages: data.packages,
-        },
-      ]);
-    }
-
-    if (action === "Budget Planner") {
-      setMessages((prev) => [
-        ...prev,
-        { type: "user", text: action },
-        {
-          type: "bot",
-          text:
-            "Tell me your budget and I will match the best plan for you.",
-        },
-      ]);
-    }
-
-    if (action === "How It Works") {
-      setMessages((prev) => [
-        ...prev,
-        { type: "user", text: action },
-        {
-          type: "bot",
-          text:
-            "We start with consultation → design → development → deployment → support.",
-        },
-      ]);
-    }
-
-    if (action === "Get Quote") {
-      setMessages((prev) => [
-        ...prev,
-        { type: "user", text: action },
-        {
-          type: "bot",
-          text:
-            "Send us your requirements and we’ll respond with a tailored quotation.",
-        },
-      ]);
-    }
-  };
+      mode,
+    }));
+  }
 
   return (
     <>
-      {/* FLOATING SERVICE BUTTONS (HOME STATE) */}
-      {state.step === "home" && (
+      {/* FLOATING SERVICE BUTTONS (HOME) */}
+      {state.mode === "home" && (
         <div className="fixed left-6 bottom-6 z-[999] flex flex-col gap-3">
           {services.map((s, i) => (
             <button
               key={i}
-              onClick={() => handleServiceClick(s)}
+              onClick={() => selectService(s)}
               className="px-4 py-3 rounded-xl bg-[#081120] border border-white/10 text-white text-sm hover:border-blue-500/40 transition"
             >
               {s.name}
@@ -226,7 +128,7 @@ export default function AIAssistant() {
         </div>
       )}
 
-      {/* CHAT PANEL */}
+      {/* CHAT WINDOW */}
       <div className="fixed left-6 bottom-28 z-[999] w-[340px]">
         <div className="rounded-2xl bg-[#081120]/95 border border-white/10 backdrop-blur-xl p-4 text-white">
 
@@ -238,55 +140,119 @@ export default function AIAssistant() {
             </button>
           </div>
 
-          {/* MESSAGES */}
-          <div className="space-y-3 max-h-[300px] overflow-y-auto">
+          {/* HOME VIEW */}
+          {state.mode === "service" && (
+            <div className="space-y-3">
 
-            {messages.map((msg, i) => (
-              <div key={i}>
+              {/* INTRO */}
+              <div className="text-sm text-gray-300 bg-white/5 p-3 rounded-xl">
+                {selectedService?.intro}
+              </div>
 
-                {msg.type === "bot" && (
-                  <div className="text-sm text-gray-300 bg-white/5 p-2 rounded-xl">
-                    {msg.text}
-                  </div>
-                )}
+              {/* ACTION BUTTONS */}
+              <div className="grid grid-cols-2 gap-2">
 
-                {msg.type === "buttons" && (
-                  <div className="grid grid-cols-2 gap-2 mt-2">
-                    {msg.buttons.map((b, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => handleAction(b)}
-                        className="text-xs bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500/20 rounded-lg p-2"
-                      >
-                        {b}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                <button
+                  onClick={() => go("packages")}
+                  className="bg-blue-600/20 border border-blue-500/20 rounded-lg p-2 text-xs"
+                >
+                  View Packages
+                </button>
 
-                {msg.packages && (
-                  <div className="space-y-2">
-                    {msg.packages.map((p, i) => (
-                      <div
-                        key={i}
-                        className="bg-white/5 p-2 rounded-lg"
-                      >
-                        <div className="font-semibold text-sm">
-                          {p.name} — {p.price}
-                        </div>
-                        <ul className="text-xs text-gray-400 list-disc ml-4">
-                          {p.features.map((f, idx) => (
-                            <li key={idx}>{f}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <button
+                  onClick={() => go("budget")}
+                  className="bg-blue-600/20 border border-blue-500/20 rounded-lg p-2 text-xs"
+                >
+                  Budget Guide
+                </button>
+
+                <button
+                  onClick={() => go("info")}
+                  className="bg-blue-600/20 border border-blue-500/20 rounded-lg p-2 text-xs"
+                >
+                  How It Works
+                </button>
+
+                <button
+                  className="bg-blue-600/20 border border-blue-500/20 rounded-lg p-2 text-xs"
+                >
+                  Contact Us
+                </button>
 
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+
+          {/* PACKAGES VIEW */}
+          {state.mode === "packages" && (
+            <div className="space-y-2">
+
+              {selectedService?.packages?.map((p, i) => (
+                <div
+                  key={i}
+                  className="bg-white/5 p-3 rounded-lg"
+                >
+                  <div className="font-semibold text-sm">
+                    {p.name} — {p.price}
+                  </div>
+
+                  <ul className="text-xs text-gray-400 ml-4 list-disc">
+                    {p.features.map((f, idx) => (
+                      <li key={idx}>{f}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+
+              <button
+                onClick={() => go("service")}
+                className="text-xs text-blue-400 mt-2"
+              >
+                ← Back
+              </button>
+            </div>
+          )}
+
+          {/* INFO VIEW */}
+          {state.mode === "info" && (
+            <div className="text-sm text-gray-300 space-y-2">
+              <p>
+                We start with consultation → planning →
+                design → development → deployment →
+                support.
+              </p>
+
+              <button
+                onClick={() => go("service")}
+                className="text-xs text-blue-400"
+              >
+                ← Back
+              </button>
+            </div>
+          )}
+
+          {/* BUDGET VIEW */}
+          {state.mode === "budget" && (
+            <div className="text-sm text-gray-300 space-y-2">
+              <p>
+                Tell us your budget and we will match the
+                best package for you.
+              </p>
+
+              <div className="text-xs text-gray-400">
+                Example:
+                <br /> AED 2500 → Starter Web
+                <br /> AED 6500 → Business Elite
+              </div>
+
+              <button
+                onClick={() => go("service")}
+                className="text-xs text-blue-400"
+              >
+                ← Back
+              </button>
+            </div>
+          )}
 
           {/* FOOTER */}
           <div className="mt-3 flex justify-end">
@@ -295,7 +261,6 @@ export default function AIAssistant() {
               Contact
             </button>
           </div>
-
         </div>
       </div>
     </>
