@@ -22,6 +22,7 @@ import ProtectedRoute
 from "./components/admin/ProtectedRoute";
 
 import ServicePage from "./pages/ServicePage";
+import { services } from "./data/servicesData";
 
 function App() {
   return (
