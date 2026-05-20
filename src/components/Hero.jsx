@@ -16,32 +16,45 @@ export default function Hero() {
     >
 
       {/* BACKGROUND IMAGE */}
-      <img
-        src="https://res.cloudinary.com/diszilwhc/image/upload/v1777984942/globe1_g9sjcl.jpg"
-        alt="hero"
-        className="
-          absolute inset-0
-          w-full h-full
-          object-cover
-          scale-110 md:scale-100
-          opacity-60
-        "
-      />
+{/* BACKGROUND VIDEO */}
+<video
+  autoPlay
+  muted
+  loop
+  playsInline
+  className="
+    absolute inset-0
+    w-full h-full
+    object-cover
+    scale-110 md:scale-100
+    opacity-45
+  "
+>
+  <source
+    src="https://res.cloudinary.com/diszilwhc/video/upload/v1778448235/technology_bg_qwzj9x.mp4"
+    type="video/mp4"
+  />
+</video>
 
-      {/* DARK OVERLAY */}
-      <div className="absolute inset-0 bg-black/50" />
+{/* DARK OVERLAY */}
+<div
+  className="
+    absolute inset-0
+    bg-[#02050D]/65
+  "
+/>
 
-      {/* LEFT FADE */}
-      <div
-        className="
-          absolute inset-0
-          bg-gradient-to-r
-          from-[#05070F]
-          via-[#05070F]/90
-          via-[#05070F]/70
-          to-transparent
-        "
-      />
+{/* LEFT CINEMATIC FADE */}
+<div
+  className="
+    absolute inset-0
+    bg-gradient-to-r
+    from-[#05070F]
+    via-[#05070F]/92
+    via-[#05070F]/72
+    to-transparent
+  "
+/>
 
       {/* GLOW */}
       <div
