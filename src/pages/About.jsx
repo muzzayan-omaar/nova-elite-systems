@@ -274,6 +274,84 @@ export default function About() {
 
         </div>
 
+        {/* OUR JOURNEY */}
+<div className="mt-28 relative">
+
+  {/* BACKGROUND LAYER */}
+  <div className="absolute inset-0 opacity-20 pointer-events-none">
+    <img
+      src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d"
+      alt="journey background"
+      className="w-full h-full object-cover scale-110 blur-sm"
+    />
+    <div className="absolute inset-0 bg-gradient-to-b from-[#050816] via-[#050816]/80 to-[#050816]" />
+  </div>
+
+  <div className="relative z-10 max-w-5xl mx-auto text-center px-6">
+
+    <p className="uppercase tracking-[0.28em] text-[11px] text-blue-400 font-semibold mb-5">
+      Our Journey
+    </p>
+
+    <h2 className="text-3xl md:text-5xl font-bold leading-tight">
+      From a Small 2023 Startup
+      <span className="text-blue-500"> to a Growing Tech & Security Agency</span>
+    </h2>
+
+    <p className="mt-8 text-gray-400 text-sm md:text-base leading-relaxed">
+      NOVA Elite Systems started in 2023 as a small freelance initiative focused on CCTV installations and basic web development.
+      At the time, the goal was simple — deliver reliable systems and help local businesses go digital without complexity.
+    </p>
+
+    <p className="mt-5 text-gray-500 text-sm leading-relaxed">
+      As demand grew, we expanded beyond basic services into full digital ecosystems — combining web platforms, networking infrastructure,
+      CCTV systems, and scalable business solutions. What started as small projects slowly evolved into long-term partnerships with businesses
+      that needed more than just websites — they needed systems that work.
+    </p>
+
+  </div>
+
+  {/* TIMELINE (SUBTLE, NOT BOXY) */}
+  <div className="relative z-10 mt-16 max-w-4xl mx-auto px-6 space-y-10">
+
+    {[
+      {
+        year: "2023",
+        title: "Started as Freelance CCTV & Web Services",
+        desc: "Focused on small installations, websites, and local business support."
+      },
+      {
+        year: "2024",
+        title: "Expanded Into Business Systems",
+        desc: "Moved into networking, structured web platforms, and business automation."
+      },
+      {
+        year: "2025+",
+        title: "Full Digital & Infrastructure Agency",
+        desc: "Delivering scalable systems, security infrastructure, and modern web ecosystems."
+      }
+    ].map((item, i) => (
+      <div key={i} className="flex gap-6">
+
+        {/* LINE DOT */}
+        <div className="flex flex-col items-center">
+          <div className="w-3 h-3 rounded-full bg-blue-500" />
+          {i !== 2 && <div className="w-[1px] h-20 bg-white/10 mt-2" />}
+        </div>
+
+        {/* CONTENT (NO BOX FEEL) */}
+        <div>
+          <p className="text-blue-400 text-xs tracking-[0.2em]">{item.year}</p>
+          <h3 className="text-lg font-semibold mt-1">{item.title}</h3>
+          <p className="text-gray-400 text-sm mt-2 leading-relaxed">{item.desc}</p>
+        </div>
+
+      </div>
+    ))}
+  </div>
+
+</div>
+
         {/* VALUES */}
         <div className="mt-28">
 
