@@ -17,7 +17,6 @@ export default function Hero() {
 
       {/* BACKGROUND IMAGE */}
 {/* BACKGROUND VIDEO */}
-{/* BACKGROUND VIDEO */}
 {/* VIDEO BACKGROUND */}
 <video
   autoPlay
@@ -29,7 +28,7 @@ export default function Hero() {
     absolute inset-0
     w-full h-full
     object-cover
-    opacity-30
+    opacity-40
   "
 >
   <source
@@ -38,8 +37,13 @@ export default function Hero() {
   />
 </video>
 
-{/* DARK OVERLAY */}
-<div className="absolute inset-0 bg-[#02050D]/75" />
+{/* MAIN OVERLAY */}
+<div
+  className="
+    absolute inset-0
+    bg-[#05070F]/55
+  "
+/>
 
 {/* LEFT CINEMATIC FADE */}
 <div
@@ -47,41 +51,22 @@ export default function Hero() {
     absolute inset-0
     bg-gradient-to-r
     from-[#05070F]
-    via-[#05070F]/92
+    via-[#05070F]/75
     to-transparent
   "
 />
 
-{/* VIGNETTE */}
+{/* TOP/BOTTOM VIGNETTE */}
 <div
   className="
     absolute inset-0
     bg-gradient-to-t
     from-[#05070F]
     via-transparent
-    to-[#05070F]/30
+    to-[#05070F]/40
   "
 />
 
-{/* DARK OVERLAY */}
-<div
-  className="
-    absolute inset-0
-    bg-[#02050D]/65
-  "
-/>
-
-{/* LEFT CINEMATIC FADE */}
-<div
-  className="
-    absolute inset-0
-    bg-gradient-to-r
-    from-[#05070F]
-    via-[#05070F]/92
-    via-[#05070F]/72
-    to-transparent
-  "
-/>
 
       {/* GLOW */}
       <div
