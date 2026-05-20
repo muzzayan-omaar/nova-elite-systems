@@ -229,25 +229,33 @@ export default function AIAssistant() {
   return (
     <>
       {/* FLOAT BUTTON */}
-      <div className="fixed left-6 bottom-6 z-[999]">
-        <button
-          onClick={() => setOpen(!open)}
-          className="
-            w-14 h-14
-            rounded-2xl
-            bg-[#081120]
-            border border-blue-500/20
-            shadow-[0_0_35px_rgba(59,130,246,0.25)]
-            flex items-center justify-center
-          "
-        >
-          {open ? (
-            <X className="text-white" />
-          ) : (
-            <span className="text-blue-400 font-bold">AI</span>
-          )}
-        </button>
-      </div>
+{/* FLOAT BUTTON */}
+<div className="fixed left-6 bottom-6 z-[999]">
+  <button
+    onClick={() => setOpen(!open)}
+    className="
+      w-14 h-14
+      rounded-2xl
+      overflow-hidden
+      bg-transparent
+      border-0
+      shadow-[0_0_35px_rgba(59,130,246,0.25)]
+      flex items-center justify-center
+      hover:scale-105 transition-transform duration-300
+    "
+  >
+    <div className="absolute inset-0 rounded-2xl animate-ping bg-blue-500/20" />
+    <img
+      src="https://res.cloudinary.com/diszilwhc/image/upload/v1778360837/20260510_010555_jissyl.png"
+      alt="NOVA AI"
+      className="
+        w-10 h-10
+        object-contain
+        drop-shadow-[0_0_18px_rgba(59,130,246,0.45)]
+      "
+    />
+  </button>
+</div>
 
       {/* CHAT PANEL */}
       {open && (
@@ -290,11 +298,7 @@ export default function AIAssistant() {
               ))}
             </div>
 
-            {/* CONTACT CTA */}
-            <button className="mt-4 w-full bg-blue-600 hover:bg-blue-500 py-2 rounded-xl text-sm flex items-center justify-center gap-2">
-              <Phone size={14} />
-              Contact Us
-            </button>
+
           </div>
         </div>
       )}
