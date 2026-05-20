@@ -18,31 +18,7 @@ export default function Home() {
 
   <div className="text-center">
 
-    <p
-      className="
-        uppercase
-        tracking-[0.28em]
-        text-[11px]
-        text-blue-400
-        font-semibold
-        mb-5
-      "
-    >
-      TECHNOLOGY ECOSYSTEM
-    </p>
 
-    <h2
-      className="
-        text-3xl
-        md:text-4xl
-        font-semibold
-      "
-    >
-      Trusted Technologies &
-      <span className="text-blue-500">
-        {" "}Infrastructure
-      </span>
-    </h2>
 
     <p
       className="
