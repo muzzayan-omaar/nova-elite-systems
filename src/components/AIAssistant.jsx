@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   X,
   ArrowRight,
@@ -18,28 +19,36 @@ export default function AIAssistant() {
     },
   ]);
 
-  const quickReplies = [
-    {
-      label: "Get Started",
-      response:
-        "We help businesses with web platforms, apps, SaaS systems, networking, CCTV and access control solutions.",
-    },
-    {
-      label: "View Services",
-      response:
-        "Our core services include Web Development, Mobile Apps, SaaS Platforms, CCTV Systems, Access Control and Networking Solutions.",
-    },
-    {
-      label: "Get a Quote",
-      response:
-        "You can request a quotation through our contact section or WhatsApp for a faster response.",
-    },
-    {
-      label: "Case Studies",
-      response:
-        "Explore our case studies to see how NOVA Elite Systems delivers real business results.",
-    },
-  ];
+const quickReplies = [
+  {
+    label: "Build Website",
+    response:
+      "I can help you build a business website. Tell me your industry or click Get Started.",
+    route: "/templates/web",
+    keywords: ["website", "web", "business site"],
+  },
+  {
+    label: "E-commerce Store",
+    response:
+      "Let’s build your online store. I can guide you to the best ecommerce templates.",
+    route: "/templates/ecommerce",
+    keywords: ["shop", "store", "ecommerce"],
+  },
+  {
+    label: "CCTV Setup",
+    response:
+      "We design full CCTV & security systems for businesses and homes.",
+    route: "/templates/security",
+    keywords: ["cctv", "security", "camera"],
+  },
+  {
+    label: "Talk to Human",
+    response:
+      "Connecting you to support. You can also WhatsApp us instantly.",
+    route: "/contact",
+    keywords: ["human", "support", "help"],
+  },
+];
 
   const prompts = [
     "Need a website fast?",
@@ -71,19 +80,20 @@ export default function AIAssistant() {
     return () => clearInterval(interval);
   }, [open]);
 
-  const handleReply = (item) => {
-    setMessages((prev) => [
-      ...prev,
-      {
-        type: "user",
-        text: item.label,
-      },
-      {
-        type: "bot",
-        text: item.response,
-      },
-    ]);
-  };
+ const handleReply = (item) => {
+  setMessages((prev) => [
+    ...prev,
+    { type: "user", text: item.label },
+    { type: "bot", text: item.response },
+  ]);
+
+  // smart redirect delay (feels AI-driven)
+  if (item.route) {
+    setTimeout(() => {
+      window.location.href = item.route;
+    }, 1200);
+  }
+};
 
   return (
     <>
@@ -356,6 +366,48 @@ export default function AIAssistant() {
 
               </div>
             </div>
+
+            <div className="mt-3">
+  <input
+    type="text"
+    placeholder="Ask NOVA... (e.g. I need a website for my shop)"
+    className="
+      w-full
+      px-3 py-2
+      rounded-xl
+      bg-white/[0.04]
+      border border-white/10
+      text-sm text-white
+      outline-none
+      focus:border-blue-500/40
+    "
+    onKeyDown={(e) => {
+      if (e.key === "Enter") {
+        const value = e.target.value.toLowerCase();
+
+        let matched = quickReplies.find((q) =>
+          q.keywords.some((k) => value.includes(k))
+        );
+
+        if (matched) {
+          handleReply(matched);
+        } else {
+          setMessages((prev) => [
+            ...prev,
+            { type: "user", text: value },
+            {
+              type: "bot",
+              text:
+                "I can help with websites, apps, CCTV, SaaS or networking. Try selecting a category below.",
+            },
+          ]);
+        }
+
+        e.target.value = "";
+      }
+    }}
+  />
+</div>
           </div>
 
           {/* FOOTER */}
@@ -399,21 +451,26 @@ export default function AIAssistant() {
               </button>
             </div>
 
-            <button
-              className="
-                px-4 py-2
-                rounded-xl
-                bg-blue-600
-                hover:bg-blue-500
-                transition
-                flex items-center gap-2
-                text-sm font-medium
-                text-white
-              "
-            >
-              <Phone size={16} />
-              Contact
-            </button>
+<Link
+  to="/book-consultation"
+  className="
+    relative
+    px-4 py-2
+    rounded-xl
+    bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600
+    hover:from-blue-500 hover:via-cyan-400 hover:to-blue-500
+    transition
+    flex items-center gap-2
+    text-sm font-medium
+    text-white
+    shadow-[0_0_30px_rgba(59,130,246,0.45)]
+    overflow-hidden
+  "
+>
+  <span className="absolute inset-0 opacity-30 animate-pulse bg-white/10" />
+  <Phone size={16} />
+  Start Project
+</Link>
           </div>
         </div>
       </div>
