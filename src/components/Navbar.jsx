@@ -327,11 +327,11 @@ export default function Navbar() {
         right-0
         w-[430px]
         rounded-[28px]
-        border border-white/10
-        bg-[#0B1423]/80
+        border border-white/[0.05]
+        bg-[#0B1423]/55
         backdrop-blur-xl
         overflow-hidden
-        shadow-[0_25px_80px_rgba(0,0,0,0.45)]
+        shadow-[0_20px_60px_rgba(0,0,0,0.28)]
         z-[999]
       "
     >
@@ -342,7 +342,7 @@ export default function Navbar() {
           px-5
           pt-5
           pb-4
-          border-b border-white/5
+          border-b border-white/[0.03]
         "
       >
 
@@ -418,10 +418,10 @@ export default function Navbar() {
               relative
               overflow-hidden
               rounded-2xl
-              border border-white/8
-              bg-white/[0.025]
-              hover:bg-blue-500/[0.06]
-              hover:border-blue-500/20
+              border border-white/[0.04]
+              bg-white/[0.015]
+              hover:bg-blue-500/[0.04]
+              hover:border-blue-500/10
               p-4
               text-left
               transition-all duration-300
@@ -436,7 +436,7 @@ export default function Navbar() {
                 opacity-0
                 group-hover:opacity-100
                 bg-gradient-to-br
-                from-blue-500/10
+                from-blue-500/[0.08]
                 to-transparent
                 transition
               "
