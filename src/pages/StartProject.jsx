@@ -801,6 +801,7 @@ setFormData({
               text-3xl
               font-bold
               mb-4
+              text-white
             "
           >
             Project Request Sent
@@ -817,7 +818,7 @@ setFormData({
             Your project inquiry has been
             received successfully.
 
-            Our team will review your
+            Our team are reviewing your
             requirements and contact you
             shortly via email or WhatsApp.
           </p>
@@ -829,24 +830,7 @@ setFormData({
             "
           >
 
-            <button
-              onClick={() =>
-                setShowSuccess(false)
-              }
 
-              className="
-                flex-1
-                h-12
-                rounded-2xl
-                bg-blue-600
-                hover:bg-blue-500
-                transition-all
-                text-sm
-                font-medium
-              "
-            >
-              Continue Browsing
-            </button>
 
             <Link
               to="/"

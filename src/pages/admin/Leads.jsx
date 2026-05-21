@@ -1,13 +1,16 @@
+import { useEffect, useState } from "react";
+import axios from "../../api/axios";
 
 import {
- useEffect, useState } from "react";
-import API from "../../api/axios";
-
-import {
+  Search,
   Mail,
-  Phone,
+  MessageCircle,
+  CalendarDays,
+  Briefcase,
   Globe,
-  Trash2,
+  Wallet,
+  Clock3,
+  CheckCircle2,
 } from "lucide-react";
 
 export default function Leads() {
@@ -15,25 +18,52 @@ export default function Leads() {
   const [leads, setLeads] =
     useState([]);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [selectedLead, setSelectedLead] =
+    useState(null);
+
+  const [search, setSearch] =
+    useState("");
 
   const [statusFilter, setStatusFilter] =
     useState("all");
 
+  // =========================
+  // FETCH LEADS
+  // =========================
+
   const fetchLeads = async () => {
+
     try {
 
-      const res = await API.get(
-        `/inquiries?status=${statusFilter}`
-      );
+      const token =
+        localStorage.getItem(
+          "adminToken"
+        );
+
+      const res =
+        await axios.get(
+          `/inquiries?status=${statusFilter}`,
+          {
+            headers: {
+              Authorization:
+                `Bearer ${token}`,
+            },
+          }
+        );
 
       setLeads(res.data);
 
+      if (
+        res.data.length > 0 &&
+        !selectedLead
+      ) {
+        setSelectedLead(
+          res.data[0]
+        );
+      }
+
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -41,76 +71,243 @@ export default function Leads() {
     fetchLeads();
   }, [statusFilter]);
 
+  // =========================
+  // UPDATE STATUS
+  // =========================
+
   const updateStatus = async (
     id,
     status
   ) => {
+
     try {
 
-      await API.put(
+      const token =
+        localStorage.getItem(
+          "adminToken"
+        );
+
+      await axios.put(
         `/inquiries/${id}`,
-        { status }
+        { status },
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
       );
 
       fetchLeads();
+
+      setSelectedLead({
+        ...selectedLead,
+        status,
+      });
 
     } catch (error) {
       console.log(error);
     }
   };
 
-  const deleteLead = async (id) => {
+  // =========================
+  // FILTERED LEADS
+  // =========================
 
-    const confirmDelete =
-      window.confirm(
-        "Delete this lead?"
+  const filteredLeads =
+    leads.filter((lead) => {
+
+      const term =
+        search.toLowerCase();
+
+      return (
+        lead.fullName
+          ?.toLowerCase()
+          .includes(term) ||
+
+        lead.email
+          ?.toLowerCase()
+          .includes(term) ||
+
+        lead.companyName
+          ?.toLowerCase()
+          .includes(term) ||
+
+        lead.service
+          ?.toLowerCase()
+          .includes(term)
       );
+    });
 
-    if (!confirmDelete) return;
+  // =========================
+  // STATUS COLORS
+  // =========================
 
-    try {
+  const statusStyles = {
+    new:
+      "bg-blue-500/15 text-blue-400 border-blue-500/20",
 
-      await API.delete(
-        `/inquiries/${id}`
-      );
+    contacted:
+      "bg-yellow-500/15 text-yellow-400 border-yellow-500/20",
 
-      fetchLeads();
+    "proposal-sent":
+      "bg-purple-500/15 text-purple-400 border-purple-500/20",
 
-    } catch (error) {
-      console.log(error);
-    }
+    "in-progress":
+      "bg-cyan-500/15 text-cyan-400 border-cyan-500/20",
+
+    completed:
+      "bg-green-500/15 text-green-400 border-green-500/20",
+
+    rejected:
+      "bg-red-500/15 text-red-400 border-red-500/20",
+
+    closed:
+      "bg-gray-500/15 text-gray-400 border-gray-500/20",
+  };
+
+  // =========================
+  // STATS
+  // =========================
+
+  const stats = {
+    total: leads.length,
+
+    new:
+      leads.filter(
+        (l) => l.status === "new"
+      ).length,
+
+    progress:
+      leads.filter(
+        (l) =>
+          l.status ===
+          "in-progress"
+      ).length,
+
+    completed:
+      leads.filter(
+        (l) =>
+          l.status ===
+          "completed"
+      ).length,
   };
 
   return (
-    <section
-      className="
-        min-h-screen
-        bg-[#050816]
-        text-white
-        p-8
-      "
-    >
 
-      <div
-        className="
-          flex
-          justify-between
-          items-center
-          mb-8
-        "
-      >
+    <section>
 
-        <h1
+      {/* TOP */}
+
+      <div className="mb-8">
+
+        <h1 className="text-4xl font-bold mb-3">
+          Leads CRM
+        </h1>
+
+        <p className="text-gray-400">
+          Manage inquiries, proposals,
+          onboarding and communication.
+        </p>
+
+      </div>
+
+      {/* STATS */}
+
+      <div className="grid md:grid-cols-4 gap-4 mb-6">
+
+        {[
+          {
+            label: "Total Leads",
+            value: stats.total,
+          },
+
+          {
+            label: "New",
+            value: stats.new,
+          },
+
+          {
+            label: "In Progress",
+            value: stats.progress,
+          },
+
+          {
+            label: "Completed",
+            value: stats.completed,
+          },
+
+        ].map((item, index) => (
+
+          <div
+            key={index}
+
+            className="
+              rounded-3xl
+              border border-white/10
+              bg-white/[0.03]
+              p-6
+            "
+          >
+
+            <p className="text-sm text-gray-400">
+              {item.label}
+            </p>
+
+            <h2 className="text-4xl font-bold mt-3">
+              {item.value}
+            </h2>
+
+          </div>
+        ))}
+
+      </div>
+
+      {/* SEARCH + FILTER */}
+
+      <div className="flex flex-wrap gap-4 mb-6">
+
+        <div
           className="
-            text-3xl
-            font-bold
+            flex items-center gap-3
+            px-4
+            h-12
+            rounded-2xl
+            border border-white/10
+            bg-white/[0.03]
+            flex-1
           "
         >
-          Project Leads
-        </h1>
+
+          <Search
+            size={18}
+            className="text-gray-500"
+          />
+
+          <input
+            type="text"
+
+            placeholder="Search leads..."
+
+            value={search}
+
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+
+            className="
+              bg-transparent
+              outline-none
+              text-sm
+              w-full
+            "
+          />
+
+        </div>
 
         <select
           value={statusFilter}
+
           onChange={(e) =>
             setStatusFilter(
               e.target.value
@@ -118,15 +315,17 @@ export default function Leads() {
           }
 
           className="
-            bg-[#0b1220]
+            h-12
+            px-4
+            rounded-2xl
+            bg-[#0B1220]
             border border-white/10
-            rounded-xl
-            px-4 py-2
+            text-sm
           "
         >
 
           <option value="all">
-            All
+            All Status
           </option>
 
           <option value="new">
@@ -149,146 +348,217 @@ export default function Leads() {
             Completed
           </option>
 
-          <option value="closed">
-            Closed
-          </option>
-
-          <option value="rejected">
-            Rejected
-          </option>
-
         </select>
 
       </div>
 
-      {loading ? (
+      {/* MAIN */}
 
-        <p>Loading leads...</p>
+      <div
+        className="
+          grid
+          lg:grid-cols-[360px_1fr]
+          gap-5
+        "
+      >
 
-      ) : (
+        {/* SIDEBAR */}
 
-        <div className="space-y-5">
+        <div
+          className="
+            rounded-3xl
+            border border-white/10
+            bg-white/[0.03]
+            overflow-hidden
+            h-[75vh]
+            overflow-y-auto
+          "
+        >
 
-          {leads.map((lead) => (
+          {filteredLeads.map((lead) => (
 
-            <div
+            <button
               key={lead._id}
 
-              className="
-                rounded-3xl
-                border border-white/10
-                bg-white/[0.03]
-                p-6
-              "
+              onClick={() =>
+                setSelectedLead(lead)
+              }
+
+              className={`
+                w-full
+                text-left
+                p-5
+                border-b border-white/5
+                transition-all
+
+                ${
+                  selectedLead?._id ===
+                  lead._id
+                    ? "bg-blue-500/[0.08]"
+                    : "hover:bg-white/[0.03]"
+                }
+              `}
             >
 
-              <div
-                className="
-                  flex
-                  justify-between
-                  gap-6
-                  flex-wrap
-                "
-              >
+              <div className="flex items-start justify-between">
 
                 <div>
 
-                  <h2
-                    className="
-                      text-2xl
-                      font-bold
-                    "
-                  >
+                  <h3 className="font-semibold">
                     {lead.fullName}
-                  </h2>
+                  </h3>
 
-                  <p
-                    className="
-                      text-blue-400
-                      mt-1
-                    "
-                  >
-                    {lead.service}
+                  <p className="text-sm text-gray-400 mt-1">
+                    {
+                      lead.companyName
+                    }
                   </p>
 
                 </div>
 
                 <div
-                  className="
-                    flex
-                    gap-3
-                    flex-wrap
-                  "
-                >
+                  className={`
+                    px-3 py-1
+                    rounded-full
+                    border
+                    text-[10px]
+                    capitalize
 
-                  <select
-                    value={lead.status}
-
-                    onChange={(e) =>
-                      updateStatus(
-                        lead._id,
-                        e.target.value
-                      )
+                    ${
+                      statusStyles[
+                        lead.status
+                      ]
                     }
+                  `}
+                >
+                  {lead.status}
+                </div>
 
-                    className="
-                      bg-[#0b1220]
-                      border border-white/10
-                      rounded-xl
-                      px-4 py-2
-                    "
-                  >
+              </div>
 
-                    <option value="new">
-                      New
-                    </option>
+              <div className="mt-4">
 
-                    <option value="contacted">
-                      Contacted
-                    </option>
+                <p className="text-sm text-blue-400">
+                  {lead.service}
+                </p>
 
-                    <option value="proposal-sent">
-                      Proposal Sent
-                    </option>
+                <p className="text-xs text-gray-500 mt-2">
+                  {lead.packageName}
+                </p>
 
-                    <option value="in-progress">
-                      In Progress
-                    </option>
+              </div>
 
-                    <option value="completed">
-                      Completed
-                    </option>
+            </button>
+          ))}
 
-                    <option value="closed">
-                      Closed
-                    </option>
+        </div>
 
-                    <option value="rejected">
-                      Rejected
-                    </option>
+        {/* DETAILS */}
 
-                  </select>
+        <div
+          className="
+            rounded-3xl
+            border border-white/10
+            bg-white/[0.03]
+            p-8
+            h-[75vh]
+            overflow-y-auto
+          "
+        >
+
+          {selectedLead ? (
+
+            <>
+
+              {/* HEADER */}
+
+              <div
+                className="
+                  flex flex-col lg:flex-row
+                  lg:items-center
+                  justify-between
+                  gap-5
+                  mb-8
+                "
+              >
+
+                <div>
+
+                  <h2 className="text-3xl font-bold">
+                    {
+                      selectedLead.fullName
+                    }
+                  </h2>
+
+                  <p className="text-gray-400 mt-2">
+                    {
+                      selectedLead.companyName
+                    }
+                  </p>
+
+                </div>
+
+                <div className="flex gap-3">
+
+                  {/* EMAIL */}
 
                   <button
-                    onClick={() =>
-                      deleteLead(
-                        lead._id
-                      )
-                    }
+                    onClick={() => {
+
+                      window.location.href =
+                        `mailto:${selectedLead.email}?subject=Your Project Inquiry`;
+
+                    }}
 
                     className="
-                      w-11 h-11
-                      rounded-xl
-                      bg-red-500/10
-                      border border-red-500/20
-                      text-red-400
-                      flex
-                      items-center
-                      justify-center
+                      h-12
+                      px-5
+                      rounded-2xl
+                      bg-blue-600
+                      hover:bg-blue-500
+                      transition-all
+                      flex items-center gap-2
+                      text-sm
                     "
                   >
 
-                    <Trash2 size={18} />
+                    <Mail size={16} />
+
+                    Email
+
+                  </button>
+
+                  {/* WHATSAPP */}
+
+                  <button
+                    onClick={() => {
+
+                      const message =
+`Hello ${selectedLead.fullName},
+Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.service} project.`;
+
+                      window.open(
+                        `https://wa.me/${selectedLead.whatsapp}?text=${encodeURIComponent(message)}`
+                      );
+
+                    }}
+
+                    className="
+                      h-12
+                      px-5
+                      rounded-2xl
+                      border border-white/10
+                      hover:border-green-500/30
+                      hover:bg-green-500/10
+                      transition-all
+                      flex items-center gap-2
+                      text-sm
+                    "
+                  >
+
+                    <MessageCircle size={16} />
+
+                    WhatsApp
 
                   </button>
 
@@ -296,116 +566,175 @@ export default function Leads() {
 
               </div>
 
-              <div
-                className="
-                  grid
-                  md:grid-cols-3
-                  gap-5
-                  mt-6
-                "
-              >
+              {/* GRID */}
 
-                <div>
+              <div className="grid md:grid-cols-2 gap-5 mb-8">
 
-                  <div
-                    className="
-                      flex
-                      items-center
-                      gap-2
-                      text-gray-400
-                      text-sm
-                    "
-                  >
+                {[
+                  {
+                    icon:
+                      <Briefcase size={16} />,
+                    label: "Service",
+                    value:
+                      selectedLead.service,
+                  },
 
-                    <Mail size={14} />
+                  {
+                    icon:
+                      <Wallet size={16} />,
+                    label: "Budget",
+                    value:
+                      selectedLead.budget,
+                  },
 
-                    {lead.email}
+                  {
+                    icon:
+                      <Clock3 size={16} />,
+                    label: "Timeline",
+                    value:
+                      selectedLead.timeline,
+                  },
 
-                  </div>
+                  {
+                    icon:
+                      <Globe size={16} />,
+                    label: "Country",
+                    value:
+                      selectedLead.country,
+                  },
 
-                  <div
-                    className="
-                      flex
-                      items-center
-                      gap-2
-                      text-gray-400
-                      text-sm
-                      mt-2
-                    "
-                  >
-
-                    <Phone size={14} />
-
-                    {lead.whatsapp}
-
-                  </div>
+                ].map((item, index) => (
 
                   <div
+                    key={index}
+
                     className="
-                      flex
-                      items-center
-                      gap-2
-                      text-gray-400
-                      text-sm
-                      mt-2
+                      rounded-2xl
+                      border border-white/10
+                      bg-white/[0.02]
+                      p-5
                     "
                   >
 
-                    <Globe size={14} />
+                    <div className="flex items-center gap-2 text-blue-400 mb-3">
 
-                    {lead.country}
+                      {item.icon}
+
+                      <p className="text-sm">
+                        {item.label}
+                      </p>
+
+                    </div>
+
+                    <h3 className="font-semibold">
+                      {item.value || "—"}
+                    </h3>
 
                   </div>
-
-                </div>
-
-                <div>
-
-                  <p className="text-sm text-gray-500">
-                    Package
-                  </p>
-
-                  <p className="mt-1">
-                    {lead.packageName}
-                  </p>
-
-                  <p
-                    className="
-                      text-blue-400
-                      mt-1
-                    "
-                  >
-                    {lead.packagePrice}
-                  </p>
-
-                </div>
-
-                <div>
-
-                  <p className="text-sm text-gray-500">
-                    Project Description
-                  </p>
-
-                  <p
-                    className="
-                      mt-2
-                      text-sm
-                      text-gray-300
-                      leading-relaxed
-                    "
-                  >
-                    {lead.description}
-                  </p>
-
-                </div>
+                ))}
 
               </div>
 
+              {/* DESCRIPTION */}
+
+              <div
+                className="
+                  rounded-3xl
+                  border border-white/10
+                  bg-white/[0.02]
+                  p-6
+                  mb-8
+                "
+              >
+
+                <h3 className="font-semibold mb-4">
+                  Project Description
+                </h3>
+
+                <p className="text-gray-400 leading-relaxed">
+                  {
+                    selectedLead.description
+                  }
+                </p>
+
+              </div>
+
+              {/* STATUS */}
+
+              <div>
+
+                <h3 className="font-semibold mb-4">
+                  Lead Status
+                </h3>
+
+                <select
+                  value={
+                    selectedLead.status
+                  }
+
+                  onChange={(e) =>
+                    updateStatus(
+                      selectedLead._id,
+                      e.target.value
+                    )
+                  }
+
+                  className="
+                    h-12
+                    px-4
+                    rounded-2xl
+                    bg-[#0B1220]
+                    border border-white/10
+                    text-sm
+                  "
+                >
+
+                  <option value="new">
+                    New
+                  </option>
+
+                  <option value="contacted">
+                    Contacted
+                  </option>
+
+                  <option value="proposal-sent">
+                    Proposal Sent
+                  </option>
+
+                  <option value="in-progress">
+                    In Progress
+                  </option>
+
+                  <option value="completed">
+                    Completed
+                  </option>
+
+                  <option value="rejected">
+                    Rejected
+                  </option>
+
+                </select>
+
+              </div>
+
+            </>
+
+          ) : (
+
+            <div
+              className="
+                h-full
+                flex items-center justify-center
+                text-gray-500
+              "
+            >
+              Select a lead
             </div>
-          ))}
+          )}
 
         </div>
-      )}
+
+      </div>
 
     </section>
   );
