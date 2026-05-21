@@ -1,7 +1,6 @@
 import {
   useLocation,
   Link,
-  useNavigate,
 } from "react-router-dom";
 
 import { useState } from "react";
@@ -22,8 +21,8 @@ import {
 export default function StartProject() {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-
-  const navigate = useNavigate();
+  const [showSuccess, setShowSuccess] =
+  useState(false);
 
  const {
   service = "Custom Project",
@@ -78,12 +77,25 @@ const handleSubmit = async (e) => {
 
     await API.post("/inquiries", payload);
 
-    toast.success("Request submitted successfully 🚀");
+toast.success(
+  "Project inquiry submitted 🚀"
+);
 
-    setLoading(false);
+setLoading(false);
 
-    // optional UX flow
-    navigate("/thank-you");
+setShowSuccess(true);
+
+setFormData({
+  fullName: "",
+  companyName: "",
+  email: "",
+  whatsapp: "",
+  country: "",
+  businessType: "",
+  timeline: "",
+  budget: "",
+  description: "",
+});
 
   } catch (error) {
     console.error(error);
@@ -719,6 +731,151 @@ const handleSubmit = async (e) => {
           </div>
         </div>
       </section>
+    {
+  showSuccess && (
+
+    <div
+      className="
+        fixed inset-0
+        z-[200]
+        flex items-center justify-center
+        bg-black/70
+        backdrop-blur-md
+        px-4
+      "
+    >
+
+      <div
+        className="
+          w-full
+          max-w-lg
+          rounded-[32px]
+          border border-white/10
+          bg-[#081120]
+          p-8 md:p-10
+          text-center
+          relative
+          overflow-hidden
+        "
+      >
+
+        {/* glow */}
+        <div
+          className="
+            absolute
+            top-[-120px]
+            left-1/2
+            -translate-x-1/2
+            w-[300px]
+            h-[300px]
+            bg-blue-500/20
+            blur-[100px]
+            rounded-full
+          "
+        />
+
+        <div className="relative z-10">
+
+          <div
+            className="
+              w-20 h-20
+              rounded-full
+              bg-blue-500/10
+              border border-blue-500/20
+              flex items-center
+              justify-center
+              mx-auto
+              mb-6
+            "
+          >
+
+            <Check
+              size={34}
+              className="text-blue-400"
+            />
+
+          </div>
+
+          <h2
+            className="
+              text-3xl
+              font-bold
+              mb-4
+            "
+          >
+            Project Request Sent
+          </h2>
+
+          <p
+            className="
+              text-gray-400
+              leading-relaxed
+              text-sm md:text-base
+              mb-8
+            "
+          >
+            Your project inquiry has been
+            received successfully.
+
+            Our team will review your
+            requirements and contact you
+            shortly via email or WhatsApp.
+          </p>
+
+          <div
+            className="
+              flex flex-col sm:flex-row
+              gap-3
+            "
+          >
+
+            <button
+              onClick={() =>
+                setShowSuccess(false)
+              }
+
+              className="
+                flex-1
+                h-12
+                rounded-2xl
+                bg-blue-600
+                hover:bg-blue-500
+                transition-all
+                text-sm
+                font-medium
+              "
+            >
+              Continue Browsing
+            </button>
+
+            <Link
+              to="/"
+
+              className="
+                flex-1
+                h-12
+                rounded-2xl
+                border border-white/10
+                hover:border-blue-500/40
+                hover:bg-white/[0.03]
+                transition-all
+                text-sm
+                font-medium
+                flex items-center justify-center
+              "
+            >
+              Go Home
+            </Link>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  )
+}
     </>
   );
 }
