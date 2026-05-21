@@ -10,6 +10,7 @@ import {
   DollarSign,
   CreditCard,
   Headphones,
+  User,
 } from "lucide-react";
 
 import Invoice from "./admin/Invoice";
