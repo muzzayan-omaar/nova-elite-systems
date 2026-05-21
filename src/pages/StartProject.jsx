@@ -1,9 +1,14 @@
-import { useLocation, Link } from "react-router-dom";
+import {
+  useLocation,
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
 import { useState } from "react";
+import API from "../api/axios";
+import { toast } from "sonner";
 
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 
 import {
   ArrowRight,
@@ -15,13 +20,15 @@ import {
 } from "lucide-react";
 
 export default function StartProject() {
-
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
 
-  const {
-    service,
-    packageData,
-  } = location.state || {};
+  const navigate = useNavigate();
+
+ const {
+  service = "Custom Project",
+  packageData = {},
+} = location.state || {};
 
   const [startMethod, setStartMethod] =
     useState("consultation");
@@ -46,20 +53,46 @@ export default function StartProject() {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    console.log({
+  setLoading(true);
+
+  try {
+    const payload = {
+      fullName: formData.fullName,
+      companyName: formData.companyName,
+      email: formData.email,
+      whatsapp: formData.whatsapp,
+      country: formData.country,
+      businessType: formData.businessType,
+      timeline: formData.timeline,
+      budget: formData.budget,
+      description: formData.description,
+
       service,
-      package: packageData,
+      packageName: packageData?.title,
+      packagePrice: packageData?.price,
       startMethod,
-      formData,
-    });
+    };
 
-    alert(
-      "Project inquiry submitted successfully."
-    );
-  };
+    await API.post("/inquiries", payload);
+
+    toast.success("Request submitted successfully 🚀");
+
+    setLoading(false);
+
+    // optional UX flow
+    navigate("/thank-you");
+
+  } catch (error) {
+    console.error(error);
+
+    setLoading(false);
+
+    toast.error("Failed to submit request. Try again.");
+  }
+};
 
   return (
     <>
@@ -70,25 +103,24 @@ export default function StartProject() {
           min-h-screen
           bg-[#050816]
           text-white
-          pt-32
-          pb-24
-          px-5 md:px-8
-          overflow-hidden
           relative
+          overflow-hidden
+          pt-24
+          pb-8
+          px-4
         "
       >
-
-        {/* BACKGROUND GLOW */}
+        {/* GLOW */}
         <div
           className="
             absolute
-            top-0
+            top-[-250px]
             left-1/2
             -translate-x-1/2
-            w-[900px]
-            h-[900px]
+            w-[750px]
+            h-[750px]
             bg-blue-500/10
-            blur-[180px]
+            blur-[140px]
             rounded-full
             pointer-events-none
           "
@@ -100,97 +132,75 @@ export default function StartProject() {
             z-10
             max-w-7xl
             mx-auto
-grid
-lg:grid-cols-[340px_1fr]
-gap-5
+            h-[calc(100vh-120px)]
+            grid
+            lg:grid-cols-[300px_1fr]
+            gap-4
           "
         >
-
           {/* LEFT PANEL */}
-<div
-  className="
-    sticky
-    top-24
-    h-fit
-    rounded-[24px]
-    border border-white/10
-    bg-white/[0.025]
-    backdrop-blur-xl
-    overflow-hidden
-  "
->
-
+          <div
+            className="
+              hidden lg:flex
+              flex-col
+              rounded-[24px]
+              border border-white/10
+              bg-white/[0.025]
+              backdrop-blur-xl
+              overflow-hidden
+            "
+          >
             {/* HEADER */}
-            <div
-              className="
-                p-5
-                border-b border-white/10
-              "
-            >
-
+            <div className="p-5 border-b border-white/10">
               <div
                 className="
                   inline-flex
                   items-center
                   gap-2
-                  px-4 py-2
+                  px-3 py-1.5
                   rounded-full
                   bg-blue-500/10
                   border border-blue-500/20
                   text-blue-400
-                  text-sm
-                  mb-5
+                  text-[11px]
+                  mb-4
                 "
               >
-                <Sparkles size={15} />
+                <Sparkles size={13} />
                 Project Summary
               </div>
 
-              <h2
-                className="
-                  text-2xl
-                  font-bold
-                  leading-tight
-                "
-              >
+              <h2 className="text-xl font-bold leading-tight">
                 {service || "Custom Project"}
               </h2>
 
-              <p
-                className="
-                  text-gray-400
-                  text-sm
-                  mt-3
-                "
-              >
+              <p className="text-[13px] text-gray-400 mt-2 leading-relaxed">
                 {packageData?.subtitle}
               </p>
             </div>
 
-            {/* PACKAGE */}
-            <div className="p-6">
-
-              <div className="mb-8">
-
+            {/* CONTENT */}
+            <div
+              className="
+                flex-1
+                overflow-y-auto
+                p-5
+              "
+            >
+              <div className="mb-6">
                 <p
                   className="
-                    text-gray-500
-                    text-xs
+                    text-[10px]
                     uppercase
                     tracking-[0.2em]
+                    text-gray-500
                     mb-2
                   "
                 >
                   Selected Package
                 </p>
 
-                <h3
-                  className="
-                    text-3xl
-                    font-bold
-                    text-white
-                  "
-                >
+                <h3 className="text-2xl font-bold">
                   {packageData?.title}
                 </h3>
 
@@ -200,28 +210,27 @@ gap-5
                     inline-flex
                     items-center
                     gap-2
-                    px-4 py-2
+                    px-3 py-2
                     rounded-xl
                     bg-blue-500/10
                     border border-blue-500/20
+                    text-sm
                   "
                 >
                   <Wallet
-                    size={16}
+                    size={14}
                     className="text-blue-400"
                   />
 
-                  <span className="text-sm">
-                    {packageData?.price}
-                  </span>
+                  {packageData?.price}
                 </div>
               </div>
 
               {/* FEATURES */}
-              <div className="space-y-4">
-
-                {packageData?.features?.map(
-                  (feature, index) => (
+              <div className="space-y-3">
+                {packageData?.features
+                  ?.slice(0, 6)
+                  .map((feature, index) => (
                     <div
                       key={index}
                       className="
@@ -230,75 +239,52 @@ gap-5
                         gap-3
                       "
                     >
-
                       <div
                         className="
-                          w-5 h-5
+                          w-4 h-4
                           rounded-full
                           bg-blue-500/15
-                          flex items-center
+                          flex
+                          items-center
                           justify-center
                           shrink-0
                           mt-0.5
                         "
                       >
                         <Check
-                          size={12}
+                          size={10}
                           className="text-blue-400"
                         />
                       </div>
 
-                      <span
-                        className="
-                          text-sm
-                          text-gray-300
-                        "
-                      >
+                      <span className="text-[13px] text-gray-300 leading-relaxed">
                         {feature}
                       </span>
                     </div>
-                  )
-                )}
-
+                  ))}
               </div>
 
-              {/* TIMELINE */}
+              {/* NOTE */}
               <div
                 className="
-                  mt-8
-                  p-5
+                  mt-6
                   rounded-2xl
                   border border-white/10
-                  bg-white/[0.03]
+                  bg-white/[0.02]
+                  p-4
                 "
               >
-
                 <div className="flex gap-3">
-
                   <Shield
-                    className="text-blue-400"
-                    size={18}
+                    size={16}
+                    className="text-blue-400 shrink-0 mt-0.5"
                   />
 
-                  <div>
-
-                    <h4 className="font-medium mb-2">
-                      Estimated Timeline
-                    </h4>
-
-                    <p
-                      className="
-                        text-sm
-                        text-gray-400
-                        leading-relaxed
-                      "
-                    >
-                      Typical delivery:
-                      2–6 weeks depending
-                      on project complexity.
-                    </p>
-
-                  </div>
+                  <p className="text-[12px] text-gray-400 leading-relaxed">
+                    Projects typically begin with
+                    planning or a booking deposit
+                    before development starts.
+                  </p>
                 </div>
               </div>
             </div>
@@ -307,93 +293,82 @@ gap-5
           {/* RIGHT PANEL */}
           <div
             className="
-              rounded-[32px]
+              rounded-[24px]
               border border-white/10
-              bg-white/[0.03]
-              backdrop-blur-2xl
+              bg-white/[0.025]
+              backdrop-blur-xl
               overflow-hidden
+              flex
+              flex-col
             "
           >
-
-            <div className="p-8 md:p-10">
-
-              {/* HERO */}
-              <div className="mb-10">
-
-                <div
-                  className="
-                    inline-flex
-                    items-center
-                    gap-2
-                    px-4 py-2
-                    rounded-full
-                    bg-blue-500/10
-                    border border-blue-500/20
-                    text-blue-400
-                    text-sm
-                    mb-5
-                  "
-                >
-                  <Briefcase size={15} />
-                  Project Onboarding
-                </div>
-
-                <h1
-                  className="
-                    text-4xl
-                    md:text-5xl
-                    font-bold
-                    leading-tight
-                  "
-                >
-                  Start Your
-                  <span className="text-blue-500">
-                    {" "}
-                    Project.
-                  </span>
-                </h1>
-
-                <p
-                  className="
-                    mt-5
-                    text-gray-400
-                    max-w-2xl
-                    leading-relaxed
-                  "
-                >
-                  Tell us about your vision,
-                  goals and preferred project
-                  workflow.
-                </p>
+            {/* TOP */}
+            <div className="p-5 border-b border-white/10">
+              <div
+                className="
+                  inline-flex
+                  items-center
+                  gap-2
+                  px-3 py-1.5
+                  rounded-full
+                  bg-blue-500/10
+                  border border-blue-500/20
+                  text-blue-400
+                  text-[11px]
+                  mb-4
+                "
+              >
+                <Briefcase size={13} />
+                Project Onboarding
               </div>
 
-              {/* FORM */}
+              <h1
+                className="
+                  text-3xl
+                  md:text-4xl
+                  font-bold
+                  leading-tight
+                "
+              >
+                Start Your
+                <span className="text-blue-500">
+                  {" "}
+                  Project.
+                </span>
+              </h1>
+
+              <p
+                className="
+                  mt-3
+                  text-sm
+                  text-gray-400
+                  max-w-2xl
+                  leading-relaxed
+                "
+              >
+                Tell us about your business,
+                goals and preferred workflow.
+              </p>
+            </div>
+
+            {/* FORM AREA */}
+            <div
+              className="
+                flex-1
+                overflow-y-auto
+              "
+            >
               <form
                 onSubmit={handleSubmit}
-                className="space-y-10"
+                className="p-5 space-y-6"
               >
-
                 {/* BASIC INFO */}
                 <div>
-
-                  <h3
-                    className="
-                      text-xl
-                      font-semibold
-                      mb-6
-                    "
-                  >
+                  <h3 className="text-sm font-semibold mb-4 text-gray-200">
                     Basic Information
                   </h3>
 
-                  <div
-                    className="
-                      grid
-                      md:grid-cols-2
-                      gap-5
-                    "
-                  >
-
+                  <div className="grid md:grid-cols-2 gap-3">
                     {[
                       {
                         name: "fullName",
@@ -441,8 +416,9 @@ gap-5
                         onChange={handleChange}
                         className="
                           w-full
-                          px-5 py-4
-                          rounded-2xl
+                          h-11
+                          px-4
+                          rounded-xl
                           bg-white/[0.03]
                           border border-white/10
                           focus:outline-none
@@ -451,39 +427,23 @@ gap-5
                         "
                       />
                     ))}
-
                   </div>
                 </div>
 
                 {/* PROJECT DETAILS */}
                 <div>
-
-                  <h3
-                    className="
-                      text-xl
-                      font-semibold
-                      mb-6
-                    "
-                  >
+                  <h3 className="text-sm font-semibold mb-4 text-gray-200">
                     Project Details
                   </h3>
 
-                  <div
-                    className="
-                      grid
-                      md:grid-cols-2
-                      gap-5
-                      mb-5
-                    "
-                  >
-
+                  <div className="grid md:grid-cols-2 gap-3 mb-3">
                     <select
                       name="timeline"
                       onChange={handleChange}
                       className="
-                        w-full
-                        px-5 py-4
-                        rounded-2xl
+                        h-11
+                        px-4
+                        rounded-xl
                         bg-[#0b1220]
                         border border-white/10
                         focus:outline-none
@@ -495,30 +455,24 @@ gap-5
                         Expected Timeline
                       </option>
 
-                      <option>
-                        ASAP
-                      </option>
+                      <option>ASAP</option>
 
                       <option>
                         1–2 Weeks
                       </option>
 
-                      <option>
-                        1 Month
-                      </option>
+                      <option>1 Month</option>
 
-                      <option>
-                        Flexible
-                      </option>
+                      <option>Flexible</option>
                     </select>
 
                     <select
                       name="budget"
                       onChange={handleChange}
                       className="
-                        w-full
-                        px-5 py-4
-                        rounded-2xl
+                        h-11
+                        px-4
+                        rounded-xl
                         bg-[#0b1220]
                         border border-white/10
                         focus:outline-none
@@ -546,45 +500,36 @@ gap-5
                         $2,000+
                       </option>
                     </select>
-
                   </div>
 
                   <textarea
-                    rows="6"
+                    rows="4"
                     name="description"
-                    placeholder="
-Describe your project, goals and required features...
-                    "
+                    placeholder="Describe your project and required features..."
                     onChange={handleChange}
                     className="
                       w-full
-                      px-5 py-4
-                      rounded-2xl
+                      px-4
+                      py-3
+                      rounded-xl
                       bg-white/[0.03]
                       border border-white/10
                       focus:outline-none
                       focus:border-blue-500/40
                       text-sm
+                      resize-none
                     "
                   />
                 </div>
 
                 {/* START METHOD */}
                 <div>
-
-                  <h3
-                    className="
-                      text-xl
-                      font-semibold
-                      mb-6
-                    "
-                  >
-                    How Would You Like To Begin?
+                  <h3 className="text-sm font-semibold mb-4 text-gray-200">
+                    Choose How To Begin
                   </h3>
 
-                  <div className="space-y-4">
-
-                    {/* OPTION 1 */}
+                  <div className="grid md:grid-cols-3 gap-3">
+                    {/* CONSULTATION */}
                     <button
                       type="button"
                       onClick={() =>
@@ -593,10 +538,9 @@ Describe your project, goals and required features...
                         )
                       }
                       className={`
-                        w-full
+                        rounded-2xl
+                        p-4
                         text-left
-                        p-6
-                        rounded-3xl
                         border
                         transition-all
 
@@ -609,126 +553,84 @@ Describe your project, goals and required features...
                             `
                             : `
                               border-white/10
-                              bg-white/[0.03]
+                              bg-white/[0.02]
                             `
                         }
                       `}
                     >
-
-                      <h4 className="font-semibold text-lg mb-2">
-                        Consultation & Planning
+                      <h4 className="text-sm font-semibold mb-2">
+                        Consultation
                       </h4>
 
-                      <p
-                        className="
-                          text-sm
-                          text-gray-400
-                          leading-relaxed
-                        "
-                      >
-                        Ideal for custom
-                        systems and larger
-                        projects requiring
-                        technical planning.
-                      </p>
-
-                      {startMethod ===
-                        "consultation" && (
-                        <div
-                          className="
-                            mt-5
-                            inline-flex
-                            items-center
-                            gap-2
-                            px-4 py-2
-                            rounded-xl
-                            bg-blue-500/10
-                            border border-blue-500/20
-                            text-blue-400
-                            text-sm
-                          "
-                        >
-                          Consultation Fee:
-                          $25
-                        </div>
-                      )}
-                    </button>
-
-                    {/* OPTION 2 */}
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setStartMethod(
-                          "deposit"
-                        )
-                      }
-                      className={`
-                        w-full
-                        text-left
-                        p-6
-                        rounded-3xl
-                        border
-                        transition-all
-
-                        ${
-                          startMethod ===
-                          "deposit"
-                            ? `
-                              border-blue-500/40
-                              bg-blue-500/[0.08]
-                            `
-                            : `
-                              border-white/10
-                              bg-white/[0.03]
-                            `
-                        }
-                      `}
-                    >
-
-                      <h4 className="font-semibold text-lg mb-2">
-                        Ready To Start With Deposit
-                      </h4>
-
-                      <p
-                        className="
-                          text-sm
-                          text-gray-400
-                          leading-relaxed
-                        "
-                      >
-                        For businesses ready
-                        to immediately begin
+                      <p className="text-[12px] text-gray-400 leading-relaxed">
+                        Strategy & planning before
                         development.
                       </p>
 
+                      <div className="mt-4 text-blue-400 text-xs">
+                        From $25
+                      </div>
                     </button>
 
-                    {/* OPTION 3 */}
-                    <div
-                      className="
-                        p-6
-                        rounded-3xl
-                        border border-white/10
-                        bg-white/[0.03]
-                      "
-                    >
+                    {/* DEPOSIT */}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setStartMethod(
+                          "deposit"
+                        )
+                      }
+                      className={`
+                        rounded-2xl
+                        p-4
+                        text-left
+                        border
+                        transition-all
 
-                      <h4 className="font-semibold text-lg mb-2">
-                        Browse Ready-Made Templates
+                        ${
+                          startMethod ===
+                          "deposit"
+                            ? `
+                              border-blue-500/40
+                              bg-blue-500/[0.08]
+                            `
+                            : `
+                              border-white/10
+                              bg-white/[0.02]
+                            `
+                        }
+                      `}
+                    >
+                      <h4 className="text-sm font-semibold mb-2">
+                        Start With Deposit
                       </h4>
 
-                      <p
-                        className="
-                          text-sm
-                          text-gray-400
-                          leading-relaxed
-                          mb-5
-                        "
-                      >
-                        Explore affordable
-                        pre-built websites and
-                        digital products ready
-                        for fast deployment.
+                      <p className="text-[12px] text-gray-400 leading-relaxed">
+                        Secure your project slot
+                        immediately.
+                      </p>
+
+                      <div className="mt-4 text-blue-400 text-xs">
+                        Faster onboarding
+                      </div>
+                    </button>
+
+                    {/* TEMPLATES */}
+                    <div
+                      className="
+                        rounded-2xl
+                        p-4
+                        border border-white/10
+                        bg-white/[0.02]
+                      "
+                    >
+                      <h4 className="text-sm font-semibold mb-2">
+                        Templates
+                      </h4>
+
+                      <p className="text-[12px] text-gray-400 leading-relaxed mb-4">
+                        Ready-made websites for
+                        fast launch.
                       </p>
 
                       <Link
@@ -738,68 +640,85 @@ Describe your project, goals and required features...
                           items-center
                           gap-2
                           text-blue-400
-                          text-sm
+                          text-xs
                         "
                       >
-                        Explore Templates
-                        <ArrowRight size={15} />
+                        Explore
+                        <ArrowRight size={13} />
                       </Link>
-
                     </div>
-
                   </div>
                 </div>
 
-                {/* SUBMIT */}
-                <button
-                  type="submit"
-                  className="
-                    w-full
-                    py-5
-                    rounded-2xl
-                    bg-blue-600
-                    hover:bg-blue-500
-                    transition-all
-                    font-semibold
-                    text-base
-                    flex
-                    items-center
-                    justify-center
-                    gap-3
-                    shadow-[0_0_40px_rgba(59,130,246,0.35)]
-                  "
-                >
-                  Submit Project Inquiry
+                {/* TERMS */}
+                <div className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    required
+                    className="mt-1"
+                  />
 
-                  <ArrowRight size={18} />
-                </button>
-                <div className="flex items-start gap-2 mt-4">
-  <input type="checkbox" required className="mt-1" />
+                  <p className="text-[11px] text-gray-500 leading-relaxed">
+                    I agree to the{" "}
 
-  <p className="text-[11px] text-gray-500 leading-relaxed">
-    I agree to the{" "}
-    <Link to="/terms" className="text-blue-400 hover:underline">
-      Terms of Service
-    </Link>
-    ,{" "}
-    <Link to="/privacy-policy" className="text-blue-400 hover:underline">
-      Privacy Policy
-    </Link>{" "}
-    and{" "}
-    <Link to="/refund-policy" className="text-blue-400 hover:underline">
-      Refund Policy
-    </Link>
-    . I understand that a deposit may be required before project commencement.
-  </p>
-</div>
+                    <Link
+                      to="/terms"
+                      className="text-blue-400"
+                    >
+                      Terms
+                    </Link>
 
+                    ,{" "}
+
+                    <Link
+                      to="/privacy-policy"
+                      className="text-blue-400"
+                    >
+                      Privacy Policy
+                    </Link>
+
+                    {" "}and{" "}
+
+                    <Link
+                      to="/refund-policy"
+                      className="text-blue-400"
+                    >
+                      Refund Policy
+                    </Link>
+                    .
+                  </p>
+                </div>
+
+                {/* BUTTON */}
+<button
+  type="submit"
+  disabled={loading}
+  className="
+    w-full
+    h-12
+    rounded-xl
+    bg-blue-600
+    hover:bg-blue-500
+    transition-all
+    text-sm
+    font-medium
+    flex
+    items-center
+    justify-center
+    gap-2
+      disabled:opacity-60
+  disabled:cursor-not-allowed
+  "
+>
+  {loading ? "Submitting..." : "Continue"}
+
+  {!loading && <ArrowRight size={15} />}
+</button>
               </form>
             </div>
           </div>
         </div>
       </section>
-
-     
     </>
   );
 }

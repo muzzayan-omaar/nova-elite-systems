@@ -11,6 +11,7 @@ import {
 import {
   useState,
 } from "react";
+import { useNavigate } from "react-router-dom";
 
 import axios from "../api/axios";
 
@@ -20,7 +21,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export default function TechnicalSupport() {
-
+  const navigate = useNavigate();
   const [loading, setLoading] =
   useState(false);
 
@@ -44,43 +45,18 @@ const handleChange = (e) => {
   });
 };
 
-const handleSubmit =
-  async () => {
-    try {
-      setLoading(true);
+const handleSubmit = (e) => {
+  e.preventDefault();
 
-      await axios.post(
-        "/support",
-        form
-      );
-
-      toast.success(
-        "Support ticket submitted"
-      );
-
-      setForm({
-        fullName: "",
-        company: "",
-        email: "",
-        phone: "",
-        serviceType:
-          "Web Development",
-        priority:
-          "Medium",
-        issue: "",
-      });
-
-    } catch (err) {
-      console.log(err);
-
-      toast.error(
-        "Failed to submit ticket"
-      );
-
-    } finally {
-      setLoading(false);
-    }
-  };
+  navigate("/project-booking", {
+    state: {
+      service,
+      packageData,
+      formData,
+      startMethod,
+    },
+  });
+};
   return (
     <>
       <Navbar />

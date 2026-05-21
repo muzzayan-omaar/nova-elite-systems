@@ -27,6 +27,7 @@ from "./components/admin/ProtectedRoute";
 import ServicePage from "./pages/ServicePage";
 import { services } from "./data/servicesData";
 import StartProject from "./pages/StartProject";
+import Leads from "./pages/admin/Leads";
 
 function App() {
   return (
@@ -100,6 +101,15 @@ function App() {
     }
   />
 
+  <Route
+  path="/admin/leads"
+  element={
+    <ProtectedRoute>
+      <Leads />
+    </ProtectedRoute>
+  }
+/>
+
   {/* =========================
       FRONTEND ROUTES
   ========================= */}
@@ -168,6 +178,8 @@ function App() {
     path="/start-project"
     element={<StartProject />}
   />
+
+
 </Routes>
     </BrowserRouter>
   );
