@@ -11,6 +11,7 @@ import {
   CreditCard,
   Headphones,
   User,
+  LayoutTemplate,
 } from "lucide-react";
 
 import Invoice from "./admin/Invoice";
@@ -815,6 +816,7 @@ export default function Admin() {
           {activeTab === "templates" && (
             <Templates />
           )}
+          
 
           {/* LOGOUT */}
           {activeTab === "logout" && (
