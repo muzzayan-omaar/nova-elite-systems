@@ -28,6 +28,7 @@ import ServicePage from "./pages/ServicePage";
 import { services } from "./data/servicesData";
 import StartProject from "./pages/StartProject";
 import Leads from "./pages/admin/Leads";
+import Templates from "./pages/admin/Templates";
 
 function App() {
   return (
@@ -108,6 +109,16 @@ function App() {
       <Leads />
     </ProtectedRoute>
   }
+/>
+
+  <Route
+    path="/admin/templates"
+    element={
+      <ProtectedRoute>
+        <Templates />
+      </ProtectedRoute>
+    }
+  
 />
 
   {/* =========================
