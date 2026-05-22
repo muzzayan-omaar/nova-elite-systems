@@ -274,14 +274,7 @@ export default function Leads() {
 
           </div>
 
-          <h1 className="text-4xl font-bold">
-            Project Leads
-          </h1>
 
-          <p className="text-gray-400 mt-3">
-            Manage inquiries, onboarding,
-            proposals and communication.
-          </p>
 
         </div>
 
@@ -329,65 +322,76 @@ export default function Leads() {
 
       </div>
 
-      {/* STATS */}
+{/* SUMMARY */}
+<div className="flex flex-wrap gap-3 mb-5">
 
-      <div
-        className="
-          grid
-          grid-cols-2
-          lg:grid-cols-4
-          gap-4
-          mb-6
-        "
+  {[
+    {
+      label: "Total",
+      value: leads.length,
+      color: "text-white",
+      bg: "bg-white/[0.04]",
+    },
+
+    {
+      label: "New",
+      value: newLeadsCount,
+      color: "text-blue-400",
+      bg: "bg-blue-500/[0.08]",
+    },
+
+    {
+      label: "In Progress",
+      value: leads.filter(
+        (item) =>
+          item.status === "in-progress"
+      ).length,
+      color: "text-yellow-400",
+      bg: "bg-yellow-500/[0.08]",
+    },
+
+    {
+      label: "Completed",
+      value: leads.filter(
+        (item) =>
+          item.status === "completed"
+      ).length,
+      color: "text-green-400",
+      bg: "bg-green-500/[0.08]",
+    },
+  ].map((item, index) => (
+
+    <div
+      key={index}
+      className={`
+        ${item.bg}
+        border border-white/10
+        rounded-2xl
+        px-4
+        py-3
+        min-w-[110px]
+        backdrop-blur-xl
+      `}
+    >
+
+      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500 mb-1">
+        {item.label}
+      </p>
+
+      <h2
+        className={`
+          text-xl
+          font-bold
+          ${item.color}
+        `}
       >
+        {item.value}
+      </h2>
 
-        {[
-          {
-            label: "Total",
-            value: stats.total,
-          },
+    </div>
+  ))}
 
-          {
-            label: "New Leads",
-            value: stats.new,
-          },
-
-          {
-            label: "In Progress",
-            value: stats.progress,
-          },
-
-          {
-            label: "Completed",
-            value: stats.completed,
-          },
-
-        ].map((item, index) => (
-
-          <div
-            key={index}
-
-            className="
-              rounded-2xl
-              border border-white/10
-              bg-white/[0.03]
-              p-5
-              backdrop-blur-xl
-            "
-          >
-
-            <p className="text-xs text-gray-500 uppercase tracking-[0.15em]">
-              {item.label}
-            </p>
-
-            <h2 className="text-3xl font-bold mt-3">
-              {item.value}
-            </h2>
-
-          </div>
-        ))}
-
-      </div>
+</div>
 
       {/* MAIN */}
 
