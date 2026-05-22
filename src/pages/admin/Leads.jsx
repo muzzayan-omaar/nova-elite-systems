@@ -5,12 +5,14 @@ import {
   Search,
   Mail,
   MessageCircle,
-  CalendarDays,
-  Briefcase,
-  Globe,
-  Wallet,
   Clock3,
-  CheckCircle2,
+  Globe,
+  Briefcase,
+  Wallet,
+  CalendarDays,
+  ArrowUpRight,
+  CheckCheck,
+  Sparkles,
 } from "lucide-react";
 
 export default function Leads() {
@@ -28,7 +30,7 @@ export default function Leads() {
     useState("all");
 
   // =========================
-  // FETCH LEADS
+  // FETCH
   // =========================
 
   const fetchLeads = async () => {
@@ -51,14 +53,26 @@ export default function Leads() {
           }
         );
 
-      setLeads(res.data);
+      // newest first
+      const sorted =
+        res.data.sort(
+          (a, b) =>
+            new Date(
+              b.createdAt
+            ) -
+            new Date(
+              a.createdAt
+            )
+        );
+
+      setLeads(sorted);
 
       if (
-        res.data.length > 0 &&
+        sorted.length > 0 &&
         !selectedLead
       ) {
         setSelectedLead(
-          res.data[0]
+          sorted[0]
         );
       }
 
@@ -70,6 +84,37 @@ export default function Leads() {
   useEffect(() => {
     fetchLeads();
   }, [statusFilter]);
+
+  // =========================
+  // MARK VIEWED
+  // =========================
+
+  const handleSelectLead =
+    (lead) => {
+
+      const updated =
+        leads.map((item) => {
+
+          if (
+            item._id === lead._id
+          ) {
+
+            return {
+              ...item,
+              viewed: true,
+            };
+          }
+
+          return item;
+        });
+
+      setLeads(updated);
+
+      setSelectedLead({
+        ...lead,
+        viewed: true,
+      });
+    };
 
   // =========================
   // UPDATE STATUS
@@ -98,12 +143,12 @@ export default function Leads() {
         }
       );
 
-      fetchLeads();
-
       setSelectedLead({
         ...selectedLead,
         status,
       });
+
+      fetchLeads();
 
     } catch (error) {
       console.log(error);
@@ -111,7 +156,7 @@ export default function Leads() {
   };
 
   // =========================
-  // FILTERED LEADS
+  // FILTERS
   // =========================
 
   const filteredLeads =
@@ -140,42 +185,16 @@ export default function Leads() {
     });
 
   // =========================
-  // STATUS COLORS
-  // =========================
-
-  const statusStyles = {
-    new:
-      "bg-blue-500/15 text-blue-400 border-blue-500/20",
-
-    contacted:
-      "bg-yellow-500/15 text-yellow-400 border-yellow-500/20",
-
-    "proposal-sent":
-      "bg-purple-500/15 text-purple-400 border-purple-500/20",
-
-    "in-progress":
-      "bg-cyan-500/15 text-cyan-400 border-cyan-500/20",
-
-    completed:
-      "bg-green-500/15 text-green-400 border-green-500/20",
-
-    rejected:
-      "bg-red-500/15 text-red-400 border-red-500/20",
-
-    closed:
-      "bg-gray-500/15 text-gray-400 border-gray-500/20",
-  };
-
-  // =========================
   // STATS
   // =========================
 
   const stats = {
-    total: leads.length,
+    total:
+      leads.length,
 
     new:
       leads.filter(
-        (l) => l.status === "new"
+        (l) => !l.viewed
       ).length,
 
     progress:
@@ -193,37 +212,143 @@ export default function Leads() {
       ).length,
   };
 
+  // =========================
+  // STATUS COLORS
+  // =========================
+
+  const statusStyles = {
+    new:
+      "text-blue-400 bg-blue-500/10 border-blue-500/20",
+
+    contacted:
+      "text-yellow-400 bg-yellow-500/10 border-yellow-500/20",
+
+    "proposal-sent":
+      "text-purple-400 bg-purple-500/10 border-purple-500/20",
+
+    "in-progress":
+      "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
+
+    completed:
+      "text-green-400 bg-green-500/10 border-green-500/20",
+
+    rejected:
+      "text-red-400 bg-red-500/10 border-red-500/20",
+  };
+
   return (
 
     <section>
 
-      {/* TOP */}
+      {/* HEADER */}
 
-      <div className="mb-8">
+      <div
+        className="
+          flex flex-col lg:flex-row
+          lg:items-center
+          justify-between
+          gap-6
+          mb-8
+        "
+      >
 
-        <h1 className="text-4xl font-bold mb-3">
-          Leads CRM
-        </h1>
+        <div>
 
-        <p className="text-gray-400">
-          Manage inquiries, proposals,
-          onboarding and communication.
-        </p>
+          <div
+            className="
+              inline-flex
+              items-center gap-2
+              px-3 py-1.5
+              rounded-full
+              border border-blue-500/20
+              bg-blue-500/10
+              text-blue-400
+              text-xs
+              mb-4
+            "
+          >
+
+            <Sparkles size={13} />
+
+            Leads CRM
+
+          </div>
+
+          <h1 className="text-4xl font-bold">
+            Project Leads
+          </h1>
+
+          <p className="text-gray-400 mt-3">
+            Manage inquiries, onboarding,
+            proposals and communication.
+          </p>
+
+        </div>
+
+        {/* SEARCH */}
+
+        <div
+          className="
+            flex items-center gap-3
+            px-5
+            h-14
+            rounded-2xl
+            border border-white/10
+            bg-white/[0.03]
+            lg:w-[340px]
+          "
+        >
+
+          <Search
+            size={18}
+            className="text-gray-500"
+          />
+
+          <input
+            type="text"
+
+            value={search}
+
+            onChange={(e) =>
+              setSearch(
+                e.target.value
+              )
+            }
+
+            placeholder="Search leads..."
+
+            className="
+              bg-transparent
+              outline-none
+              w-full
+              text-sm
+            "
+          />
+
+        </div>
 
       </div>
 
       {/* STATS */}
 
-      <div className="grid md:grid-cols-4 gap-4 mb-6">
+      <div
+        className="
+          grid
+          grid-cols-2
+          lg:grid-cols-4
+          gap-4
+          mb-6
+        "
+      >
 
         {[
           {
-            label: "Total Leads",
+            label: "Total",
             value: stats.total,
           },
 
           {
-            label: "New",
+            label: "New Leads",
             value: stats.new,
           },
 
@@ -243,112 +368,24 @@ export default function Leads() {
             key={index}
 
             className="
-              rounded-3xl
+              rounded-2xl
               border border-white/10
               bg-white/[0.03]
-              p-6
+              p-5
+              backdrop-blur-xl
             "
           >
 
-            <p className="text-sm text-gray-400">
+            <p className="text-xs text-gray-500 uppercase tracking-[0.15em]">
               {item.label}
             </p>
 
-            <h2 className="text-4xl font-bold mt-3">
+            <h2 className="text-3xl font-bold mt-3">
               {item.value}
             </h2>
 
           </div>
         ))}
-
-      </div>
-
-      {/* SEARCH + FILTER */}
-
-      <div className="flex flex-wrap gap-4 mb-6">
-
-        <div
-          className="
-            flex items-center gap-3
-            px-4
-            h-12
-            rounded-2xl
-            border border-white/10
-            bg-white/[0.03]
-            flex-1
-          "
-        >
-
-          <Search
-            size={18}
-            className="text-gray-500"
-          />
-
-          <input
-            type="text"
-
-            placeholder="Search leads..."
-
-            value={search}
-
-            onChange={(e) =>
-              setSearch(e.target.value)
-            }
-
-            className="
-              bg-transparent
-              outline-none
-              text-sm
-              w-full
-            "
-          />
-
-        </div>
-
-        <select
-          value={statusFilter}
-
-          onChange={(e) =>
-            setStatusFilter(
-              e.target.value
-            )
-          }
-
-          className="
-            h-12
-            px-4
-            rounded-2xl
-            bg-[#0B1220]
-            border border-white/10
-            text-sm
-          "
-        >
-
-          <option value="all">
-            All Status
-          </option>
-
-          <option value="new">
-            New
-          </option>
-
-          <option value="contacted">
-            Contacted
-          </option>
-
-          <option value="proposal-sent">
-            Proposal Sent
-          </option>
-
-          <option value="in-progress">
-            In Progress
-          </option>
-
-          <option value="completed">
-            Completed
-          </option>
-
-        </select>
 
       </div>
 
@@ -362,94 +399,232 @@ export default function Leads() {
         "
       >
 
-        {/* SIDEBAR */}
+        {/* LEADS LIST */}
 
         <div
           className="
-            rounded-3xl
+            rounded-[32px]
             border border-white/10
             bg-white/[0.03]
             overflow-hidden
-            h-[75vh]
-            overflow-y-auto
+            h-[78vh]
+            backdrop-blur-2xl
           "
         >
 
-          {filteredLeads.map((lead) => (
+          {/* TOP */}
 
-            <button
-              key={lead._id}
+          <div
+            className="
+              p-5
+              border-b border-white/5
+              flex items-center justify-between
+            "
+          >
 
-              onClick={() =>
-                setSelectedLead(lead)
+            <h3 className="font-semibold">
+              All Leads
+            </h3>
+
+            <select
+              value={statusFilter}
+
+              onChange={(e) =>
+                setStatusFilter(
+                  e.target.value
+                )
               }
 
-              className={`
-                w-full
-                text-left
-                p-5
-                border-b border-white/5
-                transition-all
-
-                ${
-                  selectedLead?._id ===
-                  lead._id
-                    ? "bg-blue-500/[0.08]"
-                    : "hover:bg-white/[0.03]"
-                }
-              `}
+              className="
+                bg-[#0B1220]
+                border border-white/10
+                rounded-xl
+                h-10
+                px-3
+                text-xs
+              "
             >
 
-              <div className="flex items-start justify-between">
+              <option value="all">
+                All
+              </option>
 
-                <div>
+              <option value="new">
+                New
+              </option>
 
-                  <h3 className="font-semibold">
-                    {lead.fullName}
-                  </h3>
+              <option value="contacted">
+                Contacted
+              </option>
 
-                  <p className="text-sm text-gray-400 mt-1">
-                    {
-                      lead.companyName
-                    }
-                  </p>
+              <option value="proposal-sent">
+                Proposal Sent
+              </option>
+
+              <option value="in-progress">
+                In Progress
+              </option>
+
+              <option value="completed">
+                Completed
+              </option>
+
+            </select>
+
+          </div>
+
+          {/* LIST */}
+
+          <div className="overflow-y-auto h-full">
+
+            {filteredLeads.map((lead) => (
+
+              <button
+                key={lead._id}
+
+                onClick={() =>
+                  handleSelectLead(
+                    lead
+                  )
+                }
+
+                className={`
+                  relative
+                  w-full
+                  text-left
+                  px-5 py-5
+                  border-b border-white/5
+                  transition-all
+
+                  ${
+                    selectedLead?._id ===
+                    lead._id
+                      ? `
+                        bg-blue-500/[0.08]
+                      `
+                      : `
+                        hover:bg-white/[0.03]
+                      `
+                  }
+                `}
+              >
+
+                {/* NEW INDICATOR */}
+
+                {!lead.viewed && (
+
+                  <div
+                    className="
+                      absolute
+                      top-5 right-5
+                      px-2 py-1
+                      rounded-full
+                      bg-blue-500
+                      text-[10px]
+                      font-semibold
+                    "
+                  >
+                    NEW
+                  </div>
+                )}
+
+                <div className="pr-14">
+
+                  <div
+                    className="
+                      flex items-center gap-3
+                      mb-3
+                    "
+                  >
+
+                    <div
+                      className="
+                        w-11 h-11
+                        rounded-2xl
+                        bg-blue-500/10
+                        border border-blue-500/20
+                        flex items-center justify-center
+                        text-blue-400
+                        text-sm
+                        font-bold
+                        shrink-0
+                      "
+                    >
+                      {
+                        lead.fullName?.charAt(
+                          0
+                        )
+                      }
+                    </div>
+
+                    <div>
+
+                      <h3 className="font-semibold">
+                        {
+                          lead.fullName
+                        }
+                      </h3>
+
+                      <p className="text-xs text-gray-500 mt-1">
+                        {
+                          lead.companyName ||
+                          "Independent Client"
+                        }
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                  <div
+                    className="
+                      flex items-center
+                      justify-between
+                    "
+                  >
+
+                    <div>
+
+                      <p className="text-sm text-blue-400">
+                        {
+                          lead.service
+                        }
+                      </p>
+
+                      <p className="text-xs text-gray-500 mt-1">
+                        {
+                          lead.packageName
+                        }
+                      </p>
+
+                    </div>
+
+                    <div
+                      className={`
+                        px-3 py-1
+                        rounded-full
+                        border
+                        text-[10px]
+                        capitalize
+
+                        ${
+                          statusStyles[
+                            lead.status
+                          ]
+                        }
+                      `}
+                    >
+                      {lead.status}
+                    </div>
+
+                  </div>
 
                 </div>
 
-                <div
-                  className={`
-                    px-3 py-1
-                    rounded-full
-                    border
-                    text-[10px]
-                    capitalize
+              </button>
+            ))}
 
-                    ${
-                      statusStyles[
-                        lead.status
-                      ]
-                    }
-                  `}
-                >
-                  {lead.status}
-                </div>
-
-              </div>
-
-              <div className="mt-4">
-
-                <p className="text-sm text-blue-400">
-                  {lead.service}
-                </p>
-
-                <p className="text-xs text-gray-500 mt-2">
-                  {lead.packageName}
-                </p>
-
-              </div>
-
-            </button>
-          ))}
+          </div>
 
         </div>
 
@@ -457,50 +632,145 @@ export default function Leads() {
 
         <div
           className="
-            rounded-3xl
+            relative
+            rounded-[32px]
             border border-white/10
             bg-white/[0.03]
             p-8
-            h-[75vh]
+            overflow-hidden
+            backdrop-blur-2xl
+            h-[78vh]
             overflow-y-auto
           "
         >
 
+          {/* GLOW */}
+
+          <div
+            className="
+              absolute
+              top-[-250px]
+              right-[-120px]
+              w-[450px]
+              h-[450px]
+              bg-blue-500/10
+              blur-[120px]
+              rounded-full
+              pointer-events-none
+            "
+          />
+
           {selectedLead ? (
 
-            <>
+            <div className="relative z-10">
 
-              {/* HEADER */}
+              {/* TOP */}
 
               <div
                 className="
-                  flex flex-col lg:flex-row
-                  lg:items-center
+                  flex flex-col xl:flex-row
+                  xl:items-center
                   justify-between
-                  gap-5
-                  mb-8
+                  gap-6
+                  mb-10
                 "
               >
 
-                <div>
+                <div
+                  className="
+                    flex items-center gap-5
+                  "
+                >
 
-                  <h2 className="text-3xl font-bold">
+                  <div
+                    className="
+                      w-20 h-20
+                      rounded-[28px]
+                      bg-blue-500/10
+                      border border-blue-500/20
+                      flex items-center justify-center
+                      text-3xl
+                      font-bold
+                      text-blue-400
+                    "
+                  >
                     {
-                      selectedLead.fullName
+                      selectedLead.fullName?.charAt(
+                        0
+                      )
                     }
-                  </h2>
+                  </div>
 
-                  <p className="text-gray-400 mt-2">
-                    {
-                      selectedLead.companyName
-                    }
-                  </p>
+                  <div>
+
+                    <h2 className="text-4xl font-bold">
+                      {
+                        selectedLead.fullName
+                      }
+                    </h2>
+
+                    <p className="text-gray-400 mt-2">
+                      {
+                        selectedLead.companyName ||
+                        "Independent Client"
+                      }
+                    </p>
+
+                    <div
+                      className="
+                        flex items-center gap-3
+                        mt-4
+                        flex-wrap
+                      "
+                    >
+
+                      <div
+                        className={`
+                          px-4 py-2
+                          rounded-full
+                          border
+                          text-xs
+                          capitalize
+
+                          ${
+                            statusStyles[
+                              selectedLead.status
+                            ]
+                          }
+                        `}
+                      >
+                        {
+                          selectedLead.status
+                        }
+                      </div>
+
+                      <div
+                        className="
+                          text-xs
+                          text-gray-500
+                          flex items-center gap-2
+                        "
+                      >
+
+                        <CalendarDays size={14} />
+
+                        {
+                          new Date(
+                            selectedLead.createdAt
+                          ).toLocaleDateString()
+                        }
+
+                      </div>
+
+                    </div>
+
+                  </div>
 
                 </div>
 
-                <div className="flex gap-3">
+                {/* ACTIONS */}
 
-                  {/* EMAIL */}
+                <div className="flex gap-3">
 
                   <button
                     onClick={() => {
@@ -527,8 +797,6 @@ export default function Leads() {
                     Email
 
                   </button>
-
-                  {/* WHATSAPP */}
 
                   <button
                     onClick={() => {
@@ -566,41 +834,43 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
 
               </div>
 
-              {/* GRID */}
+              {/* MINI STATS */}
 
-              <div className="grid md:grid-cols-2 gap-5 mb-8">
+              <div
+                className="
+                  grid
+                  md:grid-cols-4
+                  gap-4
+                  mb-8
+                "
+              >
 
                 {[
                   {
-                    icon:
-                      <Briefcase size={16} />,
                     label: "Service",
                     value:
                       selectedLead.service,
                   },
 
                   {
-                    icon:
-                      <Wallet size={16} />,
                     label: "Budget",
                     value:
-                      selectedLead.budget,
+                      selectedLead.budget ||
+                      "—",
                   },
 
                   {
-                    icon:
-                      <Clock3 size={16} />,
                     label: "Timeline",
                     value:
-                      selectedLead.timeline,
+                      selectedLead.timeline ||
+                      "—",
                   },
 
                   {
-                    icon:
-                      <Globe size={16} />,
                     label: "Country",
                     value:
-                      selectedLead.country,
+                      selectedLead.country ||
+                      "—",
                   },
 
                 ].map((item, index) => (
@@ -611,23 +881,17 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
                     className="
                       rounded-2xl
                       border border-white/10
-                      bg-white/[0.02]
-                      p-5
+                      bg-white/[0.03]
+                      p-4
                     "
                   >
 
-                    <div className="flex items-center gap-2 text-blue-400 mb-3">
+                    <p className="text-xs text-gray-500 uppercase tracking-[0.15em]">
+                      {item.label}
+                    </p>
 
-                      {item.icon}
-
-                      <p className="text-sm">
-                        {item.label}
-                      </p>
-
-                    </div>
-
-                    <h3 className="font-semibold">
-                      {item.value || "—"}
+                    <h3 className="font-semibold mt-3 text-sm">
+                      {item.value}
                     </h3>
 
                   </div>
@@ -639,85 +903,218 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
 
               <div
                 className="
-                  rounded-3xl
+                  rounded-[28px]
                   border border-white/10
-                  bg-white/[0.02]
-                  p-6
+                  bg-white/[0.03]
+                  p-7
                   mb-8
                 "
               >
 
-                <h3 className="font-semibold mb-4">
-                  Project Description
-                </h3>
+                <div
+                  className="
+                    flex items-center gap-3
+                    mb-5
+                  "
+                >
 
-                <p className="text-gray-400 leading-relaxed">
+                  <div
+                    className="
+                      w-10 h-10
+                      rounded-xl
+                      bg-blue-500/10
+                      border border-blue-500/20
+                      flex items-center justify-center
+                    "
+                  >
+
+                    <Briefcase
+                      size={16}
+                      className="text-blue-400"
+                    />
+
+                  </div>
+
+                  <div>
+
+                    <h3 className="font-semibold">
+                      Project Description
+                    </h3>
+
+                    <p className="text-xs text-gray-500 mt-1">
+                      Client requirements &
+                      project vision
+                    </p>
+
+                  </div>
+
+                </div>
+
+                <p
+                  className="
+                    text-gray-400
+                    leading-relaxed
+                    text-sm
+                  "
+                >
                   {
-                    selectedLead.description
+                    selectedLead.description ||
+                    "No project description provided."
                   }
                 </p>
 
               </div>
 
-              {/* STATUS */}
+              {/* CONTACT + STATUS */}
 
-              <div>
+              <div
+                className="
+                  grid
+                  lg:grid-cols-2
+                  gap-5
+                "
+              >
 
-                <h3 className="font-semibold mb-4">
-                  Lead Status
-                </h3>
+                {/* CONTACT */}
 
-                <select
-                  value={
-                    selectedLead.status
-                  }
-
-                  onChange={(e) =>
-                    updateStatus(
-                      selectedLead._id,
-                      e.target.value
-                    )
-                  }
-
+                <div
                   className="
-                    h-12
-                    px-4
-                    rounded-2xl
-                    bg-[#0B1220]
+                    rounded-[28px]
                     border border-white/10
-                    text-sm
+                    bg-white/[0.03]
+                    p-6
                   "
                 >
 
-                  <option value="new">
-                    New
-                  </option>
+                  <h3 className="font-semibold mb-5">
+                    Contact Information
+                  </h3>
 
-                  <option value="contacted">
-                    Contacted
-                  </option>
+                  <div className="space-y-4">
 
-                  <option value="proposal-sent">
-                    Proposal Sent
-                  </option>
+                    <div>
 
-                  <option value="in-progress">
-                    In Progress
-                  </option>
+                      <p className="text-xs text-gray-500 mb-2">
+                        Email Address
+                      </p>
 
-                  <option value="completed">
-                    Completed
-                  </option>
+                      <p className="text-sm">
+                        {
+                          selectedLead.email
+                        }
+                      </p>
 
-                  <option value="rejected">
-                    Rejected
-                  </option>
+                    </div>
 
-                </select>
+                    <div>
+
+                      <p className="text-xs text-gray-500 mb-2">
+                        WhatsApp Number
+                      </p>
+
+                      <p className="text-sm">
+                        {
+                          selectedLead.whatsapp
+                        }
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+                {/* STATUS */}
+
+                <div
+                  className="
+                    rounded-[28px]
+                    border border-white/10
+                    bg-white/[0.03]
+                    p-6
+                  "
+                >
+
+                  <h3 className="font-semibold mb-5">
+                    Lead Pipeline
+                  </h3>
+
+                  <select
+                    value={
+                      selectedLead.status
+                    }
+
+                    onChange={(e) =>
+                      updateStatus(
+                        selectedLead._id,
+                        e.target.value
+                      )
+                    }
+
+                    className="
+                      w-full
+                      h-12
+                      px-4
+                      rounded-2xl
+                      bg-[#0B1220]
+                      border border-white/10
+                      text-sm
+                    "
+                  >
+
+                    <option value="new">
+                      New Lead
+                    </option>
+
+                    <option value="contacted">
+                      Contacted
+                    </option>
+
+                    <option value="proposal-sent">
+                      Proposal Sent
+                    </option>
+
+                    <option value="in-progress">
+                      In Progress
+                    </option>
+
+                    <option value="completed">
+                      Completed
+                    </option>
+
+                    <option value="rejected">
+                      Rejected
+                    </option>
+
+                  </select>
+
+                  <button
+                    className="
+                      mt-5
+                      w-full
+                      h-12
+                      rounded-2xl
+                      border border-white/10
+                      hover:border-blue-500/30
+                      hover:bg-blue-500/10
+                      transition-all
+                      flex items-center justify-center
+                      gap-2
+                      text-sm
+                    "
+                  >
+
+                    <CheckCheck size={16} />
+
+                    Save Changes
+
+                  </button>
+
+                </div>
 
               </div>
 
-            </>
+            </div>
 
           ) : (
 
