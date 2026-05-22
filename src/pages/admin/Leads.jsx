@@ -5,14 +5,9 @@ import {
   Search,
   Mail,
   MessageCircle,
-  Clock3,
-  Globe,
-  Briefcase,
-  Wallet,
   CalendarDays,
-  ArrowUpRight,
+  Briefcase,
   CheckCheck,
-  Sparkles,
 } from "lucide-react";
 
 export default function Leads() {
@@ -30,7 +25,7 @@ export default function Leads() {
     useState("all");
 
   // =========================
-  // FETCH
+  // FETCH LEADS
   // =========================
 
   const fetchLeads = async () => {
@@ -53,7 +48,6 @@ export default function Leads() {
           }
         );
 
-      // newest first
       const sorted =
         res.data.sort(
           (a, b) =>
@@ -65,14 +59,31 @@ export default function Leads() {
             )
         );
 
-      setLeads(sorted);
+      // preserve viewed state
+      const viewedLeads =
+        JSON.parse(
+          localStorage.getItem(
+            "viewedLeads"
+          ) || "[]"
+        );
+
+      const mapped =
+        sorted.map((lead) => ({
+          ...lead,
+          viewed:
+            viewedLeads.includes(
+              lead._id
+            ),
+        }));
+
+      setLeads(mapped);
 
       if (
-        sorted.length > 0 &&
+        mapped.length > 0 &&
         !selectedLead
       ) {
         setSelectedLead(
-          sorted[0]
+          mapped[0]
         );
       }
 
@@ -86,11 +97,34 @@ export default function Leads() {
   }, [statusFilter]);
 
   // =========================
-  // MARK VIEWED
+  // SELECT LEAD
   // =========================
 
   const handleSelectLead =
     (lead) => {
+
+      const viewed =
+        JSON.parse(
+          localStorage.getItem(
+            "viewedLeads"
+          ) || "[]"
+        );
+
+      if (
+        !viewed.includes(
+          lead._id
+        )
+      ) {
+
+        viewed.push(
+          lead._id
+        );
+
+        localStorage.setItem(
+          "viewedLeads",
+          JSON.stringify(viewed)
+        );
+      }
 
       const updated =
         leads.map((item) => {
@@ -185,32 +219,14 @@ export default function Leads() {
     });
 
   // =========================
-  // STATS
+  // NEW LEADS COUNT
   // =========================
 
-  const stats = {
-    total:
-      leads.length,
-
-    new:
-      leads.filter(
-        (l) => !l.viewed
-      ).length,
-
-    progress:
-      leads.filter(
-        (l) =>
-          l.status ===
-          "in-progress"
-      ).length,
-
-    completed:
-      leads.filter(
-        (l) =>
-          l.status ===
-          "completed"
-      ).length,
-  };
+  const newLeadsCount =
+    leads.filter(
+      (item) =>
+        !item.viewed
+    ).length;
 
   // =========================
   // STATUS COLORS
@@ -240,41 +256,89 @@ export default function Leads() {
 
     <section>
 
-      {/* HEADER */}
+      {/* TOP BAR */}
 
       <div
         className="
-          flex flex-col lg:flex-row
-          lg:items-center
+          flex
+          flex-col lg:flex-row
+          gap-4
           justify-between
-          gap-6
-          mb-8
+          mb-5
         "
       >
 
-        <div>
+        {/* SUMMARY */}
 
-          <div
-            className="
-              inline-flex
-              items-center gap-2
-              px-3 py-1.5
-              rounded-full
-              border border-blue-500/20
-              bg-blue-500/10
-              text-blue-400
-              text-xs
-              mb-4
-            "
-          >
+        <div className="flex flex-wrap gap-3">
 
-            <Sparkles size={13} />
+          {[
+            {
+              label: "Total",
+              value: leads.length,
+              color: "text-white",
+              bg: "bg-white/[0.04]",
+            },
 
-            Leads CRM
+            {
+              label: "New",
+              value: newLeadsCount,
+              color: "text-blue-400",
+              bg: "bg-blue-500/[0.08]",
+            },
 
-          </div>
+            {
+              label: "Progress",
+              value: leads.filter(
+                (item) =>
+                  item.status ===
+                  "in-progress"
+              ).length,
+              color: "text-yellow-400",
+              bg: "bg-yellow-500/[0.08]",
+            },
 
+            {
+              label: "Done",
+              value: leads.filter(
+                (item) =>
+                  item.status ===
+                  "completed"
+              ).length,
+              color: "text-green-400",
+              bg: "bg-green-500/[0.08]",
+            },
+          ].map((item, index) => (
 
+            <div
+              key={index}
+
+              className={`
+                ${item.bg}
+                border border-white/10
+                rounded-2xl
+                px-4
+                py-3
+                min-w-[105px]
+              `}
+            >
+
+              <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500 mb-1">
+                {item.label}
+              </p>
+
+              <h2
+                className={`
+                  text-xl
+                  font-bold
+                  ${item.color}
+                `}
+              >
+                {item.value}
+              </h2>
+
+            </div>
+          ))}
 
         </div>
 
@@ -283,17 +347,17 @@ export default function Leads() {
         <div
           className="
             flex items-center gap-3
-            px-5
-            h-14
+            px-4
+            h-12
             rounded-2xl
             border border-white/10
             bg-white/[0.03]
-            lg:w-[340px]
+            lg:w-[300px]
           "
         >
 
           <Search
-            size={18}
+            size={16}
             className="text-gray-500"
           />
 
@@ -322,97 +386,25 @@ export default function Leads() {
 
       </div>
 
-{/* SUMMARY */}
-<div className="flex flex-wrap gap-3 mb-5">
-
-  {[
-    {
-      label: "Total",
-      value: leads.length,
-      color: "text-white",
-      bg: "bg-white/[0.04]",
-    },
-
-    {
-      label: "New",
-      value: newLeadsCount,
-      color: "text-blue-400",
-      bg: "bg-blue-500/[0.08]",
-    },
-
-    {
-      label: "In Progress",
-      value: leads.filter(
-        (item) =>
-          item.status === "in-progress"
-      ).length,
-      color: "text-yellow-400",
-      bg: "bg-yellow-500/[0.08]",
-    },
-
-    {
-      label: "Completed",
-      value: leads.filter(
-        (item) =>
-          item.status === "completed"
-      ).length,
-      color: "text-green-400",
-      bg: "bg-green-500/[0.08]",
-    },
-  ].map((item, index) => (
-
-    <div
-      key={index}
-      className={`
-        ${item.bg}
-        border border-white/10
-        rounded-2xl
-        px-4
-        py-3
-        min-w-[110px]
-        backdrop-blur-xl
-      `}
-    >
-
-      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500 mb-1">
-        {item.label}
-      </p>
-
-      <h2
-        className={`
-          text-xl
-          font-bold
-          ${item.color}
-        `}
-      >
-        {item.value}
-      </h2>
-
-    </div>
-  ))}
-
-</div>
-
       {/* MAIN */}
 
       <div
         className="
           grid
-          lg:grid-cols-[360px_1fr]
-          gap-5
+          lg:grid-cols-[340px_1fr]
+          gap-4
         "
       >
 
-        {/* LEADS LIST */}
+        {/* LEFT PANEL */}
 
         <div
           className="
-            rounded-[32px]
+            rounded-2xl
             border border-white/10
             bg-white/[0.03]
             overflow-hidden
-            h-[78vh]
-            backdrop-blur-2xl
+            h-[82vh]
           "
         >
 
@@ -420,14 +412,14 @@ export default function Leads() {
 
           <div
             className="
-              p-5
+              p-4
               border-b border-white/5
               flex items-center justify-between
             "
           >
 
-            <h3 className="font-semibold">
-              All Leads
+            <h3 className="text-sm font-medium">
+              Leads
             </h3>
 
             <select
@@ -443,7 +435,7 @@ export default function Leads() {
                 bg-[#0B1220]
                 border border-white/10
                 rounded-xl
-                h-10
+                h-9
                 px-3
                 text-xs
               "
@@ -462,11 +454,11 @@ export default function Leads() {
               </option>
 
               <option value="proposal-sent">
-                Proposal Sent
+                Proposal
               </option>
 
               <option value="in-progress">
-                In Progress
+                Progress
               </option>
 
               <option value="completed">
@@ -496,7 +488,7 @@ export default function Leads() {
                   relative
                   w-full
                   text-left
-                  px-5 py-5
+                  px-4 py-4
                   border-b border-white/5
                   transition-all
 
@@ -513,14 +505,12 @@ export default function Leads() {
                 `}
               >
 
-                {/* NEW INDICATOR */}
-
                 {!lead.viewed && (
 
                   <div
                     className="
                       absolute
-                      top-5 right-5
+                      top-4 right-4
                       px-2 py-1
                       rounded-full
                       bg-blue-500
@@ -532,7 +522,7 @@ export default function Leads() {
                   </div>
                 )}
 
-                <div className="pr-14">
+                <div className="pr-12">
 
                   <div
                     className="
@@ -543,15 +533,14 @@ export default function Leads() {
 
                     <div
                       className="
-                        w-11 h-11
-                        rounded-2xl
+                        w-10 h-10
+                        rounded-xl
                         bg-blue-500/10
                         border border-blue-500/20
                         flex items-center justify-center
                         text-blue-400
+                        font-semibold
                         text-sm
-                        font-bold
-                        shrink-0
                       "
                     >
                       {
@@ -563,16 +552,16 @@ export default function Leads() {
 
                     <div>
 
-                      <h3 className="font-semibold">
+                      <h3 className="font-medium text-[13px]">
                         {
                           lead.fullName
                         }
                       </h3>
 
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-[11px] text-gray-500 mt-1">
                         {
                           lead.companyName ||
-                          "Independent Client"
+                          "Independent"
                         }
                       </p>
 
@@ -582,20 +571,19 @@ export default function Leads() {
 
                   <div
                     className="
-                      flex items-center
-                      justify-between
+                      flex items-center justify-between
                     "
                   >
 
                     <div>
 
-                      <p className="text-sm text-blue-400">
+                      <p className="text-[12px] text-blue-400">
                         {
                           lead.service
                         }
                       </p>
 
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-[11px] text-gray-500 mt-1">
                         {
                           lead.packageName
                         }
@@ -632,41 +620,22 @@ export default function Leads() {
 
         </div>
 
-        {/* DETAILS */}
+        {/* RIGHT PANEL */}
 
         <div
           className="
-            relative
-            rounded-[32px]
+            rounded-2xl
             border border-white/10
             bg-white/[0.03]
-            p-8
-            overflow-hidden
-            backdrop-blur-2xl
-            h-[78vh]
+            p-5
+            h-[82vh]
             overflow-y-auto
           "
         >
 
-          {/* GLOW */}
-
-          <div
-            className="
-              absolute
-              top-[-250px]
-              right-[-120px]
-              w-[450px]
-              h-[450px]
-              bg-blue-500/10
-              blur-[120px]
-              rounded-full
-              pointer-events-none
-            "
-          />
-
           {selectedLead ? (
 
-            <div className="relative z-10">
+            <div>
 
               {/* TOP */}
 
@@ -675,27 +644,27 @@ export default function Leads() {
                   flex flex-col xl:flex-row
                   xl:items-center
                   justify-between
-                  gap-6
-                  mb-10
+                  gap-5
+                  mb-6
                 "
               >
 
                 <div
                   className="
-                    flex items-center gap-5
+                    flex items-center gap-4
                   "
                 >
 
                   <div
                     className="
-                      w-20 h-20
-                      rounded-[28px]
+                      w-16 h-16
+                      rounded-2xl
                       bg-blue-500/10
                       border border-blue-500/20
                       flex items-center justify-center
-                      text-3xl
-                      font-bold
                       text-blue-400
+                      text-2xl
+                      font-bold
                     "
                   >
                     {
@@ -707,13 +676,13 @@ export default function Leads() {
 
                   <div>
 
-                    <h2 className="text-4xl font-bold">
+                    <h2 className="text-3xl font-bold">
                       {
                         selectedLead.fullName
                       }
                     </h2>
 
-                    <p className="text-gray-400 mt-2">
+                    <p className="text-sm text-gray-400 mt-2">
                       {
                         selectedLead.companyName ||
                         "Independent Client"
@@ -723,7 +692,7 @@ export default function Leads() {
                     <div
                       className="
                         flex items-center gap-3
-                        mt-4
+                        mt-3
                         flex-wrap
                       "
                     >
@@ -733,7 +702,7 @@ export default function Leads() {
                           px-4 py-2
                           rounded-full
                           border
-                          text-xs
+                          text-[11px]
                           capitalize
 
                           ${
@@ -750,13 +719,13 @@ export default function Leads() {
 
                       <div
                         className="
-                          text-xs
+                          text-[11px]
                           text-gray-500
                           flex items-center gap-2
                         "
                       >
 
-                        <CalendarDays size={14} />
+                        <CalendarDays size={13} />
 
                         {
                           new Date(
@@ -780,23 +749,23 @@ export default function Leads() {
                     onClick={() => {
 
                       window.location.href =
-                        `mailto:${selectedLead.email}?subject=Your Project Inquiry`;
+                        `mailto:${selectedLead.email}`;
 
                     }}
 
                     className="
-                      h-12
+                      h-11
                       px-5
                       rounded-2xl
                       bg-blue-600
                       hover:bg-blue-500
-                      transition-all
+                      transition
                       flex items-center gap-2
                       text-sm
                     "
                   >
 
-                    <Mail size={16} />
+                    <Mail size={15} />
 
                     Email
 
@@ -806,8 +775,7 @@ export default function Leads() {
                     onClick={() => {
 
                       const message =
-`Hello ${selectedLead.fullName},
-Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.service} project.`;
+`Hello ${selectedLead.fullName}, thank you for contacting NOVA Elite Systems.`;
 
                       window.open(
                         `https://wa.me/${selectedLead.whatsapp}?text=${encodeURIComponent(message)}`
@@ -816,19 +784,19 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
                     }}
 
                     className="
-                      h-12
+                      h-11
                       px-5
                       rounded-2xl
                       border border-white/10
                       hover:border-green-500/30
                       hover:bg-green-500/10
-                      transition-all
+                      transition
                       flex items-center gap-2
                       text-sm
                     "
                   >
 
-                    <MessageCircle size={16} />
+                    <MessageCircle size={15} />
 
                     WhatsApp
 
@@ -844,8 +812,8 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
                 className="
                   grid
                   md:grid-cols-4
-                  gap-4
-                  mb-8
+                  gap-3
+                  mb-6
                 "
               >
 
@@ -876,7 +844,6 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
                       selectedLead.country ||
                       "—",
                   },
-
                 ].map((item, index) => (
 
                   <div
@@ -890,11 +857,11 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
                     "
                   >
 
-                    <p className="text-xs text-gray-500 uppercase tracking-[0.15em]">
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-gray-500 mb-2">
                       {item.label}
                     </p>
 
-                    <h3 className="font-semibold mt-3 text-sm">
+                    <h3 className="font-medium text-sm">
                       {item.value}
                     </h3>
 
@@ -907,24 +874,24 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
 
               <div
                 className="
-                  rounded-[28px]
+                  rounded-2xl
                   border border-white/10
                   bg-white/[0.03]
-                  p-7
-                  mb-8
+                  p-5
+                  mb-5
                 "
               >
 
                 <div
                   className="
                     flex items-center gap-3
-                    mb-5
+                    mb-4
                   "
                 >
 
                   <div
                     className="
-                      w-10 h-10
+                      w-9 h-9
                       rounded-xl
                       bg-blue-500/10
                       border border-blue-500/20
@@ -933,7 +900,7 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
                   >
 
                     <Briefcase
-                      size={16}
+                      size={15}
                       className="text-blue-400"
                     />
 
@@ -941,13 +908,12 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
 
                   <div>
 
-                    <h3 className="font-semibold">
+                    <h3 className="font-medium text-sm">
                       Project Description
                     </h3>
 
-                    <p className="text-xs text-gray-500 mt-1">
-                      Client requirements &
-                      project vision
+                    <p className="text-[11px] text-gray-500 mt-1">
+                      Requirements & scope
                     </p>
 
                   </div>
@@ -963,7 +929,7 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
                 >
                   {
                     selectedLead.description ||
-                    "No project description provided."
+                    "No description provided."
                   }
                 </p>
 
@@ -975,7 +941,7 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
                 className="
                   grid
                   lg:grid-cols-2
-                  gap-5
+                  gap-4
                 "
               >
 
@@ -983,14 +949,14 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
 
                 <div
                   className="
-                    rounded-[28px]
+                    rounded-2xl
                     border border-white/10
                     bg-white/[0.03]
-                    p-6
+                    p-5
                   "
                 >
 
-                  <h3 className="font-semibold mb-5">
+                  <h3 className="font-medium text-sm mb-5">
                     Contact Information
                   </h3>
 
@@ -998,8 +964,8 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
 
                     <div>
 
-                      <p className="text-xs text-gray-500 mb-2">
-                        Email Address
+                      <p className="text-[11px] text-gray-500 mb-2">
+                        Email
                       </p>
 
                       <p className="text-sm">
@@ -1012,8 +978,8 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
 
                     <div>
 
-                      <p className="text-xs text-gray-500 mb-2">
-                        WhatsApp Number
+                      <p className="text-[11px] text-gray-500 mb-2">
+                        WhatsApp
                       </p>
 
                       <p className="text-sm">
@@ -1032,14 +998,14 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
 
                 <div
                   className="
-                    rounded-[28px]
+                    rounded-2xl
                     border border-white/10
                     bg-white/[0.03]
-                    p-6
+                    p-5
                   "
                 >
 
-                  <h3 className="font-semibold mb-5">
+                  <h3 className="font-medium text-sm mb-5">
                     Lead Pipeline
                   </h3>
 
@@ -1057,7 +1023,7 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
 
                     className="
                       w-full
-                      h-12
+                      h-11
                       px-4
                       rounded-2xl
                       bg-[#0B1220]
@@ -1067,7 +1033,7 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
                   >
 
                     <option value="new">
-                      New Lead
+                      New
                     </option>
 
                     <option value="contacted">
@@ -1094,21 +1060,20 @@ Thank you for contacting NOVA Elite Systems regarding your ${selectedLead.servic
 
                   <button
                     className="
-                      mt-5
+                      mt-4
                       w-full
-                      h-12
+                      h-11
                       rounded-2xl
                       border border-white/10
                       hover:border-blue-500/30
                       hover:bg-blue-500/10
-                      transition-all
-                      flex items-center justify-center
-                      gap-2
+                      transition
+                      flex items-center justify-center gap-2
                       text-sm
                     "
                   >
 
-                    <CheckCheck size={16} />
+                    <CheckCheck size={15} />
 
                     Save Changes
 
