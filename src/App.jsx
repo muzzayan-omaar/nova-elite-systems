@@ -29,6 +29,7 @@ import { services } from "./data/servicesData";
 import StartProject from "./pages/StartProject";
 import Leads from "./pages/admin/Leads";
 import Templates from "./pages/admin/Templates";
+import Templates from "./pages/Templates";
 
 function App() {
   return (
@@ -143,6 +144,11 @@ function App() {
   <Route
     path="/pricing"
     element={<Pricing />}
+  />
+
+  <Route
+    path="/templates"
+    element={<Templates />}
   />
 
   <Route

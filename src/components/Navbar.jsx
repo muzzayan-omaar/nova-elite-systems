@@ -229,6 +229,10 @@ export default function Navbar() {
               Pricing
             </a>
 
+            <a href="/templates" className="px-4 py-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/[0.04] transition text-sm">
+              Templates
+            </a>
+
             <SimpleDropdown
               title="Explore"
               items={explore}
