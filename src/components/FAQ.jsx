@@ -252,33 +252,9 @@ export default function PricingFAQ() {
             "
           >
 
-            <p
-              className="
-                text-gray-400
-                mb-6
-                text-sm
-                uppercase
-                tracking-[0.2em]
-              "
-            >
-              Still Have Questions?
-            </p>
 
-            <button
-              className="
-                px-7 py-3.5
-                rounded-2xl
-                bg-blue-600
-                hover:bg-blue-500
-                transition-all duration-300
-                text-white
-                text-sm
-                md:text-base
-                shadow-[0_0_35px_rgba(59,130,246,0.25)]
-              "
-            >
-              Talk To NOVA
-            </button>
+
+
 
           </div>
 

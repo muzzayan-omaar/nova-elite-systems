@@ -19,6 +19,7 @@ import Expenses from "./admin/Expenses";
 import SupportTickets from "./admin/SupportTickets";
 import Consultations from "./admin/Consultations";
 import Leads from "./admin/Leads";
+import Templates from "./admin/Templates";
 
 import {
   LogOut,
@@ -340,6 +341,11 @@ export default function Admin() {
                 id: "leads",
                 label: "Leads",
                 icon: <User size={18} />,
+              },
+              {
+                id: "templates",
+                label: "Templates",
+                icon: <LayoutTemplate size={18} />,
               },
               {
                 id: "logout",
@@ -804,6 +810,10 @@ export default function Admin() {
           {/* LEADS */}
           {activeTab === "leads" && (
             <Leads />
+          )}
+
+          {activeTab === "templates" && (
+            <Templates />
           )}
 
           {/* LOGOUT */}

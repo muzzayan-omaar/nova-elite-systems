@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.admin-input{
+  @apply
+  w-full
+  h-12
+  px-4
+  rounded-2xl
+  bg-[#0B1220]
+  border border-white/10
+  focus:outline-none
+  focus:border-blue-500/40
+  text-sm;
+}
