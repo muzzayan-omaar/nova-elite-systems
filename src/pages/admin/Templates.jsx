@@ -10,7 +10,6 @@ import {
   Trash2,
   ExternalLink,
   LayoutTemplate,
-  UploadCloud,
 } from "lucide-react";
 
 export default function Templates() {
@@ -24,51 +23,10 @@ export default function Templates() {
   const [uploading, setUploading] =
     useState(false);
 
-  const [techInput, setTechInput] =
-    useState("");
-
-  const [featureInput, setFeatureInput] =
-    useState("");
-
-  const [pageInput, setPageInput] =
-    useState("");
-
-  const [formData, setFormData] =
-    useState({
-      title: "",
-      slug: "",
-
-      category: "Corporate",
-
-      shortDescription: "",
-
-      thumbnail: "",
-
-      price: "",
-      setupPrice: "",
-
-      demoUrl: "",
-
-      technologies: [],
-
-      features: [],
-
-      pagesIncluded: [],
-
-      featured: false,
-      popular: false,
-
-      status: "published",
-    });
-
   const token =
     localStorage.getItem(
       "adminToken"
     );
-
-  /* =========================
-     CATEGORY OPTIONS
-  ========================== */
 
   const categories = [
     "Corporate",
@@ -80,6 +38,46 @@ export default function Templates() {
     "Education",
     "Portfolio",
   ];
+
+  const techOptions = [
+    "React",
+    "Next.js",
+    "Tailwind",
+    "Node.js",
+    "MongoDB",
+    "Express",
+    "Firebase",
+    "Stripe",
+    "Cloudinary",
+    "Framer Motion",
+  ];
+
+  const featureOptions = [
+    "Responsive",
+    "SEO Optimized",
+    "Admin Dashboard",
+    "Payment Integration",
+    "Authentication",
+    "Analytics",
+    "Dark Mode",
+    "WhatsApp Integration",
+  ];
+
+  const [formData, setFormData] =
+    useState({
+      title: "",
+      category: "Corporate",
+      shortDescription: "",
+      thumbnail: "",
+      price: "",
+      setupPrice: "",
+      demoUrl: "",
+      technologies: [],
+      features: [],
+      featured: false,
+      popular: false,
+      status: "published",
+    });
 
   /* =========================
      FETCH
@@ -110,20 +108,7 @@ export default function Templates() {
   }, []);
 
   /* =========================
-     SLUG GENERATOR
-  ========================== */
-
-  const generateSlug =
-    (text) => {
-
-      return text
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^\w-]+/g, "");
-    };
-
-  /* =========================
-     HANDLE CHANGE
+     INPUT CHANGE
   ========================== */
 
   const handleChange =
@@ -136,20 +121,6 @@ export default function Templates() {
         checked,
       } = e.target;
 
-      if (
-        name === "title"
-      ) {
-
-        setFormData({
-          ...formData,
-          title: value,
-          slug:
-            generateSlug(value),
-        });
-
-        return;
-      }
-
       setFormData({
         ...formData,
 
@@ -161,16 +132,38 @@ export default function Templates() {
     };
 
   /* =========================
+     MULTI SELECT
+  ========================== */
+
+  const toggleArrayValue =
+    (field, value) => {
+
+      const exists =
+        formData[field].includes(
+          value
+        );
+
+      setFormData({
+        ...formData,
+
+        [field]: exists
+          ? formData[field].filter(
+              (item) =>
+                item !== value
+            )
+          : [
+              ...formData[field],
+              value,
+            ],
+      });
+    };
+
+  /* =========================
      CLOUDINARY UPLOAD
   ========================== */
 
-  const handleThumbnailUpload =
-    async (e) => {
-
-      const file =
-        e.target.files[0];
-
-      if (!file) return;
+  const uploadThumbnail =
+    async (file) => {
 
       try {
 
@@ -186,12 +179,12 @@ export default function Templates() {
 
         data.append(
           "upload_preset",
-          "YOUR_UPLOAD_PRESET"
+          "nova_unsigned"
         );
 
         const res =
           await fetch(
-            "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload",
+            "https://api.cloudinary.com/v1_1/diszilwhc/image/upload",
             {
               method: "POST",
               body: data,
@@ -201,11 +194,11 @@ export default function Templates() {
         const uploaded =
           await res.json();
 
-        setFormData({
-          ...formData,
+        setFormData((prev) => ({
+          ...prev,
           thumbnail:
             uploaded.secure_url,
-        });
+        }));
 
       } catch (error) {
 
@@ -218,92 +211,7 @@ export default function Templates() {
     };
 
   /* =========================
-     ADD TAG ITEMS
-  ========================== */
-
-  const addTechnology =
-    () => {
-
-      if (
-        !techInput.trim()
-      ) return;
-
-      setFormData({
-        ...formData,
-
-        technologies: [
-          ...formData.technologies,
-          techInput,
-        ],
-      });
-
-      setTechInput("");
-    };
-
-  const addFeature =
-    () => {
-
-      if (
-        !featureInput.trim()
-      ) return;
-
-      setFormData({
-        ...formData,
-
-        features: [
-          ...formData.features,
-          featureInput,
-        ],
-      });
-
-      setFeatureInput("");
-    };
-
-  const addPage =
-    () => {
-
-      if (
-        !pageInput.trim()
-      ) return;
-
-      setFormData({
-        ...formData,
-
-        pagesIncluded: [
-          ...formData.pagesIncluded,
-          pageInput,
-        ],
-      });
-
-      setPageInput("");
-    };
-
-  /* =========================
-     REMOVE TAG
-  ========================== */
-
-  const removeTag =
-    (
-      field,
-      index
-    ) => {
-
-      const updated =
-        [...formData[field]];
-
-      updated.splice(
-        index,
-        1
-      );
-
-      setFormData({
-        ...formData,
-        [field]: updated,
-      });
-    };
-
-  /* =========================
-     CREATE TEMPLATE
+     CREATE
   ========================== */
 
   const handleSubmit =
@@ -315,9 +223,22 @@ export default function Templates() {
 
         setLoading(true);
 
+        const payload = {
+
+          ...formData,
+
+          slug:
+            formData.title
+              .toLowerCase()
+              .replace(/\s+/g, "-")
+              .replace(/[^\w-]+/g, ""),
+        };
+
+        console.log(payload);
+
         await axios.post(
           "/templates",
-          formData,
+          payload,
           {
             headers: {
               Authorization:
@@ -328,27 +249,16 @@ export default function Templates() {
 
         setFormData({
           title: "",
-          slug: "",
           category: "Corporate",
-
           shortDescription: "",
-
           thumbnail: "",
-
           price: "",
           setupPrice: "",
-
           demoUrl: "",
-
           technologies: [],
-
           features: [],
-
-          pagesIncluded: [],
-
           featured: false,
           popular: false,
-
           status: "published",
         });
 
@@ -418,12 +328,12 @@ export default function Templates() {
 
           <p
             className="
-              text-xs
-              text-gray-400
+              text-sm
+              text-gray-500
               mt-1
             "
           >
-            Premium system deployments
+            Manage deployment-ready systems
           </p>
 
         </div>
@@ -446,7 +356,6 @@ export default function Templates() {
 
       <form
         onSubmit={handleSubmit}
-
         className="
           rounded-[28px]
           border border-white/10
@@ -464,8 +373,6 @@ export default function Templates() {
           "
         >
 
-          {/* TITLE */}
-
           <input
             type="text"
             name="title"
@@ -475,8 +382,6 @@ export default function Templates() {
             className="admin-input"
           />
 
-          {/* CATEGORY */}
-
           <select
             name="category"
             value={formData.category}
@@ -485,20 +390,18 @@ export default function Templates() {
           >
 
             {categories.map(
-              (cat) => (
+              (item) => (
 
                 <option
-                  key={cat}
-                  value={cat}
+                  key={item}
+                  value={item}
                 >
-                  {cat}
+                  {item}
                 </option>
               )
             )}
 
           </select>
-
-          {/* PRICE */}
 
           <input
             type="text"
@@ -508,8 +411,6 @@ export default function Templates() {
             placeholder="Template Price"
             className="admin-input"
           />
-
-          {/* SETUP PRICE */}
 
           <input
             type="text"
@@ -522,20 +423,6 @@ export default function Templates() {
 
         </div>
 
-        {/* SLUG */}
-
-        <div
-          className="
-            mt-4
-            text-xs
-            text-gray-500
-          "
-        >
-          Slug:
-          {" "}
-          {formData.slug}
-        </div>
-
         {/* DESCRIPTION */}
 
         <textarea
@@ -543,17 +430,62 @@ export default function Templates() {
           value={
             formData.shortDescription
           }
-
           onChange={handleChange}
-
           placeholder="Short Description"
-
           className="
             admin-input
             mt-4
-            min-h-[110px]
+            min-h-[100px]
           "
         />
+
+        {/* THUMBNAIL */}
+
+        <div className="mt-4">
+
+          <label
+            className="
+              text-sm
+              text-gray-400
+              block
+              mb-2
+            "
+          >
+            Thumbnail
+          </label>
+
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) =>
+              uploadThumbnail(
+                e.target.files[0]
+              )
+            }
+            className="admin-input"
+          />
+
+          {uploading && (
+            <p className="text-xs text-blue-400 mt-2">
+              Uploading image...
+            </p>
+          )}
+
+          {formData.thumbnail && (
+
+            <img
+              src={formData.thumbnail}
+              alt=""
+              className="
+                h-24
+                rounded-2xl
+                mt-4
+                object-cover
+              "
+            />
+          )}
+
+        </div>
 
         {/* DEMO URL */}
 
@@ -562,175 +494,57 @@ export default function Templates() {
           name="demoUrl"
           value={formData.demoUrl}
           onChange={handleChange}
-          placeholder="Demo URL"
+          placeholder="https://demo.com"
           className="admin-input mt-4"
         />
 
-        {/* THUMBNAIL */}
-
-        <div
-          className="
-            mt-5
-            rounded-2xl
-            border border-dashed border-white/10
-            p-5
-          "
-        >
-
-          <label
-            className="
-              flex
-              items-center
-              gap-3
-              cursor-pointer
-            "
-          >
-
-            <UploadCloud
-              size={18}
-            />
-
-            <span
-              className="
-                text-sm
-                text-gray-300
-              "
-            >
-              {
-                uploading
-                  ? "Uploading..."
-                  : "Upload Thumbnail"
-              }
-            </span>
-
-            <input
-              type="file"
-              hidden
-              onChange={
-                handleThumbnailUpload
-              }
-            />
-
-          </label>
-
-          {formData.thumbnail && (
-
-            <img
-              src={
-                formData.thumbnail
-              }
-
-              alt=""
-
-              className="
-                mt-5
-                h-40
-                w-full
-                object-cover
-                rounded-2xl
-              "
-            />
-          )}
-
-        </div>
-
         {/* TECH STACK */}
 
-        <div className="mt-5">
+        <div className="mt-6">
 
-          <p
-            className="
-              text-sm
-              mb-3
-            "
-          >
-            Technologies
+          <p className="text-sm mb-3 text-gray-400">
+            Tech Stack
           </p>
 
-          <div
-            className="
-              flex
-              gap-3
-            "
-          >
+          <div className="flex flex-wrap gap-2">
 
-            <input
-              value={techInput}
-              onChange={(e) =>
-                setTechInput(
-                  e.target.value
-                )
-              }
+            {techOptions.map(
+              (tech) => (
 
-              placeholder="React"
-
-              className="admin-input"
-            />
-
-            <button
-              type="button"
-              onClick={
-                addTechnology
-              }
-
-              className="
-                px-5
-                rounded-2xl
-                bg-blue-600
-                text-sm
-              "
-            >
-              Add
-            </button>
-
-          </div>
-
-          <div
-            className="
-              flex
-              flex-wrap
-              gap-2
-              mt-4
-            "
-          >
-
-            {formData.technologies.map(
-              (
-                item,
-                index
-              ) => (
-
-                <div
-                  key={index}
-
-                  className="
-                    px-3 py-1
+                <button
+                  type="button"
+                  key={tech}
+                  onClick={() =>
+                    toggleArrayValue(
+                      "technologies",
+                      tech
+                    )
+                  }
+                  className={`
+                    px-4 py-2
                     rounded-full
-                    bg-white/[0.05]
-                    border border-white/10
                     text-xs
-                    flex
-                    items-center
-                    gap-2
-                  "
-                >
+                    border
+                    transition
 
-                  {item}
-
-                  <button
-                    type="button"
-
-                    onClick={() =>
-                      removeTag(
-                        "technologies",
-                        index
+                    ${
+                      formData.technologies.includes(
+                        tech
                       )
+                        ? `
+                          border-blue-500/30
+                          bg-blue-500/10
+                          text-white
+                        `
+                        : `
+                          border-white/10
+                          text-gray-400
+                        `
                     }
-                  >
-                    ×
-                  </button>
-
-                </div>
+                  `}
+                >
+                  {tech}
+                </button>
               )
             )}
 
@@ -740,102 +554,53 @@ export default function Templates() {
 
         {/* FEATURES */}
 
-        <div className="mt-5">
+        <div className="mt-6">
 
-          <p
-            className="
-              text-sm
-              mb-3
-            "
-          >
+          <p className="text-sm mb-3 text-gray-400">
             Features
           </p>
 
-          <div
-            className="
-              flex
-              gap-3
-            "
-          >
+          <div className="flex flex-wrap gap-2">
 
-            <input
-              value={featureInput}
-              onChange={(e) =>
-                setFeatureInput(
-                  e.target.value
-                )
-              }
+            {featureOptions.map(
+              (feature) => (
 
-              placeholder="SEO Optimized"
+                <button
+                  type="button"
+                  key={feature}
+                  onClick={() =>
+                    toggleArrayValue(
+                      "features",
+                      feature
+                    )
+                  }
+                  className={`
+                    px-4 py-2
+                    rounded-full
+                    text-xs
+                    border
+                    transition
 
-              className="admin-input"
-            />
-
-            <button
-              type="button"
-              onClick={
-                addFeature
-              }
-
-              className="
-                px-5
-                rounded-2xl
-                bg-blue-600
-                text-sm
-              "
-            >
-              Add
-            </button>
-
-          </div>
-
-        </div>
-
-        {/* PAGES INCLUDED */}
-
-        <div className="mt-5">
-
-          <p
-            className="
-              text-sm
-              mb-3
-            "
-          >
-            Pages Included
-          </p>
-
-          <div
-            className="
-              flex
-              gap-3
-            "
-          >
-
-            <input
-              value={pageInput}
-              onChange={(e) =>
-                setPageInput(
-                  e.target.value
-                )
-              }
-
-              placeholder="Homepage"
-
-              className="admin-input"
-            />
-
-            <button
-              type="button"
-              onClick={addPage}
-              className="
-                px-5
-                rounded-2xl
-                bg-blue-600
-                text-sm
-              "
-            >
-              Add
-            </button>
+                    ${
+                      formData.features.includes(
+                        feature
+                      )
+                        ? `
+                          border-blue-500/30
+                          bg-blue-500/10
+                          text-white
+                        `
+                        : `
+                          border-white/10
+                          text-gray-400
+                        `
+                    }
+                  `}
+                >
+                  {feature}
+                </button>
+              )
+            )}
 
           </div>
 
@@ -852,14 +617,7 @@ export default function Templates() {
           "
         >
 
-          <label
-            className="
-              flex
-              items-center
-              gap-2
-              text-sm
-            "
-          >
+          <label className="flex items-center gap-2 text-sm">
 
             <input
               type="checkbox"
@@ -874,14 +632,7 @@ export default function Templates() {
 
           </label>
 
-          <label
-            className="
-              flex
-              items-center
-              gap-2
-              text-sm
-            "
-          >
+          <label className="flex items-center gap-2 text-sm">
 
             <input
               type="checkbox"
@@ -898,29 +649,30 @@ export default function Templates() {
 
         </div>
 
-        {/* BUTTON */}
+        {/* SUBMIT */}
 
         <button
           type="submit"
-
-          disabled={loading}
-
+          disabled={
+            loading || uploading
+          }
           className="
             mt-6
-            h-11
-            px-5
+            h-12
+            px-6
             rounded-2xl
             bg-blue-600
             hover:bg-blue-500
             transition
             text-sm
+            font-medium
             flex
             items-center
             gap-2
           "
         >
 
-          <Plus size={15} />
+          <Plus size={16} />
 
           {
             loading
@@ -947,33 +699,19 @@ export default function Templates() {
 
             <div
               key={template._id}
-
               className="
-                rounded-[26px]
+                rounded-[24px]
                 overflow-hidden
                 border border-white/10
                 bg-white/[0.03]
               "
             >
 
-              {/* IMAGE */}
-
-              <div
-                className="
-                  relative
-                  h-[190px]
-                "
-              >
+              <div className="h-[180px] overflow-hidden">
 
                 <img
-                  src={
-                    template.thumbnail
-                  }
-
-                  alt={
-                    template.title
-                  }
-
+                  src={template.thumbnail}
+                  alt={template.title}
                   className="
                     w-full
                     h-full
@@ -982,8 +720,6 @@ export default function Templates() {
                 />
 
               </div>
-
-              {/* CONTENT */}
 
               <div className="p-4">
 
@@ -997,29 +733,12 @@ export default function Templates() {
 
                   <div>
 
-                    <p
-                      className="
-                        text-[10px]
-                        uppercase
-                        tracking-[0.2em]
-                        text-blue-400
-                        mb-2
-                      "
-                    >
-                      {
-                        template.category
-                      }
+                    <p className="text-xs text-blue-400 mb-1">
+                      {template.category}
                     </p>
 
-                    <h2
-                      className="
-                        text-lg
-                        font-semibold
-                      "
-                    >
-                      {
-                        template.title
-                      }
+                    <h2 className="font-semibold">
+                      {template.title}
                     </h2>
 
                   </div>
@@ -1034,55 +753,14 @@ export default function Templates() {
                 <p
                   className="
                     mt-3
-                    text-xs
+                    text-sm
                     text-gray-400
-                    leading-relaxed
                   "
                 >
                   {
                     template.shortDescription
                   }
                 </p>
-
-                {/* TECH */}
-
-                <div
-                  className="
-                    flex
-                    flex-wrap
-                    gap-2
-                    mt-4
-                  "
-                >
-
-                  {template.technologies?.slice(
-                    0,
-                    4
-                  ).map(
-                    (
-                      tech,
-                      index
-                    ) => (
-
-                      <div
-                        key={index}
-
-                        className="
-                          px-2 py-1
-                          rounded-full
-                          bg-white/[0.05]
-                          border border-white/10
-                          text-[10px]
-                        "
-                      >
-                        {tech}
-                      </div>
-                    )
-                  )}
-
-                </div>
-
-                {/* BOTTOM */}
 
                 <div
                   className="
@@ -1093,60 +771,24 @@ export default function Templates() {
                   "
                 >
 
-                  <div>
+                  <h3 className="font-bold">
+                    {template.price}
+                  </h3>
 
-                    <p
-                      className="
-                        text-[10px]
-                        text-gray-500
-                      "
-                    >
-                      Template
-                    </p>
-
-                    <h3
-                      className="
-                        text-base
-                        font-semibold
-                      "
-                    >
-                      {
-                        template.price
-                      }
-                    </h3>
-
-                  </div>
-
-                  <div
-                    className="
-                      flex
-                      items-center
-                      gap-2
-                    "
-                  >
+                  <div className="flex gap-2">
 
                     <a
-                      href={
-                        template.demoUrl
-                      }
-
+                      href={template.demoUrl}
                       target="_blank"
-
                       rel="noreferrer"
-
                       className="
-                        w-9
-                        h-9
+                        w-9 h-9
                         rounded-xl
                         border border-white/10
-                        flex
-                        items-center
-                        justify-center
+                        flex items-center justify-center
                       "
                     >
-                      <ExternalLink
-                        size={14}
-                      />
+                      <ExternalLink size={14} />
                     </a>
 
                     <button
@@ -1155,21 +797,15 @@ export default function Templates() {
                           template._id
                         )
                       }
-
                       className="
-                        w-9
-                        h-9
+                        w-9 h-9
                         rounded-xl
                         border border-red-500/20
                         text-red-400
-                        flex
-                        items-center
-                        justify-center
+                        flex items-center justify-center
                       "
                     >
-                      <Trash2
-                        size={14}
-                      />
+                      <Trash2 size={14} />
                     </button>
 
                   </div>
