@@ -8,10 +8,9 @@ import axios from "../../api/axios";
 import {
   Plus,
   Trash2,
-  Star,
-  Globe,
-  LayoutTemplate,
   ExternalLink,
+  LayoutTemplate,
+  UploadCloud,
 } from "lucide-react";
 
 export default function Templates() {
@@ -22,20 +21,43 @@ export default function Templates() {
   const [loading, setLoading] =
     useState(false);
 
+  const [uploading, setUploading] =
+    useState(false);
+
+  const [techInput, setTechInput] =
+    useState("");
+
+  const [featureInput, setFeatureInput] =
+    useState("");
+
+  const [pageInput, setPageInput] =
+    useState("");
+
   const [formData, setFormData] =
     useState({
       title: "",
       slug: "",
-      category: "",
+
+      category: "Corporate",
+
       shortDescription: "",
+
       thumbnail: "",
+
       price: "",
       setupPrice: "",
+
       demoUrl: "",
-      technologies: "",
-      features: "",
+
+      technologies: [],
+
+      features: [],
+
+      pagesIncluded: [],
+
       featured: false,
       popular: false,
+
       status: "published",
     });
 
@@ -43,6 +65,21 @@ export default function Templates() {
     localStorage.getItem(
       "adminToken"
     );
+
+  /* =========================
+     CATEGORY OPTIONS
+  ========================== */
+
+  const categories = [
+    "Corporate",
+    "Restaurant",
+    "Real Estate",
+    "Construction",
+    "Medical",
+    "Ecommerce",
+    "Education",
+    "Portfolio",
+  ];
 
   /* =========================
      FETCH
@@ -73,6 +110,19 @@ export default function Templates() {
   }, []);
 
   /* =========================
+     SLUG GENERATOR
+  ========================== */
+
+  const generateSlug =
+    (text) => {
+
+      return text
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^\w-]+/g, "");
+    };
+
+  /* =========================
      HANDLE CHANGE
   ========================== */
 
@@ -86,6 +136,20 @@ export default function Templates() {
         checked,
       } = e.target;
 
+      if (
+        name === "title"
+      ) {
+
+        setFormData({
+          ...formData,
+          title: value,
+          slug:
+            generateSlug(value),
+        });
+
+        return;
+      }
+
       setFormData({
         ...formData,
 
@@ -93,6 +157,148 @@ export default function Templates() {
           type === "checkbox"
             ? checked
             : value,
+      });
+    };
+
+  /* =========================
+     CLOUDINARY UPLOAD
+  ========================== */
+
+  const handleThumbnailUpload =
+    async (e) => {
+
+      const file =
+        e.target.files[0];
+
+      if (!file) return;
+
+      try {
+
+        setUploading(true);
+
+        const data =
+          new FormData();
+
+        data.append(
+          "file",
+          file
+        );
+
+        data.append(
+          "upload_preset",
+          "YOUR_UPLOAD_PRESET"
+        );
+
+        const res =
+          await fetch(
+            "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload",
+            {
+              method: "POST",
+              body: data,
+            }
+          );
+
+        const uploaded =
+          await res.json();
+
+        setFormData({
+          ...formData,
+          thumbnail:
+            uploaded.secure_url,
+        });
+
+      } catch (error) {
+
+        console.log(error);
+
+      } finally {
+
+        setUploading(false);
+      }
+    };
+
+  /* =========================
+     ADD TAG ITEMS
+  ========================== */
+
+  const addTechnology =
+    () => {
+
+      if (
+        !techInput.trim()
+      ) return;
+
+      setFormData({
+        ...formData,
+
+        technologies: [
+          ...formData.technologies,
+          techInput,
+        ],
+      });
+
+      setTechInput("");
+    };
+
+  const addFeature =
+    () => {
+
+      if (
+        !featureInput.trim()
+      ) return;
+
+      setFormData({
+        ...formData,
+
+        features: [
+          ...formData.features,
+          featureInput,
+        ],
+      });
+
+      setFeatureInput("");
+    };
+
+  const addPage =
+    () => {
+
+      if (
+        !pageInput.trim()
+      ) return;
+
+      setFormData({
+        ...formData,
+
+        pagesIncluded: [
+          ...formData.pagesIncluded,
+          pageInput,
+        ],
+      });
+
+      setPageInput("");
+    };
+
+  /* =========================
+     REMOVE TAG
+  ========================== */
+
+  const removeTag =
+    (
+      field,
+      index
+    ) => {
+
+      const updated =
+        [...formData[field]];
+
+      updated.splice(
+        index,
+        1
+      );
+
+      setFormData({
+        ...formData,
+        [field]: updated,
       });
     };
 
@@ -109,28 +315,9 @@ export default function Templates() {
 
         setLoading(true);
 
-        const payload = {
-
-          ...formData,
-
-          technologies:
-            formData.technologies
-              .split(",")
-              .map((item) =>
-                item.trim()
-              ),
-
-          features:
-            formData.features
-              .split(",")
-              .map((item) =>
-                item.trim()
-              ),
-        };
-
         await axios.post(
           "/templates",
-          payload,
+          formData,
           {
             headers: {
               Authorization:
@@ -142,16 +329,26 @@ export default function Templates() {
         setFormData({
           title: "",
           slug: "",
-          category: "",
+          category: "Corporate",
+
           shortDescription: "",
+
           thumbnail: "",
+
           price: "",
           setupPrice: "",
+
           demoUrl: "",
-          technologies: "",
-          features: "",
+
+          technologies: [],
+
+          features: [],
+
+          pagesIncluded: [],
+
           featured: false,
           popular: false,
+
           status: "published",
         });
 
@@ -212,8 +409,8 @@ export default function Templates() {
 
           <h1
             className="
-              text-2xl
-              font-bold
+              text-xl
+              font-semibold
             "
           >
             Templates
@@ -221,36 +418,26 @@ export default function Templates() {
 
           <p
             className="
-              text-sm
+              text-xs
               text-gray-400
               mt-1
             "
           >
-            Manage premium ready-made systems
+            Premium system deployments
           </p>
 
         </div>
 
         <div
           className="
-            flex
-            items-center
-            gap-3
+            px-4 py-2
+            rounded-2xl
+            border border-white/10
+            bg-white/[0.03]
+            text-sm
           "
         >
-
-          <div
-            className="
-              px-4 py-2
-              rounded-2xl
-              border border-white/10
-              bg-white/[0.03]
-              text-sm
-            "
-          >
-            {templates.length} Templates
-          </div>
-
+          {templates.length} Templates
         </div>
 
       </div>
@@ -277,6 +464,8 @@ export default function Templates() {
           "
         >
 
+          {/* TITLE */}
+
           <input
             type="text"
             name="title"
@@ -286,32 +475,30 @@ export default function Templates() {
             className="admin-input"
           />
 
-          <input
-            type="text"
-            name="slug"
-            value={formData.slug}
-            onChange={handleChange}
-            placeholder="Slug"
-            className="admin-input"
-          />
+          {/* CATEGORY */}
 
-          <input
-            type="text"
+          <select
             name="category"
             value={formData.category}
             onChange={handleChange}
-            placeholder="Category"
             className="admin-input"
-          />
+          >
 
-          <input
-            type="text"
-            name="thumbnail"
-            value={formData.thumbnail}
-            onChange={handleChange}
-            placeholder="Thumbnail URL"
-            className="admin-input"
-          />
+            {categories.map(
+              (cat) => (
+
+                <option
+                  key={cat}
+                  value={cat}
+                >
+                  {cat}
+                </option>
+              )
+            )}
+
+          </select>
+
+          {/* PRICE */}
 
           <input
             type="text"
@@ -321,6 +508,8 @@ export default function Templates() {
             placeholder="Template Price"
             className="admin-input"
           />
+
+          {/* SETUP PRICE */}
 
           <input
             type="text"
@@ -332,6 +521,22 @@ export default function Templates() {
           />
 
         </div>
+
+        {/* SLUG */}
+
+        <div
+          className="
+            mt-4
+            text-xs
+            text-gray-500
+          "
+        >
+          Slug:
+          {" "}
+          {formData.slug}
+        </div>
+
+        {/* DESCRIPTION */}
 
         <textarea
           name="shortDescription"
@@ -350,6 +555,8 @@ export default function Templates() {
           "
         />
 
+        {/* DEMO URL */}
+
         <input
           type="text"
           name="demoUrl"
@@ -359,33 +566,280 @@ export default function Templates() {
           className="admin-input mt-4"
         />
 
-        <input
-          type="text"
-          name="technologies"
-          value={
-            formData.technologies
-          }
+        {/* THUMBNAIL */}
 
-          onChange={handleChange}
+        <div
+          className="
+            mt-5
+            rounded-2xl
+            border border-dashed border-white/10
+            p-5
+          "
+        >
 
-          placeholder="React, Tailwind, Node.js"
+          <label
+            className="
+              flex
+              items-center
+              gap-3
+              cursor-pointer
+            "
+          >
 
-          className="admin-input mt-4"
-        />
+            <UploadCloud
+              size={18}
+            />
 
-        <input
-          type="text"
-          name="features"
-          value={
-            formData.features
-          }
+            <span
+              className="
+                text-sm
+                text-gray-300
+              "
+            >
+              {
+                uploading
+                  ? "Uploading..."
+                  : "Upload Thumbnail"
+              }
+            </span>
 
-          onChange={handleChange}
+            <input
+              type="file"
+              hidden
+              onChange={
+                handleThumbnailUpload
+              }
+            />
 
-          placeholder="Responsive, SEO Optimized, Dashboard"
+          </label>
 
-          className="admin-input mt-4"
-        />
+          {formData.thumbnail && (
+
+            <img
+              src={
+                formData.thumbnail
+              }
+
+              alt=""
+
+              className="
+                mt-5
+                h-40
+                w-full
+                object-cover
+                rounded-2xl
+              "
+            />
+          )}
+
+        </div>
+
+        {/* TECH STACK */}
+
+        <div className="mt-5">
+
+          <p
+            className="
+              text-sm
+              mb-3
+            "
+          >
+            Technologies
+          </p>
+
+          <div
+            className="
+              flex
+              gap-3
+            "
+          >
+
+            <input
+              value={techInput}
+              onChange={(e) =>
+                setTechInput(
+                  e.target.value
+                )
+              }
+
+              placeholder="React"
+
+              className="admin-input"
+            />
+
+            <button
+              type="button"
+              onClick={
+                addTechnology
+              }
+
+              className="
+                px-5
+                rounded-2xl
+                bg-blue-600
+                text-sm
+              "
+            >
+              Add
+            </button>
+
+          </div>
+
+          <div
+            className="
+              flex
+              flex-wrap
+              gap-2
+              mt-4
+            "
+          >
+
+            {formData.technologies.map(
+              (
+                item,
+                index
+              ) => (
+
+                <div
+                  key={index}
+
+                  className="
+                    px-3 py-1
+                    rounded-full
+                    bg-white/[0.05]
+                    border border-white/10
+                    text-xs
+                    flex
+                    items-center
+                    gap-2
+                  "
+                >
+
+                  {item}
+
+                  <button
+                    type="button"
+
+                    onClick={() =>
+                      removeTag(
+                        "technologies",
+                        index
+                      )
+                    }
+                  >
+                    ×
+                  </button>
+
+                </div>
+              )
+            )}
+
+          </div>
+
+        </div>
+
+        {/* FEATURES */}
+
+        <div className="mt-5">
+
+          <p
+            className="
+              text-sm
+              mb-3
+            "
+          >
+            Features
+          </p>
+
+          <div
+            className="
+              flex
+              gap-3
+            "
+          >
+
+            <input
+              value={featureInput}
+              onChange={(e) =>
+                setFeatureInput(
+                  e.target.value
+                )
+              }
+
+              placeholder="SEO Optimized"
+
+              className="admin-input"
+            />
+
+            <button
+              type="button"
+              onClick={
+                addFeature
+              }
+
+              className="
+                px-5
+                rounded-2xl
+                bg-blue-600
+                text-sm
+              "
+            >
+              Add
+            </button>
+
+          </div>
+
+        </div>
+
+        {/* PAGES INCLUDED */}
+
+        <div className="mt-5">
+
+          <p
+            className="
+              text-sm
+              mb-3
+            "
+          >
+            Pages Included
+          </p>
+
+          <div
+            className="
+              flex
+              gap-3
+            "
+          >
+
+            <input
+              value={pageInput}
+              onChange={(e) =>
+                setPageInput(
+                  e.target.value
+                )
+              }
+
+              placeholder="Homepage"
+
+              className="admin-input"
+            />
+
+            <button
+              type="button"
+              onClick={addPage}
+              className="
+                px-5
+                rounded-2xl
+                bg-blue-600
+                text-sm
+              "
+            >
+              Add
+            </button>
+
+          </div>
+
+        </div>
 
         {/* TOGGLES */}
 
@@ -394,7 +848,7 @@ export default function Templates() {
             flex
             items-center
             gap-6
-            mt-5
+            mt-6
           "
         >
 
@@ -406,6 +860,7 @@ export default function Templates() {
               text-sm
             "
           >
+
             <input
               type="checkbox"
               name="featured"
@@ -416,6 +871,7 @@ export default function Templates() {
             />
 
             Featured
+
           </label>
 
           <label
@@ -426,6 +882,7 @@ export default function Templates() {
               text-sm
             "
           >
+
             <input
               type="checkbox"
               name="popular"
@@ -436,9 +893,12 @@ export default function Templates() {
             />
 
             Popular
+
           </label>
 
         </div>
+
+        {/* BUTTON */}
 
         <button
           type="submit"
@@ -447,21 +907,20 @@ export default function Templates() {
 
           className="
             mt-6
-            h-12
-            px-6
+            h-11
+            px-5
             rounded-2xl
             bg-blue-600
             hover:bg-blue-500
             transition
             text-sm
-            font-medium
             flex
             items-center
             gap-2
           "
         >
 
-          <Plus size={16} />
+          <Plus size={15} />
 
           {
             loading
@@ -490,7 +949,7 @@ export default function Templates() {
               key={template._id}
 
               className="
-                rounded-[28px]
+                rounded-[26px]
                 overflow-hidden
                 border border-white/10
                 bg-white/[0.03]
@@ -502,14 +961,18 @@ export default function Templates() {
               <div
                 className="
                   relative
-                  h-[220px]
-                  overflow-hidden
+                  h-[190px]
                 "
               >
 
                 <img
-                  src={template.thumbnail}
-                  alt={template.title}
+                  src={
+                    template.thumbnail
+                  }
+
+                  alt={
+                    template.title
+                  }
 
                   className="
                     w-full
@@ -518,60 +981,17 @@ export default function Templates() {
                   "
                 />
 
-                <div
-                  className="
-                    absolute
-                    top-4
-                    left-4
-                    flex
-                    gap-2
-                  "
-                >
-
-                  {template.featured && (
-
-                    <div
-                      className="
-                        px-3 py-1
-                        rounded-full
-                        bg-blue-600
-                        text-[10px]
-                        font-semibold
-                      "
-                    >
-                      FEATURED
-                    </div>
-                  )}
-
-                  {template.popular && (
-
-                    <div
-                      className="
-                        px-3 py-1
-                        rounded-full
-                        bg-orange-500
-                        text-[10px]
-                        font-semibold
-                      "
-                    >
-                      POPULAR
-                    </div>
-                  )}
-
-                </div>
-
               </div>
 
               {/* CONTENT */}
 
-              <div className="p-5">
+              <div className="p-4">
 
                 <div
                   className="
                     flex
                     items-start
                     justify-between
-                    gap-3
                   "
                 >
 
@@ -579,29 +999,33 @@ export default function Templates() {
 
                     <p
                       className="
-                        text-blue-400
-                        text-[11px]
+                        text-[10px]
                         uppercase
                         tracking-[0.2em]
+                        text-blue-400
                         mb-2
                       "
                     >
-                      {template.category}
+                      {
+                        template.category
+                      }
                     </p>
 
                     <h2
                       className="
-                        text-xl
+                        text-lg
                         font-semibold
                       "
                     >
-                      {template.title}
+                      {
+                        template.title
+                      }
                     </h2>
 
                   </div>
 
                   <LayoutTemplate
-                    size={18}
+                    size={16}
                     className="text-gray-500"
                   />
 
@@ -609,8 +1033,8 @@ export default function Templates() {
 
                 <p
                   className="
-                    mt-4
-                    text-sm
+                    mt-3
+                    text-xs
                     text-gray-400
                     leading-relaxed
                   "
@@ -627,11 +1051,14 @@ export default function Templates() {
                     flex
                     flex-wrap
                     gap-2
-                    mt-5
+                    mt-4
                   "
                 >
 
-                  {template.technologies?.map(
+                  {template.technologies?.slice(
+                    0,
+                    4
+                  ).map(
                     (
                       tech,
                       index
@@ -641,11 +1068,11 @@ export default function Templates() {
                         key={index}
 
                         className="
-                          px-3 py-1
+                          px-2 py-1
                           rounded-full
                           bg-white/[0.05]
                           border border-white/10
-                          text-[11px]
+                          text-[10px]
                         "
                       >
                         {tech}
@@ -662,7 +1089,7 @@ export default function Templates() {
                     flex
                     items-center
                     justify-between
-                    mt-6
+                    mt-5
                   "
                 >
 
@@ -670,7 +1097,7 @@ export default function Templates() {
 
                     <p
                       className="
-                        text-xs
+                        text-[10px]
                         text-gray-500
                       "
                     >
@@ -679,11 +1106,13 @@ export default function Templates() {
 
                     <h3
                       className="
-                        text-lg
-                        font-bold
+                        text-base
+                        font-semibold
                       "
                     >
-                      {template.price}
+                      {
+                        template.price
+                      }
                     </h3>
 
                   </div>
@@ -703,18 +1132,21 @@ export default function Templates() {
 
                       target="_blank"
 
+                      rel="noreferrer"
+
                       className="
-                        w-10
-                        h-10
+                        w-9
+                        h-9
                         rounded-xl
                         border border-white/10
                         flex
                         items-center
                         justify-center
-                        hover:border-blue-500/40
                       "
                     >
-                      <ExternalLink size={15} />
+                      <ExternalLink
+                        size={14}
+                      />
                     </a>
 
                     <button
@@ -725,8 +1157,8 @@ export default function Templates() {
                       }
 
                       className="
-                        w-10
-                        h-10
+                        w-9
+                        h-9
                         rounded-xl
                         border border-red-500/20
                         text-red-400
@@ -735,7 +1167,9 @@ export default function Templates() {
                         justify-center
                       "
                     >
-                      <Trash2 size={15} />
+                      <Trash2
+                        size={14}
+                      />
                     </button>
 
                   </div>
