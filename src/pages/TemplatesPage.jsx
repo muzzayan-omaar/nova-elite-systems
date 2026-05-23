@@ -713,7 +713,7 @@ const formatPrice = (price) => {
                   transition
                 "
               >
-                Details
+                Get
                 <ArrowRight size={12} />
               </Link>
 
