@@ -29,6 +29,9 @@ export default function Templates() {
   const [activeCategory, setActiveCategory] =
     useState("All");
 
+    const [currency, setCurrency] =
+    useState("USD");
+
   const categories = [
     "All",
     "Corporate",
@@ -86,6 +89,32 @@ export default function Templates() {
         matchesCategory
       );
     });
+
+   const USD_TO_UGX = 3800;
+
+
+
+const formatPrice = (price) => {
+  if (price === null || price === undefined) return "N/A";
+
+  if (typeof price === "string") {
+    if (price.toLowerCase() === "custom") return "Custom";
+  }
+
+  const numeric =
+    typeof price === "number"
+      ? price
+      : parseFloat(String(price).replace(/[^0-9.]/g, ""));
+
+  if (isNaN(numeric)) return price;
+
+  if (currency === "USD") {
+    return `$${numeric.toFixed(2)}`;
+  }
+
+  const ugx = numeric * USD_TO_UGX;
+  return `UGX ${ugx.toLocaleString()}`;
+};
 
   return (
     <>
@@ -392,279 +421,320 @@ export default function Templates() {
 
           </div>
 
+          {/* CURRENCY TOGGLE */}
+<div className="flex justify-center mb-8">
+  <div className="flex items-center gap-2 p-1 bg-white/5 border border-white/10 rounded-xl">
+
+    <button
+      onClick={() => setCurrency("USD")}
+      className={`px-4 py-2 text-sm rounded-lg transition ${
+        currency === "USD"
+          ? "bg-blue-600 text-white"
+          : "text-gray-400 hover:text-white"
+      }`}
+    >
+      USD
+    </button>
+
+    <button
+      onClick={() => setCurrency("UGX")}
+      className={`px-4 py-2 text-sm rounded-lg transition ${
+        currency === "UGX"
+          ? "bg-blue-600 text-white"
+          : "text-gray-400 hover:text-white"
+      }`}
+    >
+      UGX
+    </button>
+
+  </div>
+</div>
+
+          
+
           {/* GRID */}
-          {loading ? (
 
-            <div className="text-gray-400 py-20">
-              Loading templates...
-            </div>
+{/* GRID */}
+{loading ? (
 
-          ) : (
+  <div className="text-gray-400 py-20">
+    Loading templates...
+  </div>
 
+) : (
+
+  <div
+    className="
+      grid
+      sm:grid-cols-2
+      xl:grid-cols-4
+      gap-4
+    "
+  >
+
+    {filteredTemplates.map(
+      (item) => (
+
+        <div
+          key={item._id}
+
+          className="
+            group
+            rounded-[22px]
+            overflow-hidden
+            border border-white/8
+            bg-white/[0.025]
+            backdrop-blur-xl
+            transition-all duration-300
+            hover:border-blue-500/20
+            hover:bg-white/[0.035]
+          "
+        >
+
+          {/* IMAGE */}
+          <div className="relative overflow-hidden">
+
+            <img
+              src={item.thumbnail}
+              alt={item.title}
+              className="
+                w-full
+                h-[170px]
+                object-cover
+                transition-transform duration-700
+                group-hover:scale-[1.03]
+              "
+            />
+
+            {/* OVERLAY */}
             <div
               className="
-                grid
-                md:grid-cols-2
-                xl:grid-cols-3
-                gap-5
+                absolute
+                inset-0
+                bg-gradient-to-t
+                from-[#050816]
+                via-transparent
+                to-transparent
+              "
+            />
+
+            {/* TOP */}
+            <div
+              className="
+                absolute
+                top-3
+                left-3
+                right-3
+                flex
+                items-center
+                justify-between
               "
             >
 
-              {filteredTemplates.map(
-                (item) => (
+              <div
+                className="
+                  px-2.5 py-1
+                  rounded-full
+                  bg-black/35
+                  backdrop-blur-md
+                  text-[9px]
+                  border border-white/10
+                  tracking-wide
+                "
+              >
+                {item.category}
+              </div>
 
-                  <div
-                    key={item._id}
+              {item.featured && (
 
-                    className="
-                      group
-                      rounded-[28px]
-                      overflow-hidden
-                      border border-white/10
-                      bg-white/[0.025]
-                      backdrop-blur-xl
-                      transition-all duration-500
-                      hover:border-blue-500/20
-                    "
-                  >
-
-                    {/* IMAGE */}
-                    <div className="relative">
-
-                      <img
-                        src={item.thumbnail}
-                        alt={item.title}
-                        className="
-                          w-full
-                          h-[230px]
-                          object-cover
-                        "
-                      />
-
-                      {/* OVERLAY */}
-                      <div
-                        className="
-                          absolute
-                          inset-0
-                          bg-gradient-to-t
-                          from-[#050816]
-                          via-transparent
-                          to-transparent
-                        "
-                      />
-
-                      {/* TOP BADGES */}
-                      <div
-                        className="
-                          absolute
-                          top-4
-                          left-4
-                          right-4
-                          flex
-                          items-center
-                          justify-between
-                        "
-                      >
-
-                        <div
-                          className="
-                            px-3 py-1
-                            rounded-full
-                            bg-black/40
-                            backdrop-blur-md
-                            text-[10px]
-                            border border-white/10
-                          "
-                        >
-                          {item.category}
-                        </div>
-
-                        {item.featured && (
-
-                          <div
-                            className="
-                              flex
-                              items-center
-                              gap-1
-                              px-3 py-1
-                              rounded-full
-                              bg-blue-600
-                              text-[10px]
-                            "
-                          >
-                            <Star size={10} />
-                            Featured
-                          </div>
-                        )}
-
-                      </div>
-
-                      {/* PRICE */}
-                      <div
-                        className="
-                          absolute
-                          bottom-4
-                          left-4
-                        "
-                      >
-
-                        <div
-                          className="
-                            px-4 py-2
-                            rounded-2xl
-                            bg-black/40
-                            backdrop-blur-md
-                            border border-white/10
-                          "
-                        >
-
-                          <p
-                            className="
-                              text-[10px]
-                              uppercase
-                              tracking-[0.2em]
-                              text-gray-400
-                              mb-1
-                            "
-                          >
-                            Starting
-                          </p>
-
-                          <h3
-                            className="
-                              text-lg
-                              font-semibold
-                              text-white
-                            "
-                          >
-                            ${item.price}
-                          </h3>
-
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                    {/* CONTENT */}
-                    <div className="p-5">
-
-                      <div className="mb-5">
-
-                        <h2
-                          className="
-                            text-[20px]
-                            font-semibold
-                            tracking-[-0.03em]
-                          "
-                        >
-                          {item.title}
-                        </h2>
-
-                        <p
-                          className="
-                            mt-3
-                            text-[13px]
-                            text-gray-400
-                            leading-relaxed
-                          "
-                        >
-                          {item.shortDescription}
-                        </p>
-
-                      </div>
-
-                      {/* TECH */}
-                      <div
-                        className="
-                          flex
-                          flex-wrap
-                          gap-2
-                          mb-6
-                        "
-                      >
-
-                        {item.technologies
-                          ?.slice(0, 4)
-                          .map((tech, index) => (
-
-                            <span
-                              key={index}
-                              className="
-                                text-[11px]
-                                text-gray-400
-                              "
-                            >
-                              {tech}
-                              {
-                                index !==
-                                item.technologies
-                                  .slice(0, 4)
-                                  .length - 1
-                                  && " •"
-                              }
-                            </span>
-                          ))}
-
-                      </div>
-
-                      {/* ACTIONS */}
-                      <div
-                        className="
-                          flex
-                          items-center
-                          justify-between
-                        "
-                      >
-
-                        <a
-                          href={item.demoUrl}
-                          target="_blank"
-                          rel="noreferrer"
-
-                          className="
-                            text-sm
-                            text-gray-300
-                            hover:text-white
-                            transition
-                          "
-                        >
-                          Live Demo
-                        </a>
-
-                        <Link
-                          to={`/templates/${item.slug}`}
-
-                          className="
-                            inline-flex
-                            items-center
-                            gap-2
-                            text-sm
-                            text-blue-400
-                            hover:text-blue-300
-                            transition
-                          "
-                        >
-                          View Details
-                          <ArrowRight size={14} />
-                        </Link>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-                )
+                <div
+                  className="
+                    flex
+                    items-center
+                    gap-1
+                    px-2.5 py-1
+                    rounded-full
+                    bg-blue-600
+                    text-[9px]
+                  "
+                >
+                  <Star size={9} />
+                  Featured
+                </div>
               )}
 
             </div>
-          )}
+
+            {/* PRICE */}
+            <div
+              className="
+                absolute
+                bottom-3
+                left-3
+              "
+            >
+
+              <div
+                className="
+                  px-3 py-1.5
+                  rounded-xl
+                  bg-black/35
+                  backdrop-blur-md
+                  border border-white/10
+                "
+              >
+
+                <p
+                  className="
+                    text-[8px]
+                    uppercase
+                    tracking-[0.18em]
+                    text-gray-400
+                    mb-[2px]
+                  "
+                >
+                  Starting
+                </p>
+
+                <h3
+                  className="
+                    text-[15px]
+                    font-semibold
+                    text-white
+                  "
+                >
+                  {formatPrice(item.price)}
+                </h3>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* CONTENT */}
+          <div className="p-4">
+
+            <div className="mb-4">
+
+              <h2
+                className="
+                  text-[15px]
+                  font-medium
+                  tracking-[-0.03em]
+                  line-clamp-1
+                "
+              >
+                {item.title}
+              </h2>
+
+              <p
+                className="
+                  mt-2
+                  text-[12px]
+                  text-gray-400
+                  leading-relaxed
+                  line-clamp-2
+                "
+              >
+                {item.shortDescription}
+              </p>
+
+            </div>
+
+            {/* TECH */}
+            <div
+              className="
+                flex
+                flex-wrap
+                gap-1.5
+                mb-4
+              "
+            >
+
+              {item.technologies
+                ?.slice(0, 3)
+                .map((tech, index) => (
+
+                  <span
+                    key={index}
+                    className="
+                      text-[10px]
+                      text-gray-500
+                    "
+                  >
+                    {tech}
+                    {
+                      index !==
+                      item.technologies
+                        .slice(0, 3)
+                        .length - 1
+                        && " •"
+                    }
+                  </span>
+                ))}
+
+            </div>
+
+            {/* ACTIONS */}
+            <div
+              className="
+                flex
+                items-center
+                justify-between
+              "
+            >
+
+              <a
+                href={item.demoUrl}
+                target="_blank"
+                rel="noreferrer"
+
+                className="
+                  text-[12px]
+                  text-gray-300
+                  hover:text-white
+                  transition
+                "
+              >
+                Live Demo
+              </a>
+
+              <Link
+                to={`/templates/${item.slug}`}
+
+                className="
+                  inline-flex
+                  items-center
+                  gap-1.5
+                  text-[12px]
+                  text-blue-400
+                  hover:text-blue-300
+                  transition
+                "
+              >
+                Details
+                <ArrowRight size={12} />
+              </Link>
+
+            </div>
+
+          </div>
+
+        </div>
+      )
+    )}
+
+  </div>
+)}
+
+
 
         </div>
 
       </section>
 
-      <Footer />
+     
     </>
   );
 }
