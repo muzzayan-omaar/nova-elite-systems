@@ -29,7 +29,7 @@ import { services } from "./data/servicesData";
 import StartProject from "./pages/StartProject";
 import Leads from "./pages/admin/Leads";
 import Templates from "./pages/admin/Templates";
-import Templates from "./pages/Templates";
+import TemplatesPage from "./pages/TemplatesPage";
 
 function App() {
   return (
@@ -148,7 +148,7 @@ function App() {
 
   <Route
     path="/templates"
-    element={<Templates />}
+    element={<TemplatesPage />}
   />
 
   <Route

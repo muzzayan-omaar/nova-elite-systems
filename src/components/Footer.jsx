@@ -68,7 +68,7 @@ export default function Footer() {
 
               <p className="text-gray-400 leading-relaxed text-sm">
                 Smart digital platforms and secure infrastructure
-                systems built for modern businesses across the UAE.
+                systems built for modern businesses across Africa and beyond.
               </p>
 
 {/* SOCIALS */}
