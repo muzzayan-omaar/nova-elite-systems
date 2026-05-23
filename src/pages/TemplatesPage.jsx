@@ -7,6 +7,9 @@ import API from "../api/axios";
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useLocation } from "react-router-dom";
+
+
 
 import {
   Search,
@@ -25,6 +28,16 @@ export default function Templates() {
 
   const [search, setSearch] =
     useState("");
+
+    const location = useLocation();
+    useEffect(() => {
+  const params = new URLSearchParams(location.search);
+  const category = params.get("category");
+
+  if (category) {
+    setActiveCategory(category);
+  }
+}, [location.search]);
 
   const [activeCategory, setActiveCategory] =
     useState("All");

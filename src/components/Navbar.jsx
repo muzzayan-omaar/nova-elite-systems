@@ -19,6 +19,7 @@ import {
   MessageCircle,
   Info,
 } from "lucide-react";
+import { TEMPLATE_CATEGORIES } from "../data/templateCategories";
 
 export default function Navbar() {
   const { language, setLanguage } = useLanguage();
@@ -29,6 +30,10 @@ export default function Navbar() {
 
   const closeTimeout = useRef(null);
   const intentRef = useRef(null);
+
+  const quickCategories = TEMPLATE_CATEGORIES.slice(0, 3);
+const othersRoute = "/templates"; // fallback page
+  
 
   const safeOpen = (id) => {
     if (closeTimeout.current) clearTimeout(closeTimeout.current);
@@ -376,106 +381,61 @@ export default function Navbar() {
       </div>
 
       {/* GRID */}
-      <div
-        className="
-          grid
-          grid-cols-2
-          gap-3
-          p-4
-        "
-      >
+<div className="grid grid-cols-2 gap-3 p-4">
 
-        {[
-          {
-            label: "Business Website",
-            icon: "🌐",
-            route: "/templates/web",
-          },
-
-          {
-            label: "E-Commerce",
-            icon: "🛒",
-            route: "/templates/ecommerce",
-          },
-
-          {
-            label: "CCTV & Security",
-            icon: "📹",
-            route: "/templates/security",
-          },
-
-          {
-            label: "SaaS Platform",
-            icon: "⚡",
-            route: "/templates/saas",
-          },
-        ].map((item, i) => (
-          <button
-            key={i}
-            onClick={() => {
-              setIntentOpen(false);
-              window.location.href =
-                item.route;
-            }}
-            className="
-              group
-              relative
-              overflow-hidden
-              rounded-2xl
-              border border-white/[0.04]
-              bg-white/[0.015]
-              hover:bg-blue-500/[0.04]
-              hover:border-blue-500/10
-              p-4
-              text-left
-              transition-all duration-300
-            "
-          >
-
-            {/* HOVER GLOW */}
-            <div
-              className="
-                absolute
-                inset-0
-                opacity-0
-                group-hover:opacity-100
-                bg-gradient-to-br
-                from-blue-500/[0.08]
-                to-transparent
-                transition
-              "
-            />
-
-            <div className="relative z-10">
-
-              <div
-                className="
-                  text-2xl
-                  mb-3
-                "
-              >
-                {item.icon}
-              </div>
-
-              <h4
-                className="
-                  text-sm
-                  font-medium
-                  text-white
-                  group-hover:text-blue-400
-                  transition
-                  leading-snug
-                "
-              >
-                {item.label}
-              </h4>
-
-            </div>
-
-          </button>
-        ))}
-
+  {quickCategories.map((cat, i) => (
+    <button
+      key={i}
+      onClick={() => {
+        setIntentOpen(false);
+        window.location.href = `/templates?category=${encodeURIComponent(cat)}`;
+      }}
+      className="
+        group relative overflow-hidden
+        rounded-2xl border border-white/[0.04]
+        bg-white/[0.015]
+        hover:bg-blue-500/[0.04]
+        hover:border-blue-500/10
+        p-4 text-left
+        transition-all duration-300
+      "
+    >
+      <div className="text-sm font-medium text-white group-hover:text-blue-400">
+        {cat}
       </div>
+
+      <div className="text-xs text-gray-400 mt-1">
+        Explore {cat} templates
+      </div>
+    </button>
+  ))}
+
+  {/* OTHERS BUTTON */}
+  <button
+    onClick={() => {
+      setIntentOpen(false);
+      window.location.href = othersRoute;
+    }}
+    className="
+      group relative overflow-hidden
+      rounded-2xl border border-white/[0.04]
+      bg-white/[0.015]
+      hover:bg-blue-500/[0.04]
+      hover:border-blue-500/10
+      p-4 text-left
+      transition-all duration-300
+    "
+  >
+    <div className="text-sm font-medium text-white group-hover:text-blue-400">
+      Others
+    </div>
+
+    <div className="text-xs text-gray-400 mt-1">
+      View all templates
+    </div>
+  </button>
+
+</div>
 
     </motion.div>
   )}
