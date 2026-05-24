@@ -466,12 +466,7 @@ const othersRoute = "/templates"; // fallback page
 
 </div>
 
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden w-10 h-10 rounded-xl border border-white/10 bg-white/[0.04] flex items-center justify-center text-white"
-            >
-              {menuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
+
 
           </div>
         </div>
