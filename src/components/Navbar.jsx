@@ -471,6 +471,176 @@ const othersRoute = "/templates"; // fallback page
           </div>
         </div>
 
+        {/* MOBILE MENU */}
+<AnimatePresence>
+  {menuOpen && (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2 }}
+      className="md:hidden mt-3 rounded-2xl border border-white/10 bg-[#081120]/95 backdrop-blur-xl p-4"
+    >
+      <div className="flex flex-col gap-2 text-sm text-white">
+
+        {/* SOLUTIONS (mobile dropdown) */}
+        <button
+          onClick={() =>
+            setMobileDropdown(
+              mobileDropdown === "solutions" ? null : "solutions"
+            )
+          }
+          className="flex justify-between items-center py-2 px-3 rounded-lg hover:bg-white/5"
+        >
+          Solutions
+          <ChevronDown
+            size={16}
+            className={`transition ${
+              mobileDropdown === "solutions" ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+
+        {mobileDropdown === "solutions" && (
+          <div className="pl-3 pb-2 space-y-3">
+
+            <p className="text-[10px] text-blue-400 tracking-widest mt-2">
+              DIGITAL
+            </p>
+
+            {digitalSolutions.map((item, i) => (
+              <a
+                key={i}
+                href={item.link}
+                onClick={() => setMenuOpen(false)}
+                className="flex items-start gap-2 text-gray-300 hover:text-white"
+              >
+                {item.icon}
+                <div>
+                  <p className="text-sm">{item.title}</p>
+                  <p className="text-xs text-gray-500">{item.desc}</p>
+                </div>
+              </a>
+            ))}
+
+            <p className="text-[10px] text-blue-400 tracking-widest mt-3">
+              INFRASTRUCTURE
+            </p>
+
+            {infraSolutions.map((item, i) => (
+              <a
+                key={i}
+                href={item.link}
+                onClick={() => setMenuOpen(false)}
+                className="flex items-start gap-2 text-gray-300 hover:text-white"
+              >
+                {item.icon}
+                <div>
+                  <p className="text-sm">{item.title}</p>
+                  <p className="text-xs text-gray-500">{item.desc}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+
+        {/* SIMPLE LINKS */}
+        <a
+          href="/pricing"
+          onClick={() => setMenuOpen(false)}
+          className="py-2 px-3 rounded-lg hover:bg-white/5"
+        >
+          Pricing
+        </a>
+
+        <a
+          href="/templates"
+          onClick={() => setMenuOpen(false)}
+          className="py-2 px-3 rounded-lg hover:bg-white/5"
+        >
+          Templates
+        </a>
+
+        {/* EXPLORE */}
+        <button
+          onClick={() =>
+            setMobileDropdown(
+              mobileDropdown === "explore" ? null : "explore"
+            )
+          }
+          className="flex justify-between items-center py-2 px-3 rounded-lg hover:bg-white/5"
+        >
+          Explore
+          <ChevronDown
+            size={16}
+            className={`transition ${
+              mobileDropdown === "explore" ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+
+        {mobileDropdown === "explore" && (
+          <div className="pl-3 space-y-2">
+            {explore.map((item, i) => (
+              <a
+                key={i}
+                href={item.link}
+                onClick={() => setMenuOpen(false)}
+                className="flex items-start gap-2 text-gray-300 hover:text-white"
+              >
+                {item.icon}
+                <div>
+                  <p className="text-sm">{item.title}</p>
+                  <p className="text-xs text-gray-500">{item.desc}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+
+        {/* SUPPORT */}
+        <button
+          onClick={() =>
+            setMobileDropdown(
+              mobileDropdown === "support" ? null : "support"
+            )
+          }
+          className="flex justify-between items-center py-2 px-3 rounded-lg hover:bg-white/5"
+        >
+          Support
+          <ChevronDown
+            size={16}
+            className={`transition ${
+              mobileDropdown === "support" ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+
+        {mobileDropdown === "support" && (
+          <div className="pl-3 space-y-2">
+            {support.map((item, i) => (
+              <a
+                key={i}
+                href={item.link}
+                onClick={() => setMenuOpen(false)}
+                className="flex items-start gap-2 text-gray-300 hover:text-white"
+              >
+                {item.icon}
+                <div>
+                  <p className="text-sm">{item.title}</p>
+                  <p className="text-xs text-gray-500">{item.desc}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
+        
+
       </div>
     </div>
   );
