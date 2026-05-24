@@ -263,128 +263,150 @@ export default function Admin() {
       <div className="flex">
 
         {/* SIDEBAR */}
-        <div
-          className="
-            hidden md:block
-            w-[260px]
-            min-h-screen
-            border-r border-white/10
-            bg-[#07111F]
-            p-6
-            sticky top-0
-          "
+{/* SIDEBAR */}
+<div
+  className="
+    hidden md:flex
+    flex-col
+    w-[280px]
+    h-screen
+    sticky top-0
+    bg-[#050816]
+    border-r border-white/10
+    relative
+  "
+>
+
+  {/* SUBTLE BACKDROP GLOW */}
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+
+    <div className="absolute -top-40 -left-40 w-[300px] h-[300px] bg-blue-500/10 blur-[120px]" />
+    <div className="absolute bottom-[-120px] right-[-80px] w-[250px] h-[250px] bg-cyan-500/10 blur-[120px]" />
+
+  </div>
+
+  {/* BRAND */}
+  <div className="p-6 relative z-10 border-b border-white/10">
+
+    <div className="flex items-center gap-3">
+
+      <img
+        src="https://res.cloudinary.com/diszilwhc/image/upload/v1777939226/IMG_20260422_200643_073_fdpjkb.webp"
+        className="h-10 w-10 rounded-xl object-cover"
+      />
+
+      <div>
+        <h2 className="text-sm font-semibold tracking-wide">
+          NOVA Control
+        </h2>
+        <p className="text-[11px] text-gray-500">
+          Infrastructure Panel
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  {/* NAV */}
+  <div className="flex-1 overflow-y-auto p-4 space-y-1 relative z-10">
+
+    {[
+      { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
+      { id: "caseStudies", label: "Case Studies", icon: <Briefcase size={18} /> },
+      { id: "clients", label: "Clients", icon: <Users size={18} /> },
+      { id: "offers", label: "Offers", icon: <BadgePercent size={18} /> },
+
+      { id: "revenue", label: "Revenue", icon: <DollarSign size={18} /> },
+      { id: "invoices", label: "Invoices", icon: <Receipt size={18} /> },
+      { id: "support", label: "Support", icon: <Headphones size={18} /> },
+      { id: "expenses", label: "Expenses", icon: <CreditCard size={18} /> },
+      { id: "consultations", label: "Consultations", icon: <Briefcase size={18} /> },
+      { id: "leads", label: "Leads", icon: <User size={18} /> },
+      { id: "templates", label: "Templates", icon: <LayoutTemplate size={18} /> },
+    ].map((item) => (
+      <button
+        key={item.id}
+        onClick={() => setActiveTab(item.id)}
+        className={`
+          relative
+          w-full
+          flex items-center gap-3
+          px-4 py-3
+          rounded-2xl
+          text-sm
+          transition-all duration-300
+
+          hover:translate-x-1
+          hover:bg-white/[0.03]
+
+          ${
+            activeTab === item.id
+              ? "bg-white/[0.06] text-white shadow-lg shadow-black/20"
+              : "text-gray-400"
+          }
+        `}
+      >
+
+        {/* ACTIVE PILL INDICATOR */}
+        {activeTab === item.id && (
+          <span className="absolute inset-0 rounded-2xl border border-blue-500/20" />
+        )}
+
+        {/* ICON WRAPPER */}
+        <span
+          className={`
+            w-9 h-9
+            flex items-center justify-center
+            rounded-xl
+            transition
+            ${
+              activeTab === item.id
+                ? "bg-blue-500/10 text-blue-400"
+                : "text-gray-400"
+            }
+          `}
         >
+          {item.icon}
+        </span>
 
-          {/* LOGO */}
-          <div className="mb-10">
+        <span className="flex-1 text-left">
+          {item.label}
+        </span>
 
-            <img
-              src="https://res.cloudinary.com/diszilwhc/image/upload/v1777939226/IMG_20260422_200643_073_fdpjkb.webp"
-              alt="NOVA"
-              className="h-12 object-contain"
-            />
+        {/* RIGHT DOT INDICATOR */}
+        {activeTab === item.id && (
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+        )}
 
-          </div>
+      </button>
+    ))}
 
-          {/* NAVIGATION */}
-          <div className="space-y-2">
+  </div>
 
-            {[
-              {
-                id: "dashboard",
-                label: "Dashboard",
-                icon: <LayoutDashboard size={18} />,
-              },
+  {/* FOOTER */}
+  <div className="p-4 border-t border-white/10 relative z-10">
 
-              {
-                id: "caseStudies",
-                label: "Case Studies",
-                icon: <Briefcase size={18} />,
-              },
+    <button
+      onClick={() => setActiveTab("logout")}
+      className="
+        w-full
+        flex items-center gap-3
+        px-4 py-3
+        rounded-2xl
+        text-sm
+        text-red-400
+        hover:bg-red-500/10
+        transition
+      "
+    >
+      <LogOut size={18} />
+      Logout
+    </button>
 
-              {
-                id: "clients",
-                label: "Clients",
-                icon: <Users size={18} />,
-              },
+  </div>
 
-              {
-                id: "offers",
-                label: "Offers",
-                icon: <BadgePercent size={18} />,
-              },
-              {
-                id: "revenue",
-                label: "Revenue",
-                icon: <DollarSign size={18} />,
-              },
-              {
-                id: "invoices",
-                label: "Invoices",
-                icon: <Receipt size={18} />,
-              },
-              {
-                id: "support",
-                label: "Support",
-                icon: <Headphones size={18} />,
-              },
-              {
-                id: "expenses",
-                label: "Expenses",
-                icon: <CreditCard size={18} />,
-              },
-              {
-                id: "consultations",
-                label: "Consultations",
-                icon: <Briefcase size={18} />,
-              },
-              {
-                id: "leads",
-                label: "Leads",
-                icon: <User size={18} />,
-              },
-              {
-                id: "templates",
-                label: "Templates",
-                icon: <LayoutTemplate size={18} />,
-              },
-              {
-                id: "logout",
-                label: "Logout",
-                icon: <LogOut size={18} />,
-              }
-
-            ].map((item) => (
-
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`
-                  w-full
-                  flex items-center gap-3
-                  px-4 py-3
-                  rounded-2xl
-                  transition-all duration-300
-                  text-sm
-
-                  ${
-                    activeTab === item.id
-                      ? "bg-blue-600 text-white"
-                      : "text-gray-400 hover:bg-white/[0.04] hover:text-white"
-                  }
-                `}
-              >
-
-                {item.icon}
-
-                {item.label}
-
-              </button>
-            ))}
-
-          </div>
-
-        </div>
+</div>
 
         {/* MAIN CONTENT */}
         <div className="flex-1 p-6 md:p-8 overflow-hidden">
