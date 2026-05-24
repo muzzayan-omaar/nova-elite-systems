@@ -7,11 +7,14 @@ import App from "./App.jsx";
 
 import { LanguageProvider } from "./context/LanguageContext";
 import { Toaster } from "sonner";
+import WhatsAppButton from "./components/WhatsAppButton";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <LanguageProvider>
       <App />
+      <WhatsAppButton />
+
       <Toaster />
     </LanguageProvider>
   </StrictMode>

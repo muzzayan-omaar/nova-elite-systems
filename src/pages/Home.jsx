@@ -7,6 +7,12 @@ import Navbar from "../components/Navbar";
 import CTA from "../components/CTA";
 import Footer from "../components/Footer";
 import AIAssistant from "../components/AIAssistant";
+import FeaturedTemplates from "../components/FeaturedTemplates";
+import ProcessTimeline from "../components/ProcessTimeline";
+import Industries from "../components/Industries";
+import Infrastructure from "../components/Infrastructure";
+import HomeTestimonials from "../components/HomeTestimonials";
+import { Check, ArrowRight } from "lucide-react";
 
 export default function Home() {
   return (
@@ -160,9 +166,16 @@ export default function Home() {
 
   </div>
 
+  
+
 </div>
-      <OfferBanner />
+     
       <Services />
+      <ProcessTimeline />
+      <Industries />
+      <Infrastructure />
+      <FeaturedTemplates />
+      <HomeTestimonials />
       <CaseStudies />
       <CTA />
       <Footer />
