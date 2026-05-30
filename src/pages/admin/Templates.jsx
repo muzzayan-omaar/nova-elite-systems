@@ -260,11 +260,6 @@ const handleSubmit =
 
         ...formData,
 
-        slug:
-          formData.title
-            .toLowerCase()
-            .replace(/\s+/g, "-")
-            .replace(/[^\w-]+/g, ""),
       };
 
       if (editingId) {
