@@ -606,7 +606,7 @@ const formatPrice = (price) => {
                     mb-[2px]
                   "
                 >
-                  Starting
+                  Starting From
                 </p>
 
                 <h3
