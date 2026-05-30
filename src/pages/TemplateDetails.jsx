@@ -169,7 +169,7 @@ return (
               </a>
 
               <a
-                href={`https://wa.me/0000000000?text=I want this template: ${template.title}`}
+                href={`https://wa.me/971582469913?text=I want this template: ${template.title}`}
                 target="_blank"
                 className="w-full flex justify-center px-5 py-3 rounded-xl border border-white/10 hover:border-blue-500/30 transition text-sm"
               >
