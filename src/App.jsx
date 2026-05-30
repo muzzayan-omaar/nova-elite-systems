@@ -134,7 +134,7 @@ function App() {
   
 <Route
   path="/templates/:slug"
-  element={<TemplateSlugPage />}
+  element={<TemplateDetails />}
 />
 
   <Route
