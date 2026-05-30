@@ -17,6 +17,7 @@ import Consultations from "./pages/admin/Consultations";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import RefundPolicy from "./pages/RefundPolicy";
+import TemplateSlugPage from "./pages/TemplateSlugPage";
 
 import AdminLogin
 from "./pages/admin/AdminLogin";
@@ -132,8 +133,8 @@ function App() {
   />
 
 <Route
-  path="/services/:slug"
-  element={<ServicePage />}
+  path="/templates/:slug"
+  element={<TemplateSlugPage />}
 />
 
   <Route
