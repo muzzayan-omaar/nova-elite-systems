@@ -1,7 +1,6 @@
 import Hero from "../components/Hero";
 import Clients from "../components/Clients";
 import Services from "../components/Services";
-import CaseStudies from "../components/CaseStudies";
 import OfferBanner from "../components/OfferBanner";
 import Navbar from "../components/Navbar";
 import CTA from "../components/CTA";
@@ -176,7 +175,6 @@ export default function Home() {
       <Infrastructure />
       <FeaturedTemplates />
       <HomeTestimonials />
-      <CaseStudies />
       <CTA />
       <Footer />
       <AIAssistant />

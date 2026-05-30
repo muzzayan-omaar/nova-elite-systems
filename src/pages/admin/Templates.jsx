@@ -195,16 +195,16 @@ export default function Templates() {
             }
           );
 
-        const uploaded =
-          await res.json();
+const uploaded =
+  await res.json();
 
-       setFormData((prev) => ({
-  ...prev,
-  [name]:
-    type === "checkbox"
-      ? checked
-      : value,
-}));
+if (uploaded.secure_url) {
+  setFormData((prev) => ({
+    ...prev,
+    thumbnail:
+      uploaded.secure_url,
+  }));
+}
 
       } catch (error) {
 
