@@ -10,6 +10,7 @@ import {
   Trash2,
   ExternalLink,
   LayoutTemplate,
+  Pencil,
 } from "lucide-react";
 
 export default function Templates() {
@@ -22,6 +23,9 @@ export default function Templates() {
 
   const [uploading, setUploading] =
     useState(false);
+
+  const [editingId, setEditingId] =
+  useState(null);
 
   const token =
     localStorage.getItem(
@@ -194,11 +198,13 @@ export default function Templates() {
         const uploaded =
           await res.json();
 
-        setFormData((prev) => ({
-          ...prev,
-          thumbnail:
-            uploaded.secure_url,
-        }));
+       setFormData((prev) => ({
+  ...prev,
+  [name]:
+    type === "checkbox"
+      ? checked
+      : value,
+}));
 
       } catch (error) {
 
@@ -213,28 +219,68 @@ export default function Templates() {
   /* =========================
      CREATE
   ========================== */
+/* =========================
+   RESET FORM
+========================== */
 
-  const handleSubmit =
-    async (e) => {
+const resetForm = () => {
 
-      e.preventDefault();
+  setEditingId(null);
 
-      try {
+  setFormData({
+    title: "",
+    category: "Corporate",
+    shortDescription: "",
+    thumbnail: "",
+    price: "",
+    setupPrice: "",
+    demoUrl: "",
+    technologies: [],
+    features: [],
+    featured: false,
+    popular: false,
+    status: "published",
+  });
+};
 
-        setLoading(true);
+/* =========================
+   CREATE / UPDATE
+========================== */
 
-        const payload = {
+const handleSubmit =
+  async (e) => {
 
-          ...formData,
+    e.preventDefault();
 
-          slug:
-            formData.title
-              .toLowerCase()
-              .replace(/\s+/g, "-")
-              .replace(/[^\w-]+/g, ""),
-        };
+    try {
 
-        console.log(payload);
+      setLoading(true);
+
+      const payload = {
+
+        ...formData,
+
+        slug:
+          formData.title
+            .toLowerCase()
+            .replace(/\s+/g, "-")
+            .replace(/[^\w-]+/g, ""),
+      };
+
+      if (editingId) {
+
+        await axios.put(
+          `/templates/${editingId}`,
+          payload,
+          {
+            headers: {
+              Authorization:
+                `Bearer ${token}`,
+            },
+          }
+        );
+
+      } else {
 
         await axios.post(
           "/templates",
@@ -246,60 +292,89 @@ export default function Templates() {
             },
           }
         );
-
-        setFormData({
-          title: "",
-          category: "Corporate",
-          shortDescription: "",
-          thumbnail: "",
-          price: "",
-          setupPrice: "",
-          demoUrl: "",
-          technologies: [],
-          features: [],
-          featured: false,
-          popular: false,
-          status: "published",
-        });
-
-        fetchTemplates();
-
-      } catch (error) {
-
-        console.log(error);
-
-      } finally {
-
-        setLoading(false);
       }
-    };
+
+      resetForm();
+
+      await fetchTemplates();
+
+    } catch (error) {
+
+      console.log(error);
+
+    } finally {
+
+      setLoading(false);
+    }
+  };
+
 
   /* =========================
      DELETE
   ========================== */
 
-  const deleteTemplate =
-    async (id) => {
+ const deleteTemplate =
+  async (id) => {
 
-      try {
+    const confirmed =
+      window.confirm(
+        "Delete this template?"
+      );
 
-        await axios.delete(
-          `/templates/${id}`,
-          {
-            headers: {
-              Authorization:
-                `Bearer ${token}`,
-            },
-          }
-        );
+    if (!confirmed) return;
 
-        fetchTemplates();
+    try {
 
-      } catch (error) {
+      await axios.delete(
+        `/templates/${id}`,
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
+      );
 
-        console.log(error);
-      }
-    };
+      await fetchTemplates();
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  };
+
+
+  const handleEdit =
+  (template) => {
+
+    setEditingId(
+      template._id
+    );
+
+    setFormData({
+      title: template.title,
+      category: template.category,
+      shortDescription:
+        template.shortDescription,
+      thumbnail:
+        template.thumbnail,
+      price: template.price,
+      setupPrice:
+        template.setupPrice,
+      demoUrl:
+        template.demoUrl,
+      technologies:
+        template.technologies || [],
+      features:
+        template.features || [],
+      featured:
+        template.featured,
+      popular:
+        template.popular,
+      status:
+        template.status,
+    });
+  };
 
   return (
     <section>
@@ -457,11 +532,13 @@ export default function Templates() {
           <input
             type="file"
             accept="image/*"
-            onChange={(e) =>
-              uploadThumbnail(
-                e.target.files[0]
-              )
-            }
+            onChange={(e) => {
+  const file = e.target.files?.[0];
+
+  if (file) {
+    uploadThumbnail(file);
+  }
+}}
             className="admin-input"
           />
 
@@ -672,15 +749,45 @@ export default function Templates() {
           "
         >
 
-          <Plus size={16} />
+         {
+  editingId
+    ? <Pencil size={16} />
+    : <Plus size={16} />
+}
 
-          {
-            loading
-              ? "Creating..."
-              : "Create Template"
-          }
+      {
+  loading
+    ? editingId
+      ? "Updating..."
+      : "Creating..."
+    : editingId
+      ? "Update Template"
+      : "Create Template"
+}
 
         </button>
+        {
+  editingId && (
+
+    <button
+      type="button"
+      onClick={resetForm}
+      className="
+        mt-3
+        ml-3
+        h-12
+        px-6
+        rounded-2xl
+        border
+        border-white/10
+        text-sm
+      "
+    >
+      Cancel Edit
+    </button>
+
+  )
+}
 
       </form>
 
@@ -775,40 +882,60 @@ export default function Templates() {
                     {template.price}
                   </h3>
 
-                  <div className="flex gap-2">
+             <div className="flex gap-2">
 
-                    <a
-                      href={template.demoUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="
-                        w-9 h-9
-                        rounded-xl
-                        border border-white/10
-                        flex items-center justify-center
-                      "
-                    >
-                      <ExternalLink size={14} />
-                    </a>
+  <a
+    href={template.demoUrl}
+    target="_blank"
+    rel="noreferrer"
+    className="
+      w-9 h-9
+      rounded-xl
+      border border-white/10
+      flex items-center
+      justify-center
+    "
+  >
+    <ExternalLink size={14} />
+  </a>
 
-                    <button
-                      onClick={() =>
-                        deleteTemplate(
-                          template._id
-                        )
-                      }
-                      className="
-                        w-9 h-9
-                        rounded-xl
-                        border border-red-500/20
-                        text-red-400
-                        flex items-center justify-center
-                      "
-                    >
-                      <Trash2 size={14} />
-                    </button>
+  <button
+      type="button"
+  onClick={() =>
+    handleEdit(template)
+  }
+    className="
+      w-9 h-9
+      rounded-xl
+      border border-blue-500/20
+      text-blue-400
+      flex items-center
+      justify-center
+    "
+  >
+    <Pencil size={14} />
+  </button>
 
-                  </div>
+  <button
+  type="button"
+  onClick={() =>
+    deleteTemplate(
+      template._id
+    )
+  }
+    className="
+      w-9 h-9
+      rounded-xl
+      border border-red-500/20
+      text-red-400
+      flex items-center
+      justify-center
+    "
+  >
+    <Trash2 size={14} />
+  </button>
+
+</div>
 
                 </div>
 
