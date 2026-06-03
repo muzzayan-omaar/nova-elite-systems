@@ -40,7 +40,7 @@ export default {
   heroTitle3: "Stronger Businesses.",
 
   heroDesc:
-    "High-performance digital platforms and secure infrastructure that help UAE businesses scale, automate, and operate efficiently.",
+    "High-performance digital platforms and secure infrastructure that help businesses scale, automate, and operate efficiently.",
 
   heroBtn1: "Get Started",
   heroBtn2: "View Our Work",
@@ -56,5 +56,5 @@ export default {
   heroTitle3: "Stronger Businesses.",
 
   heroDesc:
-    "High-performance digital platforms and secure infrastructure that help UAE businesses scale, automate, and operate efficiently.",
+    "High-performance digital platforms and secure infrastructure that help businesses scale, automate, and operate efficiently.",
 };

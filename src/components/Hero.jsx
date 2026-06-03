@@ -1,8 +1,16 @@
 import { useLanguage } from "../context/LanguageContext";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { MessageCircle } from "lucide-react";
+
+const MotionLink = motion(Link);
+
+
+
 
 export default function Hero() {
+    const [hovered, setHovered] = useState(false);
   const { t } = useLanguage();
 
   return (
@@ -73,33 +81,48 @@ export default function Hero() {
 
         <div className="max-w-2xl pl-2 md:pl-8 lg:pl-14">
 
-          {/* TOP BADGE */}
-          <div
-            className="
-              inline-flex
-              items-center gap-2
-              px-3 py-1.5
-              rounded-full
-              border border-blue-500/20
-              bg-blue-500/10
-              backdrop-blur-xl
-              mb-6
-            "
-          >
-            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+{/* TOP BADGE */}
+<div
+  className="
+    inline-flex items-center gap-2
+    px-3 py-1.5
+    rounded-full
+    border border-blue-500/20
+    bg-blue-500/10
+    backdrop-blur-xl
+    mb-6
+  "
+>
+  <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
 
-            <span
-              className="
-                text-[10px]
-                uppercase
-                tracking-[0.22em]
-                text-blue-400
-                font-medium
-              "
-            >
-              DIGITAL & INFRASTRUCTURE SOLUTIONS
-            </span>
-          </div>
+  <span
+    className="
+      text-[10px]
+      uppercase
+      tracking-[0.22em]
+      text-blue-400
+      font-medium
+    "
+  >
+    NOVA ELITE SYSTEMS
+  </span>
+
+  {/* Divider */}
+  <span className="w-[1px] h-3 bg-white/10 mx-1" />
+
+  {/* Reassurance */}
+  <span
+    className="
+      text-[10px]
+      uppercase
+      tracking-[0.18em]
+      text-gray-300
+      font-medium
+    "
+  >
+    Built 150+ Digital Systems & Platforms
+  </span>
+</div>
 
           {/* TITLE */}
           <h1
@@ -180,36 +203,62 @@ export default function Hero() {
   </span>
 </Link>
 
-<Link
-  to="/technical-support"
-  className="
-    relative
-    inline-flex items-center justify-center
-    px-7 py-3.5
-    rounded-2xl
-    text-sm font-medium text-white
+ <MotionLink
+      to="/technical-support"
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      animate={{
+        borderRadius: hovered ? "9999px" : "16px",
+        width: hovered ? 52 : 190,
+      }}
+      transition={{ duration: 0.25, ease: "easeInOut" }}
+      className="
+        relative overflow-hidden
+        flex items-center justify-center
+        h-[44px]
 
-    border border-white/10
-    bg-white/[0.03]
-    backdrop-blur-xl
+        bg-black/70 backdrop-blur-xl
+        border border-blue-500/30
+        text-white
 
-    transition-all duration-300
-    hover:bg-white/[0.06]
-    hover:border-white/20
-    hover:scale-[1.02]
+        shadow-[0_0_25px_-5px] shadow-blue-500
 
-    active:scale-[0.98]
+        hover:border-blue-400
+        hover:shadow-[0_0_45px_-5px] hover:shadow-indigo-500
+      "
+    >
+      {/* shimmer */}
+      <span className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
 
-    overflow-hidden
-  "
->
-  {/* subtle light sweep */}
-  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-120%] hover:translate-x-[120%] transition-transform duration-700" />
-
-  <span className="relative">
-    Technical Support
-  </span>
-</Link>
+      {/* content */}
+      <span className="relative flex items-center justify-center z-10">
+        <AnimatePresence mode="wait">
+          {!hovered ? (
+            <motion.span
+              key="text"
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.15 }}
+              className="flex items-center gap-2 whitespace-nowrap text-sm font-medium"
+            >
+              Technical Support
+              <span className="text-blue-400">✦</span>
+            </motion.span>
+          ) : (
+            <motion.span
+              key="icon"
+              initial={{ opacity: 0, scale: 0.7 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.7 }}
+              transition={{ duration: 0.15 }}
+            >
+              <MessageCircle size={20} />
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </span>
+    </MotionLink>
 
           </div>
 

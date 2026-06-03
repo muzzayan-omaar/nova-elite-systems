@@ -138,67 +138,52 @@ text-base
             "
           >
 
-            {/* PRIMARY BUTTON */}
-<Link
-  to="/book-consultation"
-  className="
-    group
-    relative overflow-hidden
-    min-w-[210px]
-    px-8 py-4
-    rounded-xl
-    bg-blue-600
-    hover:bg-blue-500
-    transition-all duration-300
-    font-semibold
-    text-base
-    shadow-[0_0_35px_rgba(59,130,246,0.35)]
-    inline-flex items-center justify-center
-  "
->
-  {/* BUTTON GLOW */}
-  <div
-    className="
-      absolute inset-0
-      bg-gradient-to-r
-      from-white/10
-      to-transparent
-      opacity-40
-    "
-  />
 
-  <span className="relative z-10 flex items-center justify-center gap-3">
-    Get a Quote
-    <ArrowRight
-      size={20}
-      className="group-hover:translate-x-1 transition"
-    />
-  </span>
-</Link>
-
-            {/* SECONDARY BUTTON */}
-    <a
+<a
   href="https://wa.me/971582469913"
   target="_blank"
   rel="noopener noreferrer"
   className="
-    group
+    group relative
+    inline-flex items-center justify-center
+    gap-3
+
     min-w-[210px]
     px-8 py-4
-    rounded-xl
-    border border-white/10
-    bg-white/[0.02]
-    hover:border-green-500/40
-    hover:bg-white/[0.04]
+
+    rounded-2xl
+
+    bg-black/40 backdrop-blur-xl
+    border border-green-500/20
+
+    text-white font-semibold text-lg
+
+    shadow-[0_0_25px_rgba(34,197,94,0.15)]
+    hover:shadow-[0_0_45px_rgba(34,197,94,0.25)]
+
+    hover:border-green-400/40
+    hover:scale-[1.03]
+    active:scale-[0.98]
+
     transition-all duration-300
-    font-semibold
-    text-lg
-    backdrop-blur-xl
-    inline-flex items-center justify-center
+    overflow-hidden
   "
 >
-  <span className="flex items-center justify-center gap-3">
-    <FaWhatsapp className="text-green-500" size={18} />
+  {/* shimmer sweep */}
+  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-green-500/10 to-transparent translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-700" />
+
+  {/* ICON */}
+  <FaWhatsapp
+    className="
+      text-green-400
+      group-hover:scale-110
+      transition-transform duration-300
+    "
+    size={20}
+  />
+
+  {/* TEXT */}
+  <span className="relative z-10">
     WhatsApp Us
   </span>
 </a>

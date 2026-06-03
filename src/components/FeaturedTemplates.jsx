@@ -83,151 +83,91 @@ export default function FeaturedTemplates() {
 
         </div>
 
-        {/* GRID */}
-        <div className="grid lg:grid-cols-[1.3fr_0.7fr] gap-6">
+{/* AIRBNB STYLE GRID */}
+<div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          {/* MAIN FEATURE */}
-          {templates[0] && (
-            <div className="group relative overflow-hidden rounded-[42px] h-[600px]">
+  {templates.map((item, index) => (
+    <Link
+      key={item._id}
+      to={`/templates/${item.slug}`}
+      className={`
+        group relative
+        rounded-2xl overflow-hidden
+        border border-white/10
+        bg-[#0A0F1C]
+        hover:border-white/20
+        transition
+        ${index === 0 ? "lg:col-span-2 lg:row-span-2" : ""}
+      `}
+    >
 
-              <img
-                src={templates[0].thumbnail}
-                className="
-                  absolute inset-0 w-full h-full object-cover
-                  group-hover:scale-105 transition duration-700
-                "
-              />
+      {/* IMAGE */}
+      <div className={`
+        relative overflow-hidden
+        ${index === 0 ? "h-[320px] lg:h-[420px]" : "h-[220px]"}
+      `}>
+        <img
+          src={item.thumbnail}
+          className="
+            w-full h-full object-cover
+            group-hover:scale-105 transition duration-700
+          "
+        />
 
-              {/* softer gradient (less harsh than before) */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#050816] via-[#050816]/40 to-transparent" />
+        {/* soft overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-              {/* subtle light bloom */}
-              <div className="absolute -bottom-32 -right-32 w-[380px] h-[380px] bg-blue-500/20 blur-[120px]" />
+        {/* BADGES (subtle Airbnb style) */}
+        <div className="absolute top-3 left-3 flex gap-2">
+          <span className="px-3 py-1 rounded-full bg-black/40 backdrop-blur-xl text-[10px] text-gray-200 uppercase tracking-[0.2em]">
+            {item.category}
+          </span>
 
-              <div className="absolute inset-0 p-10 flex flex-col justify-between">
-
-                {/* TOP TAGS */}
-                <div className="flex items-start justify-between">
-
-                  <div className="px-4 py-2 rounded-full bg-black/30 backdrop-blur-xl text-[10px] tracking-[0.25em] uppercase text-gray-200">
-                    {templates[0].category}
-                  </div>
-
-                  {templates[0].featured && (
-                    <div className="px-4 py-2 rounded-full bg-blue-600 text-[11px] flex items-center gap-2">
-                      <Star size={11} />
-                      Featured
-                    </div>
-                  )}
-
-                </div>
-
-                {/* CONTENT */}
-                <div className="max-w-xl">
-
-                  <p className="text-[11px] uppercase tracking-[0.25em] text-gray-400 mb-4">
-                    Deployment Ready
-                  </p>
-
-                  <h3 className="text-[48px] md:text-[64px] leading-[0.9] font-semibold tracking-[-0.06em] text-white">
-                    {templates[0].title}
-                  </h3>
-
-                  <p className="mt-6 text-sm text-gray-300 max-w-md leading-relaxed">
-                    {templates[0].shortDescription}
-                  </p>
-
-                  <div className="mt-10 flex items-center justify-between">
-
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500">
-                        Starting
-                      </p>
-                      <h4 className="text-2xl font-semibold text-white">
-                        {templates[0].price}
-                      </h4>
-                    </div>
-
-                    <Link
-                      to={`/templates/${templates[0].slug}`}
-                      className="
-                        h-12 px-6 rounded-full
-                        bg-white text-black
-                        hover:bg-blue-500 hover:text-white
-                        transition flex items-center gap-2
-                      "
-                    >
-                      View System
-                      <ArrowRight size={14} />
-                    </Link>
-
-                  </div>
-
-                </div>
-
-              </div>
-            </div>
+          {item.featured && (
+            <span className="px-3 py-1 rounded-full bg-blue-500/80 text-[10px] text-white uppercase tracking-[0.2em]">
+              Featured
+            </span>
           )}
+        </div>
 
-          {/* SIDE STACK (cleaner, less boxed) */}
-          <div className="space-y-6">
+        {/* PRICE (airbnb-style floating corner) */}
+        <div className="absolute bottom-3 right-3">
+          <span className="px-3 py-1 rounded-lg bg-black/50 backdrop-blur-xl text-white text-sm font-medium">
+            From ${item.price}
+          </span>
+        </div>
+      </div>
 
-            {templates.slice(1).map((item) => (
-              <div
-                key={item._id}
-                className="
-                  group relative overflow-hidden
-                  rounded-[30px] h-[290px]
-                "
-              >
+      {/* CONTENT (BELOW IMAGE like Airbnb) */}
+      <div className="p-4">
 
-                <img
-                  src={item.thumbnail}
-                  className="
-                    absolute inset-0 w-full h-full object-cover
-                    group-hover:scale-105 transition duration-700
-                  "
-                />
+        <h3 className="text-white text-lg font-semibold group-hover:text-blue-400 transition">
+          {item.title}
+        </h3>
 
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050816] via-[#050816]/30 to-transparent" />
+        <p className="text-xs text-gray-400 mt-1 line-clamp-2 leading-relaxed">
+          {item.shortDescription}
+        </p>
 
-                <div className="absolute inset-0 p-6 flex flex-col justify-between">
+        {/* META ROW */}
+        <div className="mt-3 flex items-center justify-between">
 
-                  <div className="px-3 py-1 rounded-full bg-black/30 backdrop-blur-xl text-[10px] uppercase tracking-[0.2em] w-fit text-gray-200">
-                    {item.category}
-                  </div>
+          <span className="text-[11px] text-gray-500 uppercase tracking-[0.2em]">
+            Deployment Ready
+          </span>
 
-                  <div>
-
-                    <h3 className="text-[22px] font-semibold text-white tracking-[-0.03em]">
-                      {item.title}
-                    </h3>
-
-                    <div className="mt-5 flex items-center justify-between">
-
-                      <span className="text-gray-300 text-sm">
-                        {item.price}
-                      </span>
-
-                      <Link
-                        to={`/templates/${item.slug}`}
-                        className="text-blue-400 text-sm flex items-center gap-2"
-                      >
-                        View <ArrowRight size={14} />
-                      </Link>
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-            ))}
-
-          </div>
+          <span className="text-blue-400 text-sm flex items-center gap-1">
+            View →
+          </span>
 
         </div>
+
+      </div>
+
+    </Link>
+  ))}
+
+</div>
 
       </div>
     </section>

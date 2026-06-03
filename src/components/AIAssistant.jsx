@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
-  ArrowRight,
-  Phone,
-  Briefcase,
-  Globe,
 } from "lucide-react";
 
 /* =========================
    SERVICE KNOWLEDGE BASE
-   (FROM YOUR PRICING.JSX)
 ========================= */
 
 const serviceData = {
@@ -20,139 +16,45 @@ const serviceData = {
       {
         name: "Essential",
         price: "AED 2,500",
-        benefits: [
-          "Responsive modern website",
-          "SEO-ready structure",
-          "Mobile optimization",
-        ],
+        benefits: ["Responsive modern website", "SEO-ready structure", "Mobile optimization"],
       },
       {
         name: "Business Elite",
         price: "AED 6,500",
-        benefits: [
-          "Admin dashboard",
-          "Backend integration",
-          "Advanced animations",
-          "API systems",
-        ],
-      },
-      {
-        name: "Enterprise",
-        price: "Custom",
-        benefits: [
-          "Full SaaS architecture",
-          "Scalable infrastructure",
-          "Dedicated consultation",
-        ],
+        benefits: ["Admin dashboard", "Backend integration", "Advanced animations", "API systems"],
       },
     ],
   },
 
   "CCTV Systems": {
     intro:
-      "We design and install advanced CCTV surveillance systems with remote monitoring, AI detection, and full security infrastructure for homes and businesses.",
+      "We design advanced CCTV systems with remote monitoring and smart security infrastructure.",
     packages: [
       {
         name: "Office Security",
         price: "AED 3,500",
-        benefits: [
-          "HD cameras",
-          "Remote monitoring",
-          "Mobile access",
-        ],
-      },
-      {
-        name: "Enterprise Security",
-        price: "Custom",
-        benefits: [
-          "AI monitoring",
-          "24/7 surveillance",
-          "Multi-site support",
-        ],
-      },
-    ],
-  },
-
-  "Mobile Apps": {
-    intro:
-      "We develop scalable mobile applications for Android & iOS with authentication, dashboards, cloud sync, and modern UI systems.",
-    packages: [
-      {
-        name: "Starter App",
-        price: "AED 5,000",
-        benefits: ["Basic app", "Push notifications", "UI design"],
-      },
-      {
-        name: "Business App",
-        price: "AED 12,000",
-        benefits: [
-          "Backend system",
-          "Auth system",
-          "Admin dashboard",
-        ],
-      },
-    ],
-  },
-
-  "Networking": {
-    intro:
-      "We provide enterprise networking solutions including structured cabling, secure systems, and infrastructure design for companies.",
-    packages: [
-      {
-        name: "Basic Setup",
-        price: "AED 2,000+",
-        benefits: ["LAN setup", "WiFi configuration"],
-      },
-      {
-        name: "Enterprise Network",
-        price: "Custom",
-        benefits: [
-          "Full infrastructure",
-          "Secure routing",
-          "Scalable systems",
-        ],
+        benefits: ["HD cameras", "Remote monitoring", "Mobile access"],
       },
     ],
   },
 };
 
-/* =========================
-   AI ASSISTANT
-========================= */
-
 export default function AIAssistant() {
   const [open, setOpen] = useState(false);
-
   const [stage, setStage] = useState("home");
   const [activeService, setActiveService] = useState(null);
 
   const [messages, setMessages] = useState([
-    {
-      type: "bot",
-      text: "Hi, I’m NOVA. Select a service to explore.",
-    },
+    { type: "bot", text: "Hi, I’m NOVA. Select a service to explore." },
   ]);
-
-  /* =========================
-     MAIN SERVICE BUTTONS
-  ========================= */
 
   const mainServices = Object.keys(serviceData);
 
   const resetToHome = () => {
     setStage("home");
     setActiveService(null);
-    setMessages([
-      {
-        type: "bot",
-        text: "Choose a service to begin 👇",
-      },
-    ]);
+    setMessages([{ type: "bot", text: "Choose a service to begin 👇" }]);
   };
-
-  /* =========================
-     HANDLE SERVICE CLICK
-  ========================= */
 
   const handleServiceClick = (service) => {
     const data = serviceData[service];
@@ -163,16 +65,9 @@ export default function AIAssistant() {
     setMessages((prev) => [
       ...prev,
       { type: "user", text: service },
-      {
-        type: "bot",
-        text: data.intro,
-      },
+      { type: "bot", text: data.intro },
     ]);
   };
-
-  /* =========================
-     HANDLE PACKAGE VIEW
-  ========================= */
 
   const showPackages = () => {
     const data = serviceData[activeService];
@@ -181,10 +76,7 @@ export default function AIAssistant() {
 
     setMessages((prev) => [
       ...prev,
-      {
-        type: "bot",
-        text: `${activeService} Packages:`,
-      },
+      { type: "bot", text: `${activeService} Packages:` },
       ...data.packages.map((p) => ({
         type: "bot",
         text: `• ${p.name} - ${p.price}\n${p.benefits.join(", ")}`,
@@ -192,116 +84,132 @@ export default function AIAssistant() {
     ]);
   };
 
-  /* =========================
-     RENDER QUICK BUTTONS
-  ========================= */
-
   const renderButtons = () => {
-    if (stage === "home") {
-      return mainServices;
-    }
-
-    if (stage === "service") {
-      return ["View Packages", "Back"];
-    }
-
-    if (stage === "packages") {
-      return ["Back to Services"];
-    }
-
+    if (stage === "home") return mainServices;
+    if (stage === "service") return ["View Packages", "Back"];
+    if (stage === "packages") return ["Back to Services"];
     return [];
   };
 
   const handleButtonClick = (btn) => {
     if (btn === "Back") return resetToHome();
-
     if (btn === "View Packages") return showPackages();
-
     if (btn === "Back to Services") return resetToHome();
-
     handleServiceClick(btn);
   };
-
-  /* =========================
-     UI
-  ========================= */
 
   return (
     <>
       {/* FLOAT BUTTON */}
-{/* FLOAT BUTTON */}
-<div className="fixed left-6 bottom-6 z-[999]">
-  <button
-    onClick={() => setOpen(!open)}
-    className="
-      w-14 h-14
-      rounded-2xl
-      overflow-hidden
-      bg-transparent
-      border-0
-      shadow-[0_0_35px_rgba(59,130,246,0.25)]
-      flex items-center justify-center
-      hover:scale-105 transition-transform duration-300
-    "
-  >
-    <div className="absolute inset-0 rounded-2xl animate-ping bg-blue-500/20" />
-    <img
-      src="https://res.cloudinary.com/diszilwhc/image/upload/v1778360837/20260510_010555_jissyl.png"
-      alt="NOVA AI"
-      className="
-        w-10 h-10
-        object-contain
-        drop-shadow-[0_0_18px_rgba(59,130,246,0.45)]
-      "
-    />
-  </button>
-</div>
+      <div className="fixed left-6 bottom-6 z-[999]">
+        <motion.button
+          onClick={() => setOpen((p) => !p)}
+          className="
+            relative w-14 h-14
+            rounded-2xl
+            bg-black/40 backdrop-blur-xl
+            border border-blue-500/20
+            shadow-[0_0_35px_rgba(59,130,246,0.25)]
+            flex items-center justify-center
+            overflow-hidden
+          "
+          whileTap={{ scale: 0.92 }}
+        >
+          {/* glow pulse */}
+          <span className="absolute inset-0 rounded-2xl bg-blue-500/10 animate-ping" />
+
+          {/* ICON MORPH */}
+          <AnimatePresence mode="wait" initial={false}>
+            {!open ? (
+              <motion.img
+                key="bot"
+                src="https://res.cloudinary.com/diszilwhc/image/upload/v1778360837/20260510_010555_jissyl.png"
+                className="w-10 h-10 object-contain"
+                initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                exit={{ opacity: 0, scale: 0.5, rotate: 20 }}
+                transition={{ duration: 0.2 }}
+              />
+            ) : (
+              <motion.div
+                key="close"
+                initial={{ opacity: 0, scale: 0.4, rotate: -90 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                exit={{ opacity: 0, scale: 0.4, rotate: 90 }}
+                transition={{ duration: 0.2 }}
+                className="text-white"
+              >
+                <X size={22} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.button>
+      </div>
 
       {/* CHAT PANEL */}
-      {open && (
-        <div className="fixed left-6 bottom-28 z-[999] w-[340px]">
-          <div className="rounded-2xl bg-[#081120] border border-white/10 p-4 text-white">
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.25 }}
+            className="fixed left-6 bottom-28 z-[999] w-[360px]"
+          >
+            <div className="
+              rounded-2xl
+              bg-[#0B1424]/80
+              backdrop-blur-2xl
+              border border-white/10
+              shadow-[0_30px_80px_rgba(0,0,0,0.5)]
+              p-4
+              text-white
+            ">
 
-            {/* MESSAGES */}
-            <div className="space-y-3 max-h-[300px] overflow-y-auto">
-              {messages.map((m, i) => (
-                <div
-                  key={i}
-                  className={`text-sm ${
-                    m.type === "user"
-                      ? "text-right text-blue-400"
-                      : "text-gray-300"
-                  }`}
-                >
-                  {m.text}
-                </div>
-              ))}
+              {/* MESSAGES */}
+              <div className="space-y-3 max-h-[320px] overflow-y-auto pr-1">
+                {messages.map((m, i) => (
+                  <div
+                    key={i}
+                    className={`
+                      text-sm leading-relaxed px-3 py-2 rounded-xl
+                      ${m.type === "user"
+                        ? "ml-auto bg-blue-500/20 text-blue-200 w-fit"
+                        : "bg-white/5 text-gray-300 w-fit"
+                      }
+                    `}
+                  >
+                    {m.text}
+                  </div>
+                ))}
+              </div>
+
+              {/* BUTTONS */}
+              <div className="grid grid-cols-2 gap-2 mt-4">
+                {renderButtons().map((btn, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleButtonClick(btn)}
+                    className="
+                      text-xs
+                      px-3 py-2
+                      rounded-xl
+                      bg-white/5
+                      border border-white/10
+                      hover:bg-blue-500/20
+                      hover:border-blue-400/30
+                      transition
+                    "
+                  >
+                    {btn}
+                  </button>
+                ))}
+              </div>
+
             </div>
-
-            {/* BUTTONS */}
-            <div className="grid grid-cols-2 gap-2 mt-4">
-              {renderButtons().map((btn, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleButtonClick(btn)}
-                  className="
-                    text-xs
-                    px-3 py-2
-                    rounded-lg
-                    bg-white/5
-                    hover:bg-blue-500/20
-                    border border-white/10
-                  "
-                >
-                  {btn}
-                </button>
-              ))}
-            </div>
-
-
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

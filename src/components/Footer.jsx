@@ -205,7 +205,16 @@ export default function Footer() {
                     className="text-blue-500 mt-0.5"
                   />
 
-                  <p>Abu Dhabi, United Arab Emirates & Kampala, Uganda</p>
+                  <p>Kampala, Uganda</p>
+                </div>
+
+                                <div className="flex gap-3 items-start">
+                  <FiMapPin
+                    size={18}
+                    className="text-blue-500 mt-0.5"
+                  />
+
+                  <p>Abu Dhabi, United Arab Emirates</p>
                 </div>
 
                 <div className="flex gap-3 items-center">
