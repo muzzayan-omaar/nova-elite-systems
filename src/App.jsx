@@ -18,6 +18,11 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import RefundPolicy from "./pages/RefundPolicy";
 import TemplateDetails from "./pages/TemplateDetails";
+import WebDevelopment from "./pages/services/web-development";
+import AppDevelopment from "./pages/services/app-development";
+import CCTVSystems from "./pages/services/CCTVSystems";
+import Networking from "./pages/services/Networking";
+import SAASApplications from "./pages/services/saas-applications";
 
 import AdminLogin
 from "./pages/admin/AdminLogin";
@@ -32,9 +37,12 @@ import Leads from "./pages/admin/Leads";
 import Templates from "./pages/admin/Templates";
 import TemplatesPage from "./pages/TemplatesPage";
 
+
+
 function App() {
   return (
-    <BrowserRouter>
+    <div className="min-h-screen bg-[#060B14] text-white">  
+          <BrowserRouter>
 <Routes>
 
   {/* =========================
@@ -197,9 +205,37 @@ function App() {
     element={<StartProject />}
   />
 
+  <Route
+    path="/services/web-development"
+    element={<WebDevelopment />}
+  />
+
+  <Route
+    path="/services/app-development"
+    element={<AppDevelopment />}
+  />
+
+  <Route
+    path="/services/cctv-systems"
+    element={<CCTVSystems />}
+  />
+
+  <Route
+    path="/services/networking"
+    element={<Networking />}
+  />
+
+  <Route
+    path="/services/saas-applications"
+    element={<SAASApplications />}
+  />
+
+
 
 </Routes>
     </BrowserRouter>
+    </div>
+
   );
 }
 
