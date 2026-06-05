@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "../api/axios";
+import { ArrowRight } from "lucide-react";
 
 export default function CaseStudies() {
   const [caseStudies, setCaseStudies] = useState([]);
@@ -18,163 +20,112 @@ export default function CaseStudies() {
   };
 
   return (
-    <section className="py-16 md:py-24 px-5 md:px-6 text-white">
+    <section className="py-20 md:py-28 px-5 text-white bg-[#050816]">
       <div className="max-w-7xl mx-auto">
 
         {/* HEADER */}
-        <div className="text-center mb-10 md:mb-14">
-          <h2 className="text-3xl md:text-4xl font-bold">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl md:text-5xl font-bold">
             Case Studies
           </h2>
-
-          <p className="text-gray-400 mt-3 text-sm md:text-base">
-            Real solutions. Real results.
+          <p className="text-gray-400 mt-3">
+            Real solutions. Real measurable impact.
           </p>
         </div>
 
         {/* GRID */}
-        <div className="grid md:grid-cols-2 gap-5 md:gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
           {caseStudies.map((item) => (
             <div
               key={item._id}
               className="
-                group
-                bg-[#0B1220]
-                border border-white/5
-                rounded-xl md:rounded-2xl
+                group relative
+                rounded-3xl
                 overflow-hidden
-                flex flex-col md:flex-row
-                md:min-h-[260px]
-                hover:border-blue-500/30
-                hover:shadow-[0_0_30px_rgba(59,130,246,0.08)]
+                border border-white/10
+                bg-white/[0.02]
+                backdrop-blur-xl
+                hover:-translate-y-1
+                hover:border-cyan-500/30
                 transition-all duration-300
               "
             >
 
-              {/* IMAGE */}
-              <div
-                className="
-                  w-full md:w-[45%]
-                  h-[220px] md:h-auto
-                  overflow-hidden
-                "
-              >
+              {/* IMAGE SECTION (NO CROPPING) */}
+              <div className="relative h-52 flex items-center justify-center bg-black/40 overflow-hidden">
+
                 <img
                   src={item.image}
                   alt={item.title}
                   className="
-                    w-full h-full object-cover
+                    max-h-full
+                    max-w-full
+                    object-contain
+                    transition-transform duration-500
                     group-hover:scale-105
-                    transition duration-500
                   "
                 />
+
+                {/* fade into content */}
+                <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-[#050816] to-transparent" />
               </div>
 
               {/* CONTENT */}
-              <div
-                className="
-                  flex-1
-                  p-5 md:p-6
-                  flex flex-col justify-between
-                "
-              >
+              <div className="p-6 flex flex-col gap-4">
 
-                <div>
+                {/* CATEGORY */}
+                <p className="text-cyan-400 text-xs tracking-[0.2em] uppercase">
+                  {item.category}
+                </p>
 
-                  {/* CATEGORY */}
-                  <p
-                    className="
-                      text-blue-500
-                      text-[10px] md:text-xs
-                      tracking-[0.18em]
-                      font-semibold
-                      uppercase
-                      mb-3 md:mb-4
-                    "
-                  >
-                    {item.category}
-                  </p>
+                {/* TITLE */}
+                <h3 className="text-xl font-semibold leading-tight">
+                  {item.title}
+                </h3>
 
-                  {/* TITLE */}
-                  <h3
-                    className="
-                      text-xl md:text-2xl
-                      font-semibold
-                      leading-tight
-                      mb-3 md:mb-4
-                    "
-                  >
-                    {item.title}
-                  </h3>
+                {/* DESCRIPTION */}
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  {item.description}
+                </p>
 
-                  {/* DESC */}
-                  <p
-                    className="
-                      text-gray-400
-                      text-[13px] md:text-sm
-                      leading-relaxed
-                    "
-                  >
-                    {item.description}
-                  </p>
+                {/* RESULT */}
+                <div className="flex items-center justify-between mt-2">
 
-                </div>
-
-                {/* RESULT BOX */}
-                <div
-                  className="
-                    mt-6 md:mt-8
-                    inline-flex
-                    items-center
-                    gap-3 md:gap-4
-                    px-4 md:px-5
-                    py-3 md:py-4
-                    rounded-xl
-                    bg-blue-500/10
-                    border border-blue-500/20
-                    backdrop-blur-xl
-                    w-fit
-                  "
-                >
-
-                  {/* BIG RESULT */}
-                  <span
-                    className="
-                      text-blue-500
-                      text-2xl md:text-3xl
-                      font-bold
-                      leading-none
-                    "
-                  >
-                    {item.result}
-                  </span>
-
-                  {/* LABEL */}
                   <div className="flex flex-col">
-
-                    <span
-                      className="
-                        text-white
-                        text-xs md:text-sm
-                        font-medium
-                      "
-                    >
+                    <span className="text-2xl font-bold text-cyan-400">
+                      {item.result}
+                    </span>
+                    <span className="text-xs text-gray-400">
                       Performance Growth
                     </span>
-
-                    <span
-                      className="
-                        text-gray-400
-                        text-[11px] md:text-xs
-                      "
-                    >
-                      measurable client results
-                    </span>
-
                   </div>
 
                 </div>
+
+                {/* CTA */}
+                <Link
+                  to={`/case-studies/${item._id}`}
+                  className="
+                    mt-4
+                    group/btn
+                    inline-flex items-center justify-center gap-2
+                    px-5 py-3
+                    rounded-2xl
+                    bg-cyan-500
+                    text-black
+                    text-sm font-semibold
+                    hover:-translate-y-1
+                    hover:shadow-[0_0_35px_rgba(34,211,238,0.3)]
+                    transition-all duration-300
+                  "
+                >
+                  View Case Study
+                  <ArrowRight
+                    size={16}
+                    className="group-hover/btn:translate-x-1 transition"
+                  />
+                </Link>
 
               </div>
             </div>
