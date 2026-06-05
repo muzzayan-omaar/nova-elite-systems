@@ -192,9 +192,9 @@ export default function Home() {
   
 
 </div>
-     
+     <CaseStudies />
       <Services />
-      <CaseStudies />
+      
       <ProcessTimeline />
       <Industries />
       <Infrastructure />
