@@ -985,14 +985,47 @@ const getSavings = (price) => {
               </div>
             </div>
 
-            <div className="text-center mt-10">
-              <Link 
-                to="/start-project" 
-                className="inline-flex items-center gap-3 px-8 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl text-sm font-medium transition"
-              >
-                Start Your Project with Confidence <ArrowRight size={18} />
-              </Link>
-            </div>
+<div className="text-center mt-10">
+  <Link
+    to="/start-project"
+    className="
+      group relative overflow-hidden
+      inline-flex items-center justify-center gap-3
+      px-10 py-5
+      rounded-3xl
+      bg-cyan-500
+      text-black
+      font-semibold text-sm
+      transition-all duration-300
+      hover:-translate-y-1
+      hover:shadow-[0_0_40px_rgba(34,211,238,0.35)]
+    "
+  >
+    {/* Shine effect */}
+    <span
+      className="
+        absolute inset-0
+        -translate-x-full
+        bg-gradient-to-r from-transparent via-white/30 to-transparent
+        group-hover:translate-x-full
+        transition-transform duration-1000
+      "
+    />
+
+    <span className="relative">
+      Start Your Project with Confidence
+    </span>
+
+    <ArrowRight
+      size={18}
+      className="
+        relative
+        transition-transform duration-300
+        group-hover:translate-x-1
+      "
+    />
+  </Link>
+</div>
           </div>
 
           <FAQ />

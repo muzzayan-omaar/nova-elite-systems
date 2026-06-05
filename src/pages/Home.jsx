@@ -11,6 +11,7 @@ import ProcessTimeline from "../components/ProcessTimeline";
 import Industries from "../components/Industries";
 import Infrastructure from "../components/Infrastructure";
 import HomeTestimonials from "../components/HomeTestimonials";
+import CaseStudies from "../components/CaseStudies";
 import { Check, ArrowRight } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 
@@ -193,6 +194,7 @@ export default function Home() {
 </div>
      
       <Services />
+      <CaseStudies />
       <ProcessTimeline />
       <Industries />
       <Infrastructure />
