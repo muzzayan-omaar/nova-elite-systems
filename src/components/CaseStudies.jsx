@@ -4,6 +4,7 @@ import { ArrowRight, X, TrendingUp } from "lucide-react";
 
 export default function CaseStudies() {
   const [caseStudies, setCaseStudies] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCase, setSelectedCase] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -13,10 +14,13 @@ export default function CaseStudies() {
 
   const fetchCaseStudies = async () => {
     try {
+      setLoading(true);
       const res = await axios.get("/case-studies");
       setCaseStudies(res.data);
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -32,24 +36,30 @@ export default function CaseStudies() {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    // Small delay to let animation finish before clearing
     setTimeout(() => setSelectedCase(null), 300);
   };
+
+  // Client Logos - Add your real client logos here
+  const clientLogos = [
+    { name: "Client A", src: "/logos/client1.png" },
+    { name: "Client B", src: "/logos/client2.png" },
+    { name: "Client C", src: "/logos/client3.png" },
+    { name: "Client D", src: "/logos/client4.png" },
+    { name: "Client E", src: "/logos/client5.png" },
+    { name: "Client F", src: "/logos/client6.png" },
+  ];
 
   return (
     <section className="relative py-20 md:py-28 px-5 text-white overflow-hidden">
       {/* Enhanced Background */}
       <div className="absolute inset-0 bg-[#050816]">
-        {/* Subtle grid overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a2333_1px,transparent_1px),linear-gradient(to_bottom,#1a2333_1px,transparent_1px)] bg-[size:60px_60px] opacity-40" />
-        
-        {/* Gradient orbs */}
         <div className="absolute top-20 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px]" />
         <div className="absolute bottom-32 right-1/3 w-80 h-80 bg-purple-500/10 rounded-full blur-[100px]" />
       </div>
 
       <div className="relative max-w-7xl mx-auto">
-        {/* HEADER - More premium */}
+        {/* HEADER */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6">
             <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
@@ -64,110 +74,139 @@ export default function CaseStudies() {
           </p>
         </div>
 
-        {/* GRID */}
+        {/* CASE STUDIES GRID */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {caseStudies.map((item) => (
-            <div
-              key={item._id}
-              onClick={() => openModal(item)}
-              className="
-                group relative
-                h-full min-h-[520px]
-                rounded-3xl
-                overflow-hidden
-                border border-white/10
-                bg-white/[0.015]
-                backdrop-blur-2xl
-                hover:border-cyan-400/40
-                hover:shadow-2xl hover:shadow-cyan-500/10
-                transition-all duration-500 cursor-pointer
-                flex flex-col
-              "
-            >
-              {/* IMAGE SECTION - Better visual hierarchy */}
-              <div className="relative h-60 overflow-hidden bg-zinc-950">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="
-                    w-full h-full object-cover
-                    transition-transform duration-700
-                    group-hover:scale-110
-                  "
-                />
-                
-                {/* Enhanced overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black/90" />
-                
-                {/* Category badge */}
-                <div className="absolute top-6 left-6">
-                  <div className="px-4 py-1.5 text-xs font-medium tracking-widest uppercase bg-black/70 backdrop-blur-md border border-white/20 rounded-2xl text-cyan-400">
-                    {item.category}
+          {loading ? (
+            // Skeleton Loaders
+            Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-[520px] rounded-3xl overflow-hidden bg-white/[0.015] border border-white/10 backdrop-blur-2xl animate-pulse"
+              >
+                <div className="h-60 bg-zinc-900" />
+                <div className="p-8 space-y-6">
+                  <div className="h-4 w-24 bg-white/10 rounded" />
+                  <div className="h-8 bg-white/10 rounded w-4/5" />
+                  <div className="space-y-3">
+                    <div className="h-4 bg-white/10 rounded" />
+                    <div className="h-4 bg-white/10 rounded" />
+                    <div className="h-4 bg-white/10 rounded w-3/4" />
                   </div>
-                </div>
-
-                {/* Hover shine effect */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-20 bg-gradient-to-r from-transparent via-white to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-              </div>
-
-              {/* CONTENT */}
-              <div className="p-8 flex-1 flex flex-col">
-                <h3 className="text-2xl font-semibold leading-tight tracking-tight mb-4 line-clamp-2 group-hover:text-cyan-400 transition-colors">
-                  {item.title}
-                </h3>
-
-                <p className="text-gray-400 text-[15px] leading-relaxed flex-1">
-                  {truncate(item.description)}
-                </p>
-
-                {/* Result Section */}
-                <div className="mt-8 pt-6 border-t border-white/10">
-                  <div className="flex items-center gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center">
-                      <TrendingUp className="w-6 h-6 text-cyan-400" />
-                    </div>
-                    <div>
-                      <div className="text-4xl font-bold text-cyan-400 tracking-tighter">
-                        {item.result}
+                  <div className="pt-6 border-t border-white/10">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-white/10 rounded-2xl" />
+                      <div className="space-y-2">
+                        <div className="h-9 w-20 bg-white/10 rounded" />
+                        <div className="h-3 w-32 bg-white/10 rounded" />
                       </div>
-                      <div className="text-xs text-gray-500 uppercase tracking-widest">Performance Growth</div>
+                    </div>
+                  </div>
+                  <div className="h-14 bg-white/10 rounded-2xl mt-8" />
+                </div>
+              </div>
+            ))
+          ) : (
+            caseStudies.map((item) => (
+              <div
+                key={item._id}
+                onClick={() => openModal(item)}
+                className="
+                  group relative
+                  h-full min-h-[520px]
+                  rounded-3xl
+                  overflow-hidden
+                  border border-white/10
+                  bg-white/[0.015]
+                  backdrop-blur-2xl
+                  hover:border-cyan-400/40
+                  hover:shadow-2xl hover:shadow-cyan-500/10
+                  transition-all duration-500 cursor-pointer
+                  flex flex-col
+                "
+              >
+                {/* Image */}
+                <div className="relative h-60 overflow-hidden bg-zinc-950">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black/90" />
+                  
+                  <div className="absolute top-6 left-6">
+                    <div className="px-4 py-1.5 text-xs font-medium tracking-widest uppercase bg-black/70 backdrop-blur-md border border-white/20 rounded-2xl text-cyan-400">
+                      {item.category}
                     </div>
                   </div>
                 </div>
 
-                {/* CTA Button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openModal(item);
-                  }}
-                  className="
-                    mt-8 w-full
-                    group/btn
-                    inline-flex items-center justify-center gap-2
-                    px-8 py-4
-                    rounded-2xl
-                    bg-gradient-to-r from-cyan-400 to-cyan-500
-                    text-black font-semibold text-sm
-                    hover:brightness-110 active:scale-[0.985]
-                    transition-all duration-300
-                    shadow-lg shadow-cyan-500/30
-                  "
-                >
-                  Explore Full Case
-                  <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition" />
-                </button>
+                {/* Content */}
+                <div className="p-8 flex-1 flex flex-col">
+                  <h3 className="text-2xl font-semibold leading-tight tracking-tight mb-4 line-clamp-2 group-hover:text-cyan-400 transition-colors">
+                    {item.title}
+                  </h3>
+
+                  <p className="text-gray-400 text-[15px] leading-relaxed flex-1">
+                    {truncate(item.description)}
+                  </p>
+
+                  <div className="mt-8 pt-6 border-t border-white/10">
+                    <div className="flex items-center gap-4">
+                      <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center">
+                        <TrendingUp className="w-6 h-6 text-cyan-400" />
+                      </div>
+                      <div>
+                        <div className="text-4xl font-bold text-cyan-400 tracking-tighter">
+                          {item.result}
+                        </div>
+                        <div className="text-xs text-gray-500 uppercase tracking-widest">Performance Growth</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={(e) => { e.stopPropagation(); openModal(item); }}
+                    className="mt-8 w-full group/btn inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-cyan-500 text-black font-semibold text-sm hover:brightness-110 active:scale-[0.985] transition-all duration-300 shadow-lg shadow-cyan-500/30"
+                  >
+                    Explore Full Case
+                    <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition" />
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* CLIENT LOGO CAROUSEL */}
+        {!loading && (
+          <div className="mt-24">
+            <p className="text-center text-sm uppercase tracking-[3px] text-gray-500 mb-8">Trusted by industry leaders</p>
+            
+            <div className="overflow-hidden relative">
+              <div className="flex animate-marquee whitespace-nowrap gap-16 items-center">
+                {[...clientLogos, ...clientLogos].map((logo, idx) => (
+                  <img
+                    key={idx}
+                    src={logo.src}
+                    alt={logo.name}
+                    className="h-9 md:h-11 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                  />
+                ))}
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        )}
+
       </div>
 
-      {/* MODAL */}
+      {/* MODAL WITH ANIMATION */}
       {isModalOpen && selectedCase && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
+        <div 
+          className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl transition-opacity duration-300 ${isModalOpen ? 'opacity-100' : 'opacity-0'}`}
+          onClick={closeModal}
+        >
           <div 
-            className="bg-[#0a0f1c] border border-white/10 rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-hidden flex flex-col shadow-2xl"
+            className={`bg-[#0a0f1c] border border-white/10 rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-hidden flex flex-col shadow-2xl transition-all duration-500 ${isModalOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
@@ -217,7 +256,6 @@ export default function CaseStudies() {
               </div>
             </div>
 
-            {/* Modal Footer */}
             <div className="border-t border-white/10 p-6 flex justify-end">
               <button
                 onClick={closeModal}
