@@ -148,25 +148,80 @@ export default function CaseStudies() {
             ))
           )}
         </div>
-
-        {/* CLIENT LOGO CAROUSEL */}
+        
+        {/*  
         {!loading && (
           <div className="mt-24">
             <p className="text-center text-sm uppercase tracking-[3px] text-gray-500 mb-8">Trusted by industry leaders</p>
+            
             <div className="overflow-hidden relative">
               <div className="flex animate-marquee whitespace-nowrap gap-16 items-center">
-                {[...clientLogos, ...clientLogos].map((logo, idx) => (
-                  <img
-                    key={idx}
-                    src={logo.src}
-                    alt={logo.name}
-                    className="h-9 md:h-11 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-                  />
-                ))}
+                <img
+                  src="https://res.cloudinary.com/your-cloud-name/image/upload/v1/logos/client1.png"
+                  alt="Client 1"
+                  className="h-9 md:h-11 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+                <img
+                  src="https://res.cloudinary.com/your-cloud-name/image/upload/v1/logos/client2.png"
+                  alt="Client 2"
+                  className="h-9 md:h-11 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+                <img
+                  src="https://res.cloudinary.com/your-cloud-name/image/upload/v1/logos/client3.png"
+                  alt="Client 3"
+                  className="h-9 md:h-11 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+                <img
+                  src="https://res.cloudinary.com/your-cloud-name/image/upload/v1/logos/client4.png"
+                  alt="Client 4"
+                  className="h-9 md:h-11 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+                <img
+                  src="https://res.cloudinary.com/your-cloud-name/image/upload/v1/logos/client5.png"
+                  alt="Client 5"
+                  className="h-9 md:h-11 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+                <img
+                  src="https://res.cloudinary.com/your-cloud-name/image/upload/v1/logos/client6.png"
+                  alt="Client 6"
+                  className="h-9 md:h-11 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+
+                <img
+                  src="https://res.cloudinary.com/your-cloud-name/image/upload/v1/logos/client1.png"
+                  alt="Client 1"
+                  className="h-9 md:h-11 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+                <img
+                  src="https://res.cloudinary.com/your-cloud-name/image/upload/v1/logos/client2.png"
+                  alt="Client 2"
+                  className="h-9 md:h-11 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+                <img
+                  src="https://res.cloudinary.com/your-cloud-name/image/upload/v1/logos/client3.png"
+                  alt="Client 3"
+                  className="h-9 md:h-11 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+                <img
+                  src="https://res.cloudinary.com/your-cloud-name/image/upload/v1/logos/client4.png"
+                  alt="Client 4"
+                  className="h-9 md:h-11 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+                <img
+                  src="https://res.cloudinary.com/your-cloud-name/image/upload/v1/logos/client5.png"
+                  alt="Client 5"
+                  className="h-9 md:h-11 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+                <img
+                  src="https://res.cloudinary.com/your-cloud-name/image/upload/v1/logos/client6.png"
+                  alt="Client 6"
+                  className="h-9 md:h-11 opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
               </div>
             </div>
           </div>
         )}
+        */}
       </div>
     </section>
   );
