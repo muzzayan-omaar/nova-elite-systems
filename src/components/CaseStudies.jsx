@@ -64,9 +64,9 @@ export default function CaseStudies() {
             Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="h-[460px] rounded-3xl overflow-hidden bg-white/[0.015] border border-white/10 backdrop-blur-2xl animate-pulse"
+                className="h-[480px] rounded-3xl overflow-hidden bg-white/[0.015] border border-white/10 backdrop-blur-2xl animate-pulse"
               >
-                <div className="h-72 bg-zinc-900" />
+                <div className="h-80 bg-zinc-900" />
                 <div className="p-6 space-y-4">
                   <div className="h-6 bg-white/10 rounded w-3/4" />
                   <div className="h-4 bg-white/10 rounded w-1/2" />
@@ -78,7 +78,7 @@ export default function CaseStudies() {
               <div
                 key={item._id}
                 className="
-                  group relative h-full min-h-[460px]
+                  group relative h-full min-h-[480px]
                   rounded-3xl overflow-hidden
                   border border-white/10 bg-white/[0.015]
                   backdrop-blur-2xl hover:border-cyan-400/40
@@ -86,28 +86,28 @@ export default function CaseStudies() {
                   transition-all duration-500 flex flex-col
                 "
               >
-                {/* IMAGE AREA */}
-                <div className="relative h-72 overflow-hidden bg-zinc-950">
+                {/* IMAGE AREA - Full Image Without Cropping */}
+                <div className="relative h-80 bg-zinc-950 flex items-center justify-center overflow-hidden">
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
                   />
                   
-                  {/* Bottom blur overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#050816] to-transparent" />
+                  {/* Bottom gradient blur for smooth transition */}
+                  <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#050816] via-[#050816]/90 to-transparent" />
 
                   {/* Category Tag - Smaller */}
-                  <div className="absolute top-5 left-5">
+                  <div className="absolute top-5 left-5 z-10">
                     <div className="px-3 py-1 text-[10px] font-medium tracking-widest uppercase bg-black/70 backdrop-blur-md border border-white/20 rounded-xl text-cyan-400">
                       {item.category}
                     </div>
                   </div>
 
-                  {/* Hover Visit Link - Only on Image Hover */}
+                  {/* Hover "Visit" Link - Only on Image Hover */}
                   <Link
                     to={`/case-studies/${item._id}`}
-                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/50"
+                    className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/60"
                   >
                     <div className="flex items-center gap-2 text-white text-lg font-medium tracking-wide hover:text-cyan-400 transition-colors">
                       Visit
