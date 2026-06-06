@@ -6,7 +6,6 @@ import { ArrowRight, TrendingUp, Calendar, CheckCircle } from "lucide-react";
 export default function CaseStudies() {
   const [caseStudies, setCaseStudies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [expandedIds, setExpandedIds] = useState(new Set());
 
   useEffect(() => {
     fetchCaseStudies();
@@ -22,20 +21,6 @@ export default function CaseStudies() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const toggleExpand = (id) => {
-    setExpandedIds(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) newSet.delete(id);
-      else newSet.add(id);
-      return newSet;
-    });
-  };
-
-  const truncate = (str, max = 110) => {
-    if (!str) return "";
-    return str.length > max ? str.substring(0, max) + "..." : str;
   };
 
   // Client Logos
@@ -79,125 +64,88 @@ export default function CaseStudies() {
             Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="h-[560px] rounded-3xl overflow-hidden bg-white/[0.015] border border-white/10 backdrop-blur-2xl animate-pulse"
+                className="h-[460px] rounded-3xl overflow-hidden bg-white/[0.015] border border-white/10 backdrop-blur-2xl animate-pulse"
               >
-                <div className="h-60 bg-zinc-900" />
-                <div className="p-8 space-y-6">
-                  <div className="h-4 w-24 bg-white/10 rounded" />
-                  <div className="h-8 bg-white/10 rounded w-4/5" />
-                  <div className="space-y-3">
-                    <div className="h-4 bg-white/10 rounded" />
-                    <div className="h-4 bg-white/10 rounded" />
-                    <div className="h-4 bg-white/10 rounded w-3/4" />
+                <div className="h-72 bg-zinc-900" />
+                <div className="p-6 space-y-4">
+                  <div className="h-6 bg-white/10 rounded w-3/4" />
+                  <div className="h-4 bg-white/10 rounded w-1/2" />
+                </div>
+              </div>
+            ))
+          ) : (
+            caseStudies.map((item) => (
+              <div
+                key={item._id}
+                className="
+                  group relative h-full min-h-[460px]
+                  rounded-3xl overflow-hidden
+                  border border-white/10 bg-white/[0.015]
+                  backdrop-blur-2xl hover:border-cyan-400/40
+                  hover:shadow-2xl hover:shadow-cyan-500/10
+                  transition-all duration-500 flex flex-col
+                "
+              >
+                {/* IMAGE AREA */}
+                <div className="relative h-72 overflow-hidden bg-zinc-950">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  
+                  {/* Bottom blur overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#050816] to-transparent" />
+
+                  {/* Category Tag - Smaller */}
+                  <div className="absolute top-5 left-5">
+                    <div className="px-3 py-1 text-[10px] font-medium tracking-widest uppercase bg-black/70 backdrop-blur-md border border-white/20 rounded-xl text-cyan-400">
+                      {item.category}
+                    </div>
                   </div>
-                  <div className="pt-6 border-t border-white/10 flex items-center gap-4">
-                    <div className="w-10 h-10 bg-white/10 rounded-2xl" />
-                    <div className="space-y-2 flex-1">
-                      <div className="h-9 w-24 bg-white/10 rounded" />
-                      <div className="h-3 w-32 bg-white/10 rounded" />
+
+                  {/* Hover Visit Link - Only on Image Hover */}
+                  <Link
+                    to={`/case-studies/${item._id}`}
+                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/50"
+                  >
+                    <div className="flex items-center gap-2 text-white text-lg font-medium tracking-wide hover:text-cyan-400 transition-colors">
+                      Visit
+                      <ArrowRight size={20} />
+                    </div>
+                  </Link>
+                </div>
+
+                {/* CONTENT AREA */}
+                <div className="flex-1 p-6 flex flex-col">
+                  {/* Title */}
+                  <h3 className="text-2xl font-semibold leading-tight tracking-tight mb-6 group-hover:text-cyan-400 transition-colors line-clamp-2">
+                    {item.title}
+                  </h3>
+
+                  {/* Bottom Meta Bar */}
+                  <div className="mt-auto pt-6 border-t border-white/10 flex items-center justify-between text-sm">
+                    {/* Date */}
+                    <div className="flex items-center gap-2 text-gray-400">
+                      <Calendar size={17} />
+                      <span>{item.date || "2025"}</span>
+                    </div>
+
+                    {/* Status */}
+                    <div className="flex items-center gap-2 text-emerald-400">
+                      <CheckCircle size={17} />
+                      <span>Completed</span>
+                    </div>
+
+                    {/* Outcome */}
+                    <div className="flex items-center gap-2 text-cyan-400">
+                      <TrendingUp size={17} />
+                      <span className="font-semibold tracking-tighter text-lg">{item.result}</span>
                     </div>
                   </div>
                 </div>
               </div>
             ))
-          ) : (
-            caseStudies.map((item) => {
-              const isExpanded = expandedIds.has(item._id);
-              const displayDesc = isExpanded 
-                ? item.description 
-                : truncate(item.description);
-
-              return (
-                <div
-                  key={item._id}
-                  className="
-                    group relative h-full min-h-[560px]
-                    rounded-3xl overflow-hidden
-                    border border-white/10 bg-white/[0.015]
-                    backdrop-blur-2xl hover:border-cyan-400/40
-                    hover:shadow-2xl hover:shadow-cyan-500/10
-                    transition-all duration-500 flex flex-col
-                  "
-                >
-                  {/* IMAGE + HOVER LINK */}
-                  <div className="relative h-60 overflow-hidden bg-zinc-950">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/70 to-black/90" />
-
-                    {/* Category */}
-                    <div className="absolute top-6 left-6">
-                      <div className="px-4 py-1.5 text-xs font-medium tracking-widest uppercase bg-black/70 backdrop-blur-md border border-white/20 rounded-2xl text-cyan-400">
-                        {item.category}
-                      </div>
-                    </div>
-
-                    {/* Hover Link Overlay */}
-                    <Link
-                      to={`/case-studies/${item._id}`}
-                      className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/60 backdrop-blur-sm"
-                    >
-                      <div className="flex items-center gap-3 px-6 py-3.5 bg-white text-black rounded-2xl font-semibold text-sm hover:bg-cyan-400 hover:text-black transition-all active:scale-95">
-                        Visit Full Case
-                        <ArrowRight size={18} />
-                      </div>
-                    </Link>
-                  </div>
-
-                  {/* CONTENT */}
-                  <div className="p-8 flex-1 flex flex-col">
-                    <h3 className="text-2xl font-semibold leading-tight tracking-tight mb-4 line-clamp-2 group-hover:text-cyan-400 transition-colors">
-                      {item.title}
-                    </h3>
-
-                    {/* Expandable Description */}
-                    <div className="flex-1 text-gray-400 text-[15px] leading-relaxed">
-                      {displayDesc}
-                      {!isExpanded && item.description?.length > 110 && (
-                        <button
-                          onClick={(e) => { e.stopPropagation(); toggleExpand(item._id); }}
-                          className="text-cyan-400 hover:text-cyan-300 text-sm font-medium mt-1 inline-flex items-center gap-1"
-                        >
-                          See more <ArrowRight size={14} />
-                        </button>
-                      )}
-                    </div>
-
-                    {/* Result - Clinical Style */}
-                    <div className="mt-8 pt-6 border-t border-white/10">
-                      <div className="flex items-center gap-5">
-                        <div className="flex-shrink-0 w-11 h-11 rounded-2xl bg-cyan-500/10 flex items-center justify-center">
-                          <TrendingUp className="w-6 h-6 text-cyan-400" />
-                        </div>
-                        <div>
-                          <div className="text-5xl font-bold text-cyan-400 tracking-tighter tabular-nums">
-                            {item.result}
-                          </div>
-                          <div className="text-xs text-gray-400 uppercase tracking-widest mt-0.5">
-                            Performance Growth
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Date & Completion */}
-                    <div className="mt-6 flex items-center justify-between text-xs text-gray-500 border-t border-white/10 pt-5">
-                      <div className="flex items-center gap-2">
-                        <Calendar size={16} />
-                        <span>{item.date || "2025"}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle size={16} className="text-emerald-400" />
-                        <span>Completed</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })
           )}
         </div>
 
