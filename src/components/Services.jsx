@@ -11,161 +11,117 @@ export default function Services() {
   const services = [
     {
       category: "digital",
-      icon: <Code2 size={24} />,
+      icon: <Code2 size={28} />,
       title: "Web\nDevelopment",
       desc: "Fast, responsive and modern websites that represent your brand perfectly.",
     },
     {
       category: "digital",
-      icon: <Smartphone size={24} />,
+      icon: <Smartphone size={28} />,
       title: "App\nDevelopment",
       desc: "Custom mobile applications that streamline operations and improve efficiency.",
     },
     {
       category: "digital",
-      icon: <Cloud size={24} />,
+      icon: <Cloud size={28} />,
       title: "SaaS\nApplications",
       desc: "Smart cloud platforms with automation for modern businesses.",
     },
-
     {
       category: "infra",
-      icon: <Camera size={24} />,
+      icon: <Camera size={28} />,
       title: "CCTV\nSystems",
       desc: "High-quality surveillance systems for real-time monitoring and security.",
     },
     {
       category: "infra",
-      icon: <Fingerprint size={24} />,
+      icon: <Fingerprint size={28} />,
       title: "Access\nControl",
       desc: "Advanced access solutions to secure your people and premises.",
     },
     {
       category: "infra",
-      icon: <Network size={24} />,
+      icon: <Network size={28} />,
       title: "Networking\nSolutions",
       desc: "Reliable networking systems that keep your business connected.",
     },
   ];
 
   return (
-    <section className="py-16 md:py-24 px-5 md:px-6 text-white">
-      <div className="max-w-7xl mx-auto">
+    <section className="relative py-20 md:py-28 px-5 text-white">
+      {/* Smooth Background Transition */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#050816] via-[#0A0F1C] to-[#0A0F1C]" />
+
+      <div className="relative max-w-7xl mx-auto">
 
         {/* HEADER */}
-        <div className="text-center mb-10 md:mb-14">
-          <h2 className="text-3xl md:text-4xl font-bold">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6">
+            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
+            <span className="text-xs uppercase tracking-[2px] text-cyan-400 font-medium">Capabilities</span>
+          </div>
+          
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter bg-gradient-to-br from-white via-cyan-100 to-cyan-300 bg-clip-text text-transparent">
             Our Services
           </h2>
-
-          <p className="text-gray-400 mt-3 text-sm md:text-base">
+          <p className="text-gray-400 mt-4 max-w-lg mx-auto">
             Complete technology solutions to power and protect your business.
           </p>
         </div>
 
         {/* CATEGORY LABELS */}
-        <div className="grid md:grid-cols-2 gap-4 md:gap-0 mb-5 md:mb-6">
-
+        <div className="grid md:grid-cols-2 gap-4 md:gap-0 mb-8">
           <div className="flex items-center gap-3">
-            <p
-              className="
-                text-blue-500
-                text-[10px] md:text-sm
-                tracking-[0.18em]
-                font-semibold
-                whitespace-nowrap
-              "
-            >
-              DIGITAL SOLUTIONS
-            </p>
-
-            <div className="h-px flex-1 bg-white/10"></div>
+            <p className="text-cyan-400 text-sm tracking-[0.125em] font-semibold uppercase">DIGITAL SOLUTIONS</p>
+            <div className="h-px flex-1 bg-white/10" />
           </div>
 
-          <div className="flex items-center gap-3 md:pl-6">
-            <p
-              className="
-                text-blue-500
-                text-[10px] md:text-sm
-                tracking-[0.18em]
-                font-semibold
-                whitespace-nowrap
-              "
-            >
-              INFRASTRUCTURE & SECURITY
-            </p>
-
-            <div className="h-px flex-1 bg-white/10"></div>
+          <div className="flex items-center gap-3 md:pl-8">
+            <p className="text-cyan-400 text-sm tracking-[0.125em] font-semibold uppercase">INFRASTRUCTURE &amp; SECURITY</p>
+            <div className="h-px flex-1 bg-white/10" />
           </div>
         </div>
 
         {/* SERVICES GRID */}
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-3 md:gap-5">
-
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 md:gap-6">
           {services.map((service, index) => (
             <div
               key={index}
               className={`
-                relative
-                rounded-xl md:rounded-2xl
-                p-4 md:p-6
-                min-h-[220px] md:min-h-[280px]
-                bg-[#0B1220]
-                border border-white/5
-                hover:border-blue-500/30
-                transition-all duration-300
-                hover:shadow-[0_0_25px_rgba(59,130,246,0.12)]
-
-                ${index === 0
-                  ? "bg-gradient-to-b from-blue-600/20 to-[#0B1220]"
-                  : ""
-                }
+                group relative
+                rounded-3xl
+                p-6 md:p-7
+                min-h-[260px] md:min-h-[300px]
+                bg-[#111827]
+                border border-white/10
+                hover:border-cyan-500/40
+                hover:-translate-y-2
+                transition-all duration-500
+                flex flex-col
+                ${index === 0 ? "ring-1 ring-cyan-500/30" : ""}
               `}
             >
-
-              {/* ICON BOX */}
-              <div
-                className="
-                  w-11 h-11 md:w-14 md:h-14
-                  rounded-lg md:rounded-xl
-                  bg-blue-500/10
-                  border border-blue-500/20
-                  flex items-center justify-center
-                  text-blue-500
-                  mb-4 md:mb-6
-                "
-              >
+              {/* Icon */}
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform">
                 {service.icon}
               </div>
 
-              {/* TITLE */}
-              <h3
-                className="
-                  text-lg md:text-2xl
-                  font-semibold
-                  leading-tight
-                  whitespace-pre-line
-                "
-              >
+              {/* Title */}
+              <h3 className="text-xl md:text-2xl font-semibold leading-tight tracking-tight whitespace-pre-line mb-4 group-hover:text-cyan-400 transition-colors">
                 {service.title}
               </h3>
 
-              {/* DESC */}
-              <p
-                className="
-                  text-gray-400
-                  text-[13px] md:text-sm
-                  leading-relaxed
-                  mt-3 md:mt-4
-                "
-              >
+              {/* Description */}
+              <p className="text-gray-400 text-[14.5px] leading-relaxed mt-auto">
                 {service.desc}
               </p>
 
+              {/* Hover Accent Line */}
+              <div className="absolute bottom-0 left-6 right-6 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
             </div>
           ))}
-
         </div>
+
       </div>
     </section>
   );
