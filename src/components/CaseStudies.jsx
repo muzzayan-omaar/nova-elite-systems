@@ -119,12 +119,12 @@ export default function CaseStudies() {
                 {/* CONTENT AREA */}
                 <div className="flex-1 p-6 flex flex-col">
                   {/* Title */}
-                  <h3 className="text-2xl font-semibold leading-tight tracking-tight mb-6 group-hover:text-cyan-400 transition-colors line-clamp-2">
+                  <h3 className="text-2xl font-semibold leading-tight tracking-tight mb-3 group-hover:text-cyan-400 transition-colors line-clamp-2">
                     {item.title}
                   </h3>
 
                   {/* Bottom Meta Bar */}
-                  <div className="mt-auto pt-6 border-t border-white/10 flex items-center justify-between text-sm">
+                  <div className="mt-auto pt-3 border-t border-white/10 flex items-center justify-between text-sm">
                     {/* Date */}
                     <div className="flex items-center gap-2 text-gray-400">
                       <Calendar size={17} />
