@@ -19,6 +19,7 @@ import {
   Globe,
   AlertCircle,
   Loader2,
+  MessageCircle,
 } from "lucide-react";
 
 export default function StartProject() {
@@ -28,7 +29,7 @@ export default function StartProject() {
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [modalState, setModalState] = useState("loading"); // "loading" | "success"
+  const [modalState, setModalState] = useState("loading");
   const [startMethod, setStartMethod] = useState("consultation");
 
   const [formData, setFormData] = useState({
@@ -46,6 +47,7 @@ export default function StartProject() {
   const [formErrors, setFormErrors] = useState({});
 
   const totalSteps = 4;
+  const isCustomProject = service.toLowerCase().includes("custom");
 
   const validateField = (name, value) => {
     switch (name) {
@@ -72,6 +74,9 @@ export default function StartProject() {
   };
 
   const validateCurrentStep = () => {
+    // Step 4 has no required fields (only startMethod choice)
+    if (currentStep === 4) return true;
+
     const stepFields = {
       1: ["fullName", "email", "whatsapp", "country"],
       2: ["companyName", "businessType"],
@@ -88,7 +93,8 @@ export default function StartProject() {
     return Object.keys(errors).length === 0;
   };
 
-  const handleNext = () => {
+  const handleNext = (e) => {
+    e.preventDefault(); // Extra safety
     if (validateCurrentStep()) {
       setCurrentStep(prev => prev + 1);
     } else {
@@ -100,6 +106,7 @@ export default function StartProject() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (currentStep !== 4) return; // Extra protection
     if (!validateCurrentStep()) return;
 
     setShowModal(true);
@@ -117,7 +124,6 @@ export default function StartProject() {
 
       await API.post("/inquiries", payload);
 
-      // Simulate slight delay for better UX
       setTimeout(() => {
         setModalState("success");
         setLoading(false);
@@ -136,6 +142,20 @@ export default function StartProject() {
     }
   };
 
+  const handleWhatsAppRedirect = () => {
+    if (!formData.whatsapp) return;
+
+    const phone = formData.whatsapp.replace(/\s+/g, '').replace(/[^0-9+]/g, '');
+    const message = encodeURIComponent(
+      `Hi! I just submitted a project request for ${service}. My name is ${formData.fullName}. Looking forward to discussing it.`
+    );
+    const whatsappUrl = `https://wa.me/${phone}?text=${message}`;
+
+    if (window.confirm("Would you like to open WhatsApp and chat with our team now?")) {
+      window.open(whatsappUrl, "_blank");
+    }
+  };
+
   const steps = [
     { id: 1, title: "Contact", icon: User },
     { id: 2, title: "Business", icon: Building2 },
@@ -148,7 +168,7 @@ export default function StartProject() {
     const value = formData[name];
     const isValid = value && !error;
 
-    const baseClasses = `w-full h-11 px-5 bg-white/[0.045] border rounded-2xl text-white placeholder:text-gray-500 focus:outline-none transition-all duration-200 text-sm ${error ? 'border-red-500 focus:border-red-500' : isValid ? 'border-emerald-500/70' : 'border-white/10 focus:border-blue-500'}`;
+    const baseClasses = `w-full h-11 px-5 bg-white/[0.06] border rounded-2xl text-white placeholder:text-gray-500 focus:outline-none transition-all duration-200 text-sm ${error ? 'border-red-500 focus:border-red-500' : isValid ? 'border-emerald-500/70' : 'border-white/10 focus:border-blue-500'}`;
 
     return (
       <div>
@@ -156,17 +176,26 @@ export default function StartProject() {
           {label} <span className="text-red-400">*</span>
         </label>
         <div className="relative group">
-          {icon && <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">{icon}</div>}
+          {icon && <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">{icon}</div>}
           
           {isSelect ? (
             <select
               name={name}
               value={value}
               onChange={handleChange}
-              className={`${baseClasses} ${icon ? 'pl-11' : 'pl-5'}`}
+              className={`${baseClasses} ${icon ? 'pl-11' : 'pl-5'} appearance-none bg-no-repeat bg-[position:right_1rem_center] bg-[length:16px]`}
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
+              }}
             >
               {options.map((opt, i) => (
-                <option key={i} value={opt.value}>{opt.label}</option>
+                <option 
+                  key={i} 
+                  value={opt.value} 
+                  className="bg-[#0a1320] text-white py-3"
+                >
+                  {opt.label}
+                </option>
               ))}
             </select>
           ) : (
@@ -206,7 +235,7 @@ export default function StartProject() {
           </div>
 
           <div className="grid lg:grid-cols-12 gap-6">
-            {/* Package Summary - Moved to top on mobile, sidebar on desktop */}
+            {/* Package Summary */}
             <div className="lg:col-span-5 xl:col-span-4">
               <div className="sticky top-24 rounded-3xl border border-white/10 bg-white/[0.025] backdrop-blur-xl overflow-hidden h-fit">
                 <div className="p-6 border-b border-white/10">
@@ -254,7 +283,7 @@ export default function StartProject() {
                 {/* Compact Stepper */}
                 <div className="px-6 py-5 border-b border-white/10">
                   <div className="flex items-center justify-between">
-                    {steps.map((step, idx) => {
+                    {steps.map((step) => {
                       const Icon = step.icon;
                       const isActive = currentStep === step.id;
                       const isComplete = currentStep > step.id;
@@ -336,7 +365,7 @@ export default function StartProject() {
                             onChange={handleChange}
                             rows={4}
                             placeholder="Describe your goals, features, target audience..."
-                            className={`w-full px-5 py-3.5 bg-white/[0.045] border rounded-3xl text-white placeholder:text-gray-500 focus:outline-none text-sm resize-y min-h-[110px] ${formErrors.description ? 'border-red-500' : formData.description && !formErrors.description ? 'border-emerald-500/70' : 'border-white/10 focus:border-blue-500'}`}
+                            className={`w-full px-5 py-3.5 bg-white/[0.06] border rounded-3xl text-white placeholder:text-gray-500 focus:outline-none text-sm resize-y min-h-[110px] ${formErrors.description ? 'border-red-500' : formData.description && !formErrors.description ? 'border-emerald-500/70' : 'border-white/10 focus:border-blue-500'}`}
                           />
                           {formErrors.description && <p className="text-red-400 text-xs mt-1.5">{formErrors.description}</p>}
                         </div>
@@ -346,6 +375,7 @@ export default function StartProject() {
                     {currentStep === 4 && (
                       <div className="space-y-6">
                         <h3 className="text-lg font-semibold flex items-center gap-2"><Calendar size={20} /> How to Begin</h3>
+                        <p className="text-gray-400 text-sm">Choose how you'd like to start the project:</p>
                         <div className="grid md:grid-cols-3 gap-4">
                           {[
                             { value: "consultation", title: "Consultation", desc: "Strategy session before development", price: "From $49" },
@@ -369,12 +399,30 @@ export default function StartProject() {
 
                     <div className="flex gap-3 pt-4">
                       {currentStep > 1 && (
-                        <button type="button" onClick={handlePrev} className="flex-1 h-11 rounded-2xl border border-white/10 hover:bg-white/5 font-medium text-sm transition-all">Back</button>
+                        <button 
+                          type="button" 
+                          onClick={handlePrev} 
+                          className="flex-1 h-11 rounded-2xl border border-white/10 hover:bg-white/5 font-medium text-sm transition-all"
+                        >
+                          Back
+                        </button>
                       )}
                       {currentStep < totalSteps ? (
-                        <button type="button" onClick={handleNext} className="flex-1 h-11 bg-blue-600 hover:bg-blue-500 rounded-2xl font-medium text-sm transition-all flex items-center justify-center gap-2">Continue <ArrowRight size={16} /></button>
+                        <button 
+                          type="button" 
+                          onClick={handleNext}
+                          className="flex-1 h-11 bg-blue-600 hover:bg-blue-500 rounded-2xl font-medium text-sm transition-all flex items-center justify-center gap-2"
+                        >
+                          Continue <ArrowRight size={16} />
+                        </button>
                       ) : (
-                        <button type="submit" disabled={loading} className="flex-1 h-11 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 rounded-2xl font-medium text-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70">Submit Project</button>
+                        <button 
+                          type="submit" 
+                          disabled={loading} 
+                          className="flex-1 h-11 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 rounded-2xl font-medium text-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+                        >
+                          Submit Project
+                        </button>
                       )}
                     </div>
                   </form>
@@ -384,62 +432,61 @@ export default function StartProject() {
           </div>
         </div>
       </section>
-      {/* Elevated Success Modal */}
+
+      {/* Enhanced Success Modal */}
       {showModal && (
         <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/90 backdrop-blur-2xl px-4">
           <div className="w-full max-w-md relative">
-            {/* Outer Glow Container */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-violet-500/10 to-transparent blur-3xl rounded-[40px] -z-10" />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-violet-500/20 to-emerald-500/10 blur-3xl rounded-[40px] -z-10" />
 
-            <div className="relative rounded-3xl border border-white/10 bg-[#0a1320] overflow-hidden shadow-2xl">
-              {/* Top Accent Glow */}
-              <div className="h-1.5 bg-gradient-to-r from-blue-500 via-violet-500 to-blue-500" />
+            <div className="relative rounded-3xl border border-white/10 bg-[#0a1320]/95 backdrop-blur-2xl overflow-hidden shadow-2xl">
+              <div className="h-1.5 bg-gradient-to-r from-blue-500 via-violet-500 to-emerald-500" />
 
               {modalState === "loading" ? (
-                <div className="px-10 py-12 text-center">
+                <div className="px-10 py-14 text-center">
                   <div className="relative mx-auto mb-8 w-20 h-20">
                     <div className="absolute inset-0 border-4 border-blue-500/20 rounded-full" />
                     <div className="absolute inset-0 border-4 border-transparent border-t-blue-500 rounded-full animate-spin" />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <Briefcase size={28} className="text-blue-400" />
+                      <Briefcase size={32} className="text-blue-400" />
                     </div>
                   </div>
 
                   <h3 className="text-2xl font-semibold mb-3 tracking-tight">Submitting Your Project</h3>
-                  <p className="text-gray-400 text-[15px] max-w-[260px] mx-auto">
-                    Please wait while we securely process your request...
-                  </p>
-
-                  <div className="mt-8 h-1 w-16 bg-white/10 rounded-full mx-auto overflow-hidden">
-                    <div className="h-full w-1/3 bg-blue-500 rounded-full animate-[loading_1.5s_infinite]" />
-                  </div>
+                  <p className="text-gray-400 text-[15px]">Please wait while we securely process your request...</p>
                 </div>
               ) : (
                 <div className="px-10 py-12 text-center relative">
-                  {/* Success Glow */}
-                  <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-emerald-500/10 to-transparent pointer-events-none" />
-
-                  <div className="relative mx-auto mb-8">
-                    <div className="w-24 h-24 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto animate-[pulse_2s_ease-in-out_infinite]">
-                      <div className="w-20 h-20 rounded-full bg-emerald-500/10 border border-emerald-500 flex items-center justify-center">
-                        <Check size={48} className="text-emerald-400" strokeWidth={3} />
-                      </div>
+                  <div className="mx-auto mb-8">
+                    <div className="w-24 h-24 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto">
+                      <Check size={56} className="text-emerald-400" strokeWidth={3} />
                     </div>
                   </div>
 
                   <h2 className="text-3xl font-bold mb-2 tracking-tighter">Project Request Sent!</h2>
                   <p className="text-gray-400 text-[15px] leading-relaxed max-w-[280px] mx-auto">
-                    Thank you! Our team has received your details and will contact you shortly via email or WhatsApp.
+                    Thank you <span className="text-white">{formData.fullName?.split(" ")[0] || ""}</span>! 
+                    Our team has received your details and will contact you shortly.
                   </p>
 
                   <div className="my-8 border-t border-white/10" />
 
+                  {isCustomProject && (
+                    <button
+                      onClick={handleWhatsAppRedirect}
+                      className="w-full mb-4 h-12 rounded-2xl bg-[#25D366] hover:bg-[#20b958] text-black font-semibold flex items-center justify-center gap-3 transition-all active:scale-[0.985]"
+                    >
+                      <MessageCircle size={22} />
+                      Chat on WhatsApp Now
+                    </button>
+                  )}
+
                   <Link
                     to="/"
-                    className="block w-full h-12 rounded-2xl bg-white text-black font-semibold text-sm hover:bg-white/90 active:scale-[0.985] transition-all flex items-center justify-center gap-2 group"
+                    className="block w-full h-12 rounded-2xl bg-white text-black font-semibold text-sm hover:bg-white/90 active:scale-[0.985] transition-all flex items-center justify-center gap-2"
                   >
                     Return to Homepage
-                    <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
+                    <ArrowRight size={18} />
                   </Link>
 
                   <p className="text-[11px] text-gray-500 mt-6">
