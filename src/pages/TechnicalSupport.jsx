@@ -8,20 +8,18 @@ import {
   PhoneCall,
   CheckCircle,
   AlertCircle,
-  ArrowRight,
   Shield,
   Users,
 } from "lucide-react";
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from "../api/axios";
 import { toast } from "sonner";
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export default function TechnicalSupport() {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
@@ -65,7 +63,6 @@ export default function TechnicalSupport() {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
 
-    // Live validation for better UX
     if (touched[name]) {
       const error = validateField(name, value);
       setErrors((prev) => ({ ...prev, [name]: error }));
@@ -84,7 +81,7 @@ export default function TechnicalSupport() {
     return touched[field] && !errors[field] && form[field].trim() !== "";
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Final validation
@@ -111,19 +108,28 @@ export default function TechnicalSupport() {
 
     setLoading(true);
 
-    // TODO: Replace with your actual backend call if needed
-    setTimeout(() => {
+    try {
+      await axios.post("/support-tickets", form);   // ← Backend endpoint
       toast.success("Support ticket submitted successfully! We'll contact you shortly.");
-      setLoading(false);
 
-      // Keep your original navigation logic
-      navigate("/project-booking", {
-        state: {
-          // service, packageData, formData, startMethod - add if needed
-          formData: form,
-        },
+      // Reset form after success
+      setForm({
+        fullName: "",
+        company: "",
+        email: "",
+        phone: "",
+        serviceType: "Web Development",
+        priority: "Medium",
+        issue: "",
       });
-    }, 800);
+      setErrors({});
+      setTouched({});
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to submit ticket. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -191,7 +197,7 @@ export default function TechnicalSupport() {
             </div>
           </div>
 
-          {/* SUPPORT FORM - Enhanced */}
+          {/* SUPPORT FORM */}
           <div className="mt-20 bg-white/[0.02] border border-white/10 rounded-3xl p-10 md:p-16">
             <div className="flex items-center gap-4 mb-10">
               <div className="w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
@@ -290,7 +296,7 @@ export default function TechnicalSupport() {
                   {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone}</p>}
                 </div>
 
-                {/* Service Type */}
+                {/* Service Type & Priority */}
                 <div className="space-y-2">
                   <label className="text-sm text-gray-400">Service Type</label>
                   <select
@@ -306,7 +312,6 @@ export default function TechnicalSupport() {
                   </select>
                 </div>
 
-                {/* Priority */}
                 <div className="space-y-2">
                   <label className="text-sm text-gray-400">Priority Level</label>
                   <select
@@ -364,7 +369,7 @@ export default function TechnicalSupport() {
             </form>
           </div>
 
-          {/* SUPPORT PROCESS */}
+          {/* SUPPORT PROCESS & QUICK HELP - unchanged */}
           <div className="mt-24">
             <div className="text-center mb-12">
               <p className="uppercase text-blue-400 text-xs tracking-[0.3em] font-semibold mb-3">HOW IT WORKS</p>
@@ -387,7 +392,6 @@ export default function TechnicalSupport() {
             </div>
           </div>
 
-          {/* QUICK HELP */}
           <div className="mt-24 grid md:grid-cols-4 gap-8 text-center">
             {[
               "Emergency On-Site Support",
