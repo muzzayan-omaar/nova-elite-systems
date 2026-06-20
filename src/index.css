@@ -20,3 +20,18 @@
 }
 .animate-marquee { animation: marquee 35s linear infinite; }
 .animate-marquee:hover { animation-play-state: paused; }
+
+.input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  background: #0b1220;
+  border: 1px solid rgba(255,255,255,0.05);
+  color: white;
+  font-size: 14px;
+  outline: none;
+}
+
+.input:focus {
+  border-color: rgba(59,130,246,0.5);
+}

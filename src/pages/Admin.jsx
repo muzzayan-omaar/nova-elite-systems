@@ -12,9 +12,11 @@ import {
   Headphones,
   User,
   LayoutTemplate,
+  FileText,
 } from "lucide-react";
 
 import Invoice from "./admin/Invoice";
+import Onboarding from "./admin/onboarding/Onboarding";
 import Revenue from "./admin/Revenue";
 import Expenses from "./admin/Expenses";
 import SupportTickets from "./admin/SupportTickets";
@@ -313,6 +315,7 @@ export default function Admin() {
 
     {[
       { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
+      { id: "onboarding", label: "Onboarding", icon: <FileText size={18} /> },
       { id: "caseStudies", label: "Case Studies", icon: <Briefcase size={18} /> },
       { id: "clients", label: "Clients", icon: <Users size={18} /> },
       { id: "offers", label: "Offers", icon: <BadgePercent size={18} /> },
@@ -809,6 +812,11 @@ export default function Admin() {
           {activeTab === "invoices" && (
             <Invoice />
           )}
+
+          {/* ONBOARDING */}
+          {activeTab === "onboarding" && (
+  <Onboarding />
+)}
 
           {/* REVENUE */}
           {activeTab === "revenue" && (
