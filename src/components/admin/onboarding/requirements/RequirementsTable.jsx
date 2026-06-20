@@ -16,24 +16,48 @@ export default function RequirementsTable({ refresh, onGenerateQuotation }) {
   useEffect(() => {
     fetchData();
   }, [refresh]);
-const generateQuotation = async (requirement) => {
-  try {
-    // OPTIONAL: send requirement to backend if you want persistence
-    // await axios.post("/quotations/from-requirement", requirement);
+  const generateQuotation = async (requirement) => {
+    try {
+      // OPTIONAL: send requirement to backend if you want persistence
+      // await axios.post("/quotations/from-requirement", requirement);
 
-    // NAVIGATE OR SEND DATA
-    localStorage.setItem(
-      "draftQuotation",
-      JSON.stringify(requirement)
-    );
+      // NAVIGATE OR SEND DATA
+      localStorage.setItem(
+        "draftQuotation",
+        JSON.stringify(requirement)
+      );
 
-    window.location.href = "/admin"; 
-    // or better: switch tab to onboarding/quotations
+      window.location.href = "/admin"; 
+      // or better: switch tab to onboarding/quotations
 
-  } catch (err) {
-    console.log(err);
-  }
-};
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const generateScope = async (
+    requirement
+  ) => {
+    try {
+
+      const res =
+        await axios.post(
+          `/project-scopes/from-requirement/${requirement._id}`
+        );
+
+      localStorage.setItem(
+        "draftScope",
+        JSON.stringify(res.data)
+      );
+
+      alert(
+        "Scope generated successfully"
+      );
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
   <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
@@ -67,11 +91,17 @@ const generateQuotation = async (requirement) => {
 
           <button
             onClick={() =>
-              onGenerateQuotation?.(item)
+              generateScope(item)
             }
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl text-sm"
+            className="
+              px-4 py-2
+              bg-blue-600
+              hover:bg-blue-700
+              rounded-xl
+              text-sm
+            "
           >
-            Generate Quotation
+            Generate Scope
           </button>
 
         </div>

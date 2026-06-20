@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import axios from "../../../api/axios";
 
@@ -37,6 +38,22 @@ export default function ProjectScope() {
 
     status: "Draft",
   });
+
+  useEffect(() => {
+
+  const saved =
+    localStorage.getItem(
+      "draftScope"
+    );
+
+  if (!saved) return;
+
+  const scope =
+    JSON.parse(saved);
+
+  setData(scope);
+
+  }, []);
 
   const updateField = (field, value) => {
     setData((prev) => ({
