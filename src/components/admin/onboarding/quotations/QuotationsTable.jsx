@@ -17,6 +17,13 @@ export default function QuotationTable({ refresh }) {
     fetchData();
   }, [refresh]);
 
+  const downloadPDF = (id) => {
+  window.open(
+    `${import.meta.env.VITE_API_URL}/quotations/${id}/pdf`,
+    "_blank"
+  );
+};
+
   return (
     <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
 
@@ -43,6 +50,18 @@ export default function QuotationTable({ refresh }) {
             <p className="text-xs text-gray-500 mt-1">
               {q.quotationNumber}
             </p>
+
+            <button
+  onClick={() => downloadPDF(item._id)}
+  className="
+    px-4 py-2
+    rounded-xl
+    bg-green-600
+    hover:bg-green-700
+  "
+>
+  PDF
+</button>
 
           </div>
         ))}
