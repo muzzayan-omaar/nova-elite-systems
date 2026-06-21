@@ -52,16 +52,18 @@ export default function QuotationTable({ refresh }) {
             </p>
 
             <button
-  onClick={() => downloadPDF(item._id)}
-  className="
-    px-4 py-2
-    rounded-xl
-    bg-green-600
-    hover:bg-green-700
-  "
->
-  PDF
-</button>
+              onClick={() => downloadPDF(q._id)}
+              className="
+                mt-3
+                px-4 py-2
+                rounded-xl
+                bg-green-600
+                hover:bg-green-700
+                text-sm
+              "
+            >
+              Download PDF
+            </button>
 
           </div>
         ))}
